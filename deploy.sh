@@ -12,7 +12,7 @@ set -e  # Exit on any error
 # Função para limpeza em caso de erro
 cleanup() {
     print_error "Erro detectado! Desativando modo de manutenção..."
-    php artisan maintenance:off 2>/dev/null || true
+    php artisan up 2>/dev/null || true
     print_warning "Modo de manutenção desativado devido a erro"
     exit 1
 }
@@ -67,7 +67,7 @@ print_header "🔧 ATIVANDO MODO DE MANUTENÇÃO"
 
 # Ativar modo de manutenção
 print_status "Ativando modo de manutenção..."
-php artisan maintenance:on
+php artisan down
 print_success "Modo de manutenção ativado"
 
 # =============================================================================
@@ -211,7 +211,7 @@ print_header "🔓 DESATIVANDO MODO DE MANUTENÇÃO"
 
 # Desativar modo de manutenção
 print_status "Desativando modo de manutenção..."
-php artisan maintenance:off
+php artisan up
 print_success "Modo de manutenção desativado - Site online!"
 
 # =============================================================================
