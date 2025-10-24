@@ -57,7 +57,10 @@ Route::middleware('auth')->group(function () {
     // Matching routes
     Route::get('/discover', [MatchingController::class, 'discover'])->name('matching.discover');
     Route::get('/matches', [MatchingController::class, 'matches'])->name('matching.matches');
+    Route::get('/likes-sent', [MatchingController::class, 'likesSent'])->name('matching.likes-sent');
+    Route::get('/likes-received', [MatchingController::class, 'likesReceived'])->name('matching.likes-received');
     Route::post('/matching/like/{user}', [MatchingController::class, 'like'])->name('matching.like');
+    Route::post('/matching/undo-like/{user}', [MatchingController::class, 'undoLike'])->name('matching.undo-like');
     Route::post('/matching/pass/{user}', [MatchingController::class, 'pass'])->name('matching.pass');
     Route::post('/matching/super-like/{user}', [MatchingController::class, 'superLike'])->name('matching.super-like');
 

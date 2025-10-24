@@ -54,6 +54,42 @@ class MatchingController extends Controller
     }
 
     /**
+     * Show likes sent by the current user
+     */
+    public function likesSent()
+    {
+        $user = Auth::user();
+        
+        $likesSent = UserMatch::where('user1_id', $user->id)
+            ->where('status', 'pending')
+            ->with(['user2.profile', 'user2.photos' => function($query) {
+                $query->where('is_approved', true)->orderBy('sort_order');
+            }])
+            ->orderBy('matched_at', 'desc')
+            ->paginate(12);
+
+        return view('matching.likes-sent', compact('likesSent'));
+    }
+
+    /**
+     * Show likes received by the current user
+     */
+    public function likesReceived()
+    {
+        $user = Auth::user();
+        
+        $likesReceived = UserMatch::where('user2_id', $user->id)
+            ->where('status', 'pending')
+            ->with(['user1.profile', 'user1.photos' => function($query) {
+                $query->where('is_approved', true)->orderBy('sort_order');
+            }])
+            ->orderBy('matched_at', 'desc')
+            ->paginate(12);
+
+        return view('matching.likes-received', compact('likesReceived'));
+    }
+
+    /**
      * Like a user (create or update match)
      */
     public function like(Request $request, $userId)
@@ -111,6 +147,36 @@ class MatchingController extends Controller
             'success' => true,
             'message' => 'Curtida enviada!',
             'match' => $match
+        ]);
+    }
+
+    /**
+     * Undo a like (remove match)
+     */
+    public function undoLike(Request $request, $userId)
+    {
+        $user = Auth::user();
+        $targetUser = User::find($userId);
+        
+        if (!$targetUser) {
+            return response()->json(['error' => 'Usuário não encontrado'], 404);
+        }
+
+        // Find and delete the match
+        $match = UserMatch::where('user1_id', $user->id)
+            ->where('user2_id', $targetUser->id)
+            ->where('status', 'pending')
+            ->first();
+
+        if (!$match) {
+            return response()->json(['error' => 'Like não encontrado'], 404);
+        }
+
+        $match->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Like removido com sucesso!'
         ]);
     }
 
