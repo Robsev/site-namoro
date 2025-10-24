@@ -31,6 +31,67 @@
             <div class="bg-white rounded-lg shadow-sm border p-6">
                 <h2 class="text-xl font-semibold text-gray-900 mb-6">Informações Básicas</h2>
                 
+                <!-- Foto de Perfil -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Foto de Perfil</h3>
+                    <div class="flex items-center space-x-6">
+                        <!-- Foto atual -->
+                        <div class="flex-shrink-0">
+                            @if($user->profile_photo)
+                                <img src="{{ Storage::url($user->profile_photo) }}" 
+                                     alt="Foto de perfil" 
+                                     class="w-20 h-20 rounded-full object-cover border-2 border-gray-300">
+                            @else
+                                <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center border-2 border-gray-300">
+                                    <i class="fas fa-user text-gray-400 text-2xl"></i>
+                                </div>
+                            @endif
+                        </div>
+                        
+                        <!-- Upload -->
+                        <div class="flex-1">
+                            <form method="POST" action="{{ route('profile.update.photo') }}" enctype="multipart/form-data" class="space-y-4">
+                                @csrf
+                                <div>
+                                    <label for="profile_photo" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Alterar Foto de Perfil
+                                    </label>
+                                    <input type="file" 
+                                           id="profile_photo" 
+                                           name="profile_photo" 
+                                           accept="image/*"
+                                           class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100">
+                                    <p class="mt-1 text-xs text-gray-500">PNG, JPG, GIF até 2MB. Recomendado: 400x400px</p>
+                                    @error('profile_photo')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                
+                                <div class="flex space-x-3">
+                                    <button type="submit" class="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition duration-200 text-sm">
+                                        <i class="fas fa-upload mr-2"></i>Atualizar Foto
+                                    </button>
+                                    
+                                    @if($user->profile_photo)
+                                    <button type="button" 
+                                            onclick="if(confirm('Tem certeza que deseja remover a foto de perfil?')) { document.getElementById('remove-photo-form').submit(); }"
+                                            class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 text-sm">
+                                        <i class="fas fa-trash mr-2"></i>Remover
+                                    </button>
+                                    @endif
+                                </div>
+                            </form>
+                            
+                            @if($user->profile_photo)
+                            <form id="remove-photo-form" method="POST" action="{{ route('profile.remove.photo') }}" class="hidden">
+                                @csrf
+                                @method('DELETE')
+                            </form>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                
                 <form method="POST" action="{{ route('profile.update.basic') }}" class="space-y-6">
                     @csrf
                     

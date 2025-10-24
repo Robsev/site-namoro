@@ -195,4 +195,75 @@ class ProfileController extends Controller
 
         return redirect()->back()->with('success', 'Localização atualizada com sucesso!');
     }
+
+    /**
+     * Update user profile photo.
+     */
+    public function updatePhoto(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'profile_photo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'], // 2MB max
+        ]);
+
+        // Delete old photo if exists
+        if ($user->profile_photo && Storage::disk('public')->exists($user->profile_photo)) {
+            Storage::disk('public')->delete($user->profile_photo);
+        }
+
+        // Store new photo
+        $path = $request->file('profile_photo')->store('profile-photos', 'public');
+        
+        // Resize and optimize image
+        $this->resizeProfilePhoto($path);
+
+        $user->update([
+            'profile_photo' => $path,
+        ]);
+
+        return redirect()->back()->with('success', 'Foto de perfil atualizada com sucesso!');
+    }
+
+    /**
+     * Remove user profile photo.
+     */
+    public function removePhoto(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($user->profile_photo && Storage::disk('public')->exists($user->profile_photo)) {
+            Storage::disk('public')->delete($user->profile_photo);
+        }
+
+        $user->update([
+            'profile_photo' => null,
+        ]);
+
+        return redirect()->back()->with('success', 'Foto de perfil removida com sucesso!');
+    }
+
+    /**
+     * Resize and optimize profile photo.
+     */
+    private function resizeProfilePhoto($path)
+    {
+        try {
+            $fullPath = Storage::disk('public')->path($path);
+            $image = \Intervention\Image\Facades\Image::make($fullPath);
+            
+            // Resize to 400x400 maintaining aspect ratio
+            $image->fit(400, 400, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+            
+            // Optimize quality
+            $image->save($fullPath, 85);
+            
+        } catch (\Exception $e) {
+            \Log::warning('Failed to resize profile photo: ' . $e->getMessage());
+            // Continue without resizing if intervention/image is not available
+        }
+    }
 }
