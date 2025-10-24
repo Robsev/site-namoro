@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\OAuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\MatchingController;
+use App\Http\Controllers\ChatController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -47,4 +49,20 @@ Route::middleware('auth')->group(function () {
     // Preferences routes
     Route::get('/preferences', [App\Http\Controllers\PreferencesController::class, 'edit'])->name('preferences.edit');
     Route::post('/preferences', [App\Http\Controllers\PreferencesController::class, 'update'])->name('preferences.update');
+
+    // Matching routes
+    Route::get('/discover', [MatchingController::class, 'discover'])->name('matching.discover');
+    Route::get('/matches', [MatchingController::class, 'matches'])->name('matching.matches');
+    Route::post('/matching/like/{user}', [MatchingController::class, 'like'])->name('matching.like');
+    Route::post('/matching/pass/{user}', [MatchingController::class, 'pass'])->name('matching.pass');
+    Route::post('/matching/super-like/{user}', [MatchingController::class, 'superLike'])->name('matching.super-like');
+
+    // Chat routes
+    Route::get('/chat', [ChatController::class, 'conversations'])->name('chat.conversations');
+    Route::get('/chat/{user}', [ChatController::class, 'show'])->name('chat.show');
+    Route::post('/chat/send/{user}', [ChatController::class, 'sendMessage'])->name('chat.send');
+    Route::get('/chat/messages/{user}', [ChatController::class, 'getMessages'])->name('chat.messages');
+    Route::post('/chat/read/{user}', [ChatController::class, 'markAsRead'])->name('chat.read');
+    Route::delete('/chat/message/{message}', [ChatController::class, 'deleteMessage'])->name('chat.delete');
+    Route::get('/chat/unread-count', [ChatController::class, 'unreadCount'])->name('chat.unread-count');
 });

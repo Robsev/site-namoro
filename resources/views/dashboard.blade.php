@@ -62,15 +62,24 @@
             <div class="bg-white rounded-lg shadow-md p-6">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Ações Rápidas</h3>
                 <div class="space-y-3">
-                    <a href="{{ route('profile.edit') }}" class="block w-full bg-pink-500 text-white py-2 px-4 rounded-lg text-center hover:bg-pink-600 transition duration-200">
-                        <i class="fas fa-edit mr-2"></i>Editar Perfil
-                    </a>
-                    <a href="{{ route('preferences.edit') }}" class="block w-full bg-purple-500 text-white py-2 px-4 rounded-lg text-center hover:bg-purple-600 transition duration-200">
-                        <i class="fas fa-heart mr-2"></i>Preferências
-                    </a>
-                    <a href="{{ route('profile.show') }}" class="block w-full bg-blue-500 text-white py-2 px-4 rounded-lg text-center hover:bg-blue-600 transition duration-200">
-                        <i class="fas fa-user mr-2"></i>Ver Perfil
-                    </a>
+        <a href="{{ route('matching.discover') }}" class="block w-full bg-pink-500 text-white py-2 px-4 rounded-lg text-center hover:bg-pink-600 transition duration-200">
+            <i class="fas fa-search mr-2"></i>Descobrir Pessoas
+        </a>
+        <a href="{{ route('matching.matches') }}" class="block w-full bg-red-500 text-white py-2 px-4 rounded-lg text-center hover:bg-red-600 transition duration-200">
+            <i class="fas fa-heart mr-2"></i>Meus Matches
+        </a>
+        <a href="{{ route('chat.conversations') }}" class="block w-full bg-green-500 text-white py-2 px-4 rounded-lg text-center hover:bg-green-600 transition duration-200">
+            <i class="fas fa-comments mr-2"></i>Conversas
+        </a>
+        <a href="{{ route('profile.edit') }}" class="block w-full bg-purple-500 text-white py-2 px-4 rounded-lg text-center hover:bg-purple-600 transition duration-200">
+            <i class="fas fa-edit mr-2"></i>Editar Perfil
+        </a>
+        <a href="{{ route('preferences.edit') }}" class="block w-full bg-indigo-500 text-white py-2 px-4 rounded-lg text-center hover:bg-indigo-600 transition duration-200">
+            <i class="fas fa-cog mr-2"></i>Preferências
+        </a>
+        <a href="{{ route('profile.show') }}" class="block w-full bg-blue-500 text-white py-2 px-4 rounded-lg text-center hover:bg-blue-600 transition duration-200">
+            <i class="fas fa-user mr-2"></i>Ver Perfil
+        </a>
                 </div>
             </div>
 

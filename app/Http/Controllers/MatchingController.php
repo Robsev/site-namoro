@@ -1,0 +1,471 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use App\Models\UserMatch;
+use App\Models\UserProfile;
+use App\Models\MatchingPreference;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
+class MatchingController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
+     * Show the discovery page with potential matches
+     */
+    public function discover()
+    {
+        $user = Auth::user();
+        $user->load(['profile', 'matchingPreferences', 'photos']);
+        
+        // Get potential matches
+        $potentialMatches = $this->getPotentialMatches($user);
+        
+        return view('matching.discover', compact('potentialMatches'));
+    }
+
+    /**
+     * Show all matches for the current user
+     */
+    public function matches()
+    {
+        $user = Auth::user();
+        
+        $matches = UserMatch::where(function($query) use ($user) {
+            $query->where('user1_id', $user->id)
+                  ->orWhere('user2_id', $user->id);
+        })
+        ->where('status', 'accepted')
+        ->with(['user1', 'user2'])
+        ->get()
+        ->map(function($match) use ($user) {
+            $match->other_user = $match->getOtherUser($user->id);
+            return $match;
+        });
+
+        return view('matching.matches', compact('matches'));
+    }
+
+    /**
+     * Like a user (create or update match)
+     */
+    public function like(Request $request, User $targetUser)
+    {
+        $user = Auth::user();
+        
+        // Prevent self-liking
+        if ($user->id === $targetUser->id) {
+            return response()->json(['error' => 'Você não pode curtir a si mesmo'], 400);
+        }
+
+        // Check if match already exists
+        $existingMatch = UserMatch::where(function($query) use ($user, $targetUser) {
+            $query->where('user1_id', $user->id)->where('user2_id', $targetUser->id);
+        })->orWhere(function($query) use ($user, $targetUser) {
+            $query->where('user1_id', $targetUser->id)->where('user2_id', $user->id);
+        })->first();
+
+        if ($existingMatch) {
+            return response()->json(['error' => 'Match já existe'], 400);
+        }
+
+        // Calculate compatibility score
+        $compatibilityScore = $this->calculateCompatibility($user, $targetUser);
+        
+        // Create new match
+        $match = UserMatch::create([
+            'user1_id' => $user->id,
+            'user2_id' => $targetUser->id,
+            'compatibility_score' => $compatibilityScore,
+            'status' => 'pending',
+            'matched_at' => now(),
+            'match_reason' => $this->generateMatchReason($user, $targetUser, $compatibilityScore)
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Curtida enviada!',
+            'match' => $match
+        ]);
+    }
+
+    /**
+     * Pass on a user (reject)
+     */
+    public function pass(Request $request, User $targetUser)
+    {
+        $user = Auth::user();
+        
+        // Create a rejected match to avoid showing this user again
+        UserMatch::create([
+            'user1_id' => $user->id,
+            'user2_id' => $targetUser->id,
+            'compatibility_score' => 0,
+            'status' => 'rejected',
+            'matched_at' => now()
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Usuário passado'
+        ]);
+    }
+
+    /**
+     * Super like a user
+     */
+    public function superLike(Request $request, User $targetUser)
+    {
+        $user = Auth::user();
+        
+        // Check if user has super likes available
+        if (!$this->hasSuperLikeAvailable($user)) {
+            return response()->json(['error' => 'Você não tem super likes disponíveis'], 400);
+        }
+
+        // Create super like match
+        $match = UserMatch::create([
+            'user1_id' => $user->id,
+            'user2_id' => $targetUser->id,
+            'compatibility_score' => $this->calculateCompatibility($user, $targetUser),
+            'status' => 'pending',
+            'matched_at' => now(),
+            'is_super_like' => true,
+            'match_reason' => 'Super Like!'
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Super Like enviado!',
+            'match' => $match
+        ]);
+    }
+
+    /**
+     * Get potential matches for a user
+     */
+    private function getPotentialMatches(User $user)
+    {
+        $userPreferences = $user->matchingPreferences;
+        
+        if (!$userPreferences) {
+            return collect();
+        }
+
+        // Get users that haven't been matched with yet
+        $excludedUserIds = UserMatch::where('user1_id', $user->id)
+            ->orWhere('user2_id', $user->id)
+            ->pluck('user1_id', 'user2_id')
+            ->flatten()
+            ->unique()
+            ->push($user->id);
+
+        $query = User::whereNotIn('id', $excludedUserIds)
+            ->where('is_active', true)
+            ->with(['profile', 'photos' => function($query) {
+                $query->where('is_approved', true)->orderBy('sort_order');
+            }]);
+
+        // Apply gender preference
+        if ($userPreferences->preferred_genders) {
+            $query->whereIn('gender', $userPreferences->preferred_genders);
+        }
+
+        // Apply age range
+        if ($userPreferences->min_age || $userPreferences->max_age) {
+            $query->whereHas('profile', function($q) use ($userPreferences) {
+                if ($userPreferences->min_age) {
+                    $q->whereRaw('YEAR(CURDATE()) - YEAR(birth_date) >= ?', [$userPreferences->min_age]);
+                }
+                if ($userPreferences->max_age) {
+                    $q->whereRaw('YEAR(CURDATE()) - YEAR(birth_date) <= ?', [$userPreferences->max_age]);
+                }
+            });
+        }
+
+        // Apply distance filter (if location is available)
+        if ($userPreferences->max_distance && $user->location) {
+            // This would require geolocation implementation
+            // For now, we'll skip distance filtering
+        }
+
+        // Apply other filters
+        if ($userPreferences->verified_only) {
+            $query->where('is_verified', true);
+        }
+
+        if ($userPreferences->online_only) {
+            $query->where('last_seen', '>=', now()->subHours(24));
+        }
+
+        return $query->limit(20)->get()->map(function($match) use ($user) {
+            $match->compatibility_score = $this->calculateCompatibility($user, $match);
+            return $match;
+        })->sortByDesc('compatibility_score');
+    }
+
+    /**
+     * Calculate compatibility score between two users
+     */
+    private function calculateCompatibility(User $user1, User $user2)
+    {
+        $score = 0;
+        $maxScore = 100;
+
+        // Basic compatibility (20 points)
+        if ($user1->profile && $user2->profile) {
+            // Age compatibility (10 points)
+            $ageScore = $this->calculateAgeCompatibility($user1, $user2);
+            $score += $ageScore;
+
+            // Interest compatibility (10 points)
+            $interestScore = $this->calculateInterestCompatibility($user1, $user2);
+            $score += $interestScore;
+        }
+
+        // Personality compatibility (30 points)
+        $personalityScore = $this->calculatePersonalityCompatibility($user1, $user2);
+        $score += $personalityScore;
+
+        // Lifestyle compatibility (20 points)
+        $lifestyleScore = $this->calculateLifestyleCompatibility($user1, $user2);
+        $score += $lifestyleScore;
+
+        // Relationship goals compatibility (20 points)
+        $relationshipScore = $this->calculateRelationshipCompatibility($user1, $user2);
+        $score += $relationshipScore;
+
+        // Education compatibility (10 points)
+        $educationScore = $this->calculateEducationCompatibility($user1, $user2);
+        $score += $educationScore;
+
+        return min($score, $maxScore);
+    }
+
+    /**
+     * Calculate age compatibility
+     */
+    private function calculateAgeCompatibility(User $user1, User $user2)
+    {
+        if (!$user1->birth_date || !$user2->birth_date) {
+            return 5; // Neutral score if no age data
+        }
+
+        $age1 = $user1->age;
+        $age2 = $user2->age;
+        $ageDiff = abs($age1 - $age2);
+
+        if ($ageDiff <= 2) return 10;
+        if ($ageDiff <= 5) return 8;
+        if ($ageDiff <= 10) return 6;
+        if ($ageDiff <= 15) return 4;
+        return 2;
+    }
+
+    /**
+     * Calculate interest compatibility
+     */
+    private function calculateInterestCompatibility(User $user1, User $user2)
+    {
+        $interests1 = $user1->profile->interests ?? [];
+        $interests2 = $user2->profile->interests ?? [];
+
+        if (empty($interests1) || empty($interests2)) {
+            return 5; // Neutral score if no interest data
+        }
+
+        $commonInterests = array_intersect($interests1, $interests2);
+        $totalInterests = count(array_unique(array_merge($interests1, $interests2)));
+
+        if ($totalInterests === 0) return 5;
+
+        $compatibility = (count($commonInterests) / $totalInterests) * 10;
+        return round($compatibility);
+    }
+
+    /**
+     * Calculate personality compatibility
+     */
+    private function calculatePersonalityCompatibility(User $user1, User $user2)
+    {
+        $traits1 = $user1->profile->personality_traits ?? [];
+        $traits2 = $user2->profile->personality_traits ?? [];
+
+        if (empty($traits1) || empty($traits2)) {
+            return 15; // Neutral score if no personality data
+        }
+
+        $commonTraits = array_intersect($traits1, $traits2);
+        $totalTraits = count(array_unique(array_merge($traits1, $traits2)));
+
+        if ($totalTraits === 0) return 15;
+
+        $compatibility = (count($commonTraits) / $totalTraits) * 30;
+        return round($compatibility);
+    }
+
+    /**
+     * Calculate lifestyle compatibility
+     */
+    private function calculateLifestyleCompatibility(User $user1, User $user2)
+    {
+        $score = 0;
+
+        // Smoking compatibility
+        if ($user1->profile->smoking === $user2->profile->smoking) {
+            $score += 5;
+        } elseif (($user1->profile->smoking === 'never' && $user2->profile->smoking === 'regularly') ||
+                  ($user2->profile->smoking === 'never' && $user1->profile->smoking === 'regularly')) {
+            $score -= 5;
+        }
+
+        // Drinking compatibility
+        if ($user1->profile->drinking === $user2->profile->drinking) {
+            $score += 5;
+        }
+
+        // Exercise compatibility
+        if ($user1->profile->exercise_frequency === $user2->profile->exercise_frequency) {
+            $score += 5;
+        }
+
+        // Education level compatibility
+        if ($user1->profile->education_level === $user2->profile->education_level) {
+            $score += 5;
+        }
+
+        return max(0, min(20, $score + 10)); // Normalize to 0-20 range
+    }
+
+    /**
+     * Calculate relationship goals compatibility
+     */
+    private function calculateRelationshipCompatibility(User $user1, User $user2)
+    {
+        $goal1 = $user1->profile->relationship_goal;
+        $goal2 = $user2->profile->relationship_goal;
+
+        if (!$goal1 || !$goal2) {
+            return 10; // Neutral score if no goal data
+        }
+
+        if ($goal1 === $goal2) {
+            return 20; // Perfect match
+        }
+
+        // Compatible goals
+        $compatiblePairs = [
+            ['friendship', 'casual'],
+            ['romance', 'serious'],
+            ['serious', 'marriage'],
+            ['casual', 'romance']
+        ];
+
+        foreach ($compatiblePairs as $pair) {
+            if (($goal1 === $pair[0] && $goal2 === $pair[1]) ||
+                ($goal1 === $pair[1] && $goal2 === $pair[0])) {
+                return 15;
+            }
+        }
+
+        return 5; // Low compatibility
+    }
+
+    /**
+     * Calculate education compatibility
+     */
+    private function calculateEducationCompatibility(User $user1, User $user2)
+    {
+        $edu1 = $user1->profile->education_level;
+        $edu2 = $user2->profile->education_level;
+
+        if (!$edu1 || !$edu2) {
+            return 5; // Neutral score if no education data
+        }
+
+        if ($edu1 === $edu2) {
+            return 10; // Perfect match
+        }
+
+        // Similar education levels
+        $educationLevels = ['high_school', 'bachelor', 'master', 'phd'];
+        $index1 = array_search($edu1, $educationLevels);
+        $index2 = array_search($edu2, $educationLevels);
+
+        if ($index1 !== false && $index2 !== false) {
+            $diff = abs($index1 - $index2);
+            if ($diff === 1) return 8;
+            if ($diff === 2) return 6;
+            if ($diff === 3) return 4;
+        }
+
+        return 5; // Low compatibility
+    }
+
+    /**
+     * Generate match reason based on compatibility
+     */
+    private function generateMatchReason(User $user1, User $user2, $score)
+    {
+        $reasons = [];
+
+        // Interest-based reasons
+        $interests1 = $user1->profile->interests ?? [];
+        $interests2 = $user2->profile->interests ?? [];
+        $commonInterests = array_intersect($interests1, $interests2);
+
+        if (!empty($commonInterests)) {
+            $reasons[] = "Vocês compartilham interesses em: " . implode(', ', array_slice($commonInterests, 0, 3));
+        }
+
+        // Personality-based reasons
+        $traits1 = $user1->profile->personality_traits ?? [];
+        $traits2 = $user2->profile->personality_traits ?? [];
+        $commonTraits = array_intersect($traits1, $traits2);
+
+        if (!empty($commonTraits)) {
+            $reasons[] = "Traços de personalidade em comum: " . implode(', ', array_slice($commonTraits, 0, 2));
+        }
+
+        // Age-based reasons
+        if ($user1->age && $user2->age) {
+            $ageDiff = abs($user1->age - $user2->age);
+            if ($ageDiff <= 3) {
+                $reasons[] = "Idades compatíveis";
+            }
+        }
+
+        // High compatibility
+        if ($score >= 80) {
+            $reasons[] = "Alta compatibilidade geral";
+        } elseif ($score >= 60) {
+            $reasons[] = "Boa compatibilidade";
+        }
+
+        return !empty($reasons) ? implode('. ', $reasons) : "Vocês podem ser uma boa combinação!";
+    }
+
+    /**
+     * Check if user has super like available
+     */
+    private function hasSuperLikeAvailable(User $user)
+    {
+        // Free users get 1 super like per day
+        // Premium users get 5 super likes per day
+        $dailyLimit = $user->subscription_type === 'premium' ? 5 : 1;
+        
+        $todaySuperLikes = UserMatch::where('user1_id', $user->id)
+            ->where('is_super_like', true)
+            ->whereDate('created_at', today())
+            ->count();
+
+        return $todaySuperLikes < $dailyLimit;
+    }
+}
