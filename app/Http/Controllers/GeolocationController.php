@@ -12,7 +12,7 @@ class GeolocationController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        // Middleware é aplicado nas rotas, não no controller
     }
 
     /**
