@@ -213,17 +213,25 @@ class ProfileController extends Controller
     private function resizeProfilePhoto($path)
     {
         try {
+            // Check if Intervention Image is available
+            if (!class_exists('Intervention\Image\ImageManager')) {
+                \Log::info('Intervention Image not available, skipping photo resizing');
+                return;
+            }
+
             $fullPath = Storage::disk('public')->path($path);
-            $image = \Intervention\Image\Facades\Image::make($fullPath);
+            
+            // Use Intervention Image v3 syntax
+            $manager = new \Intervention\Image\ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
+            $image = $manager->read($fullPath);
             
             // Resize to 400x400 maintaining aspect ratio
-            $image->fit(400, 400, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
+            $image->cover(400, 400);
             
-            // Optimize quality
-            $image->save($fullPath, 85);
+            // Optimize quality and save
+            $image->toJpeg(85)->save($fullPath);
+            
+            \Log::info('Profile photo resized successfully');
             
         } catch (\Exception $e) {
             \Log::warning('Failed to resize profile photo: ' . $e->getMessage());
