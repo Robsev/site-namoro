@@ -245,15 +245,41 @@ document.addEventListener('DOMContentLoaded', function() {
             detectBtn.disabled = true;
             detectBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Detectando...';
             
-            navigator.geolocation.getCurrentPosition(
+            // Tentar obter localização com melhor precisão
+            let attempts = 0;
+            const maxAttempts = 3;
+            
+            function tryGetLocation() {
+                attempts++;
+                console.log(`Tentativa ${attempts}/${maxAttempts} de obter localização`);
+                
+                navigator.geolocation.getCurrentPosition(
                 function(position) {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
                     
-                    console.log('Localização detectada:', lat, lng, 'Precisão:', position.coords.accuracy + 'm');
+                    console.log('Localização detectada:', {
+                        latitude: lat,
+                        longitude: lng,
+                        accuracy: position.coords.accuracy + 'm',
+                        altitude: position.coords.altitude,
+                        altitudeAccuracy: position.coords.altitudeAccuracy,
+                        heading: position.coords.heading,
+                        speed: position.coords.speed,
+                        timestamp: new Date(position.timestamp)
+                    });
+                    
+                    // Verificar precisão
+                    if (position.coords.accuracy > 100 && attempts < maxAttempts) {
+                        console.warn('Precisão baixa detectada:', position.coords.accuracy + 'm', '- Tentando novamente...');
+                        setTimeout(tryGetLocation, 2000); // Tentar novamente em 2 segundos
+                        return;
+                    }
+                    
+                    console.log('Localização aceita com precisão:', position.coords.accuracy + 'm');
                     
                     // Atualizar mapa IMEDIATAMENTE
-                    updateMapWithLocation(lat, lng, 'Localização detectada');
+                    updateMapWithLocation(lat, lng, 'Localização detectada (Precisão: ' + Math.round(position.coords.accuracy) + 'm)');
                     
                     // Update form fields
                     document.querySelector('input[name="latitude"]').value = lat;
@@ -328,10 +354,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 {
                     enableHighAccuracy: true,
-                    timeout: 15000,
-                    maximumAge: 300000 // 5 minutos
+                    timeout: 20000,
+                    maximumAge: 0, // Sempre obter nova localização
+                    watchPosition: false
                 }
-            );
+                );
+            }
+            
+            // Iniciar primeira tentativa
+            tryGetLocation();
         } else {
             alert('Geolocalização não é suportada por este navegador');
         }
