@@ -20,54 +20,16 @@
                 </h2>
                 <div id="map" class="w-full h-96 rounded-lg border border-gray-200"></div>
                 <div class="mt-4 text-sm text-gray-600">
-                    <p><strong>Coordenadas:</strong> <span id="map-coordinates">-</span></p>
-                    <p><strong>Endereço:</strong> <span id="map-address">-</span></p>
+                    <p><strong>Endereço:</strong> <span id="map-address">
+                        @if($user->hasGeolocation())
+                            {{ $user->formatted_location ?: 'Endereço não disponível' }}
+                        @else
+                            -
+                        @endif
+                    </span></p>
                 </div>
             </div>
 
-            <!-- Current Location -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-semibold text-gray-900 mb-4">
-                    <i class="fas fa-map-marker-alt text-blue-500 mr-2"></i>
-                    Localização Atual
-                </h2>
-                
-                @if($user->hasGeolocation())
-                    <div class="space-y-3">
-                        <div class="flex items-center">
-                            <i class="fas fa-latitude text-gray-400 w-5"></i>
-                            <span class="ml-2 text-sm text-gray-600">Latitude: {{ $user->latitude }}</span>
-                        </div>
-                        <div class="flex items-center">
-                            <i class="fas fa-longitude text-gray-400 w-5"></i>
-                            <span class="ml-2 text-sm text-gray-600">Longitude: {{ $user->longitude }}</span>
-                        </div>
-                        @if($user->city)
-                            <div class="flex items-center">
-                                <i class="fas fa-city text-gray-400 w-5"></i>
-                                <span class="ml-2 text-sm text-gray-600">{{ $user->formatted_location }}</span>
-                            </div>
-                        @endif
-                        @if($user->neighborhood)
-                            <div class="flex items-center">
-                                <i class="fas fa-map-marker-alt text-gray-400 w-5"></i>
-                                <span class="ml-2 text-sm text-gray-600">{{ $user->neighborhood }}</span>
-                            </div>
-                        @endif
-                        @if($user->road)
-                            <div class="flex items-center">
-                                <i class="fas fa-road text-gray-400 w-5"></i>
-                                <span class="ml-2 text-sm text-gray-600">{{ $user->road }}{{ $user->house_number ? ', ' . $user->house_number : '' }}</span>
-                            </div>
-                        @endif
-                    </div>
-                @else
-                    <div class="text-center py-8">
-                        <i class="fas fa-map-marker-alt text-gray-300 text-4xl mb-4"></i>
-                        <p class="text-gray-500">Nenhuma localização configurada</p>
-                    </div>
-                @endif
-            </div>
 
             <!-- Location Settings -->
             <div class="bg-white rounded-lg shadow-md p-6">
