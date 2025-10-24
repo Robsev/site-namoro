@@ -89,6 +89,11 @@ class GeolocationController extends Controller
                     'state' => $address['state'] ?? $address['region'] ?? null,
                     'country' => $address['country'] ?? null,
                     'postal_code' => $address['postcode'] ?? null,
+                    'neighborhood' => $address['suburb'] ?? $address['neighbourhood'] ?? $address['quarter'] ?? null,
+                    'district' => $address['city_district'] ?? $address['district'] ?? null,
+                    'county' => $address['county'] ?? null,
+                    'road' => $address['road'] ?? null,
+                    'house_number' => $address['house_number'] ?? null,
                 ];
             }
         } catch (\Exception $e) {

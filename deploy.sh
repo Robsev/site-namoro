@@ -61,14 +61,30 @@ fi
 print_header "🚀 INICIANDO DEPLOY - AMIGOS PARA SEMPRE"
 
 # =============================================================================
-# 0. MODO DE MANUTENÇÃO
+# 0. VERIFICAÇÃO INICIAL
 # =============================================================================
-print_header "🔧 ATIVANDO MODO DE MANUTENÇÃO"
+print_header "🔍 VERIFICAÇÃO INICIAL"
 
-# Ativar modo de manutenção
-print_status "Ativando modo de manutenção..."
-php artisan down
-print_success "Modo de manutenção ativado"
+# Verificar se pode escrever nos diretórios necessários
+print_status "Verificando permissões de escrita..."
+if [ -w "storage" ] && [ -w "bootstrap/cache" ]; then
+    print_success "Permissões adequadas para deploy"
+else
+    print_error "ERRO: Usuário não tem permissão de escrita em storage/ ou bootstrap/cache/"
+    print_error "Execute como root: chown -R www:www storage/ bootstrap/cache/"
+    print_error "E depois: chmod -R 775 storage/ bootstrap/cache/"
+    exit 1
+fi
+
+# Verificar se pode criar arquivo de manutenção
+print_status "Verificando permissão para modo de manutenção..."
+if [ -w "storage/framework" ]; then
+    print_success "Modo de manutenção disponível"
+    MAINTENANCE_AVAILABLE=true
+else
+    print_warning "Modo de manutenção não disponível - continuando sem ele"
+    MAINTENANCE_AVAILABLE=false
+fi
 
 # =============================================================================
 # 1. BACKUP E PREPARAÇÃO

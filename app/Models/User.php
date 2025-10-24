@@ -40,6 +40,11 @@ class User extends Authenticatable
         'state',
         'country',
         'postal_code',
+        'neighborhood',
+        'district',
+        'county',
+        'road',
+        'house_number',
     ];
 
     /**
@@ -198,7 +203,22 @@ class User extends Authenticatable
      */
     public function getFormattedLocationAttribute()
     {
-        $parts = array_filter([$this->city, $this->state, $this->country]);
+        $parts = array_filter([$this->neighborhood, $this->city, $this->state, $this->country]);
+        return implode(', ', $parts) ?: $this->location;
+    }
+
+    /**
+     * Get detailed location string
+     */
+    public function getDetailedLocationAttribute()
+    {
+        $parts = array_filter([
+            $this->neighborhood,
+            $this->district,
+            $this->city,
+            $this->state,
+            $this->country
+        ]);
         return implode(', ', $parts) ?: $this->location;
     }
 

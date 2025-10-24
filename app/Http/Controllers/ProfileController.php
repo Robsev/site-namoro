@@ -173,6 +173,11 @@ class ProfileController extends Controller
             'state' => 'nullable|string|max:100',
             'country' => 'nullable|string|max:100',
             'postal_code' => 'nullable|string|max:20',
+            'neighborhood' => 'nullable|string|max:100',
+            'district' => 'nullable|string|max:100',
+            'county' => 'nullable|string|max:100',
+            'road' => 'nullable|string|max:255',
+            'house_number' => 'nullable|string|max:20',
         ]);
 
         $user = Auth::user();
@@ -185,6 +190,11 @@ class ProfileController extends Controller
             'state' => $request->state,
             'country' => $request->country,
             'postal_code' => $request->postal_code,
+            'neighborhood' => $request->neighborhood,
+            'district' => $request->district,
+            'county' => $request->county,
+            'road' => $request->road,
+            'house_number' => $request->house_number,
         ]);
 
         return redirect()->back()->with('success', 'Localização atualizada com sucesso!');
