@@ -205,6 +205,16 @@ function initGoogleMaps() {
     initMap();
 }
 
+// Detectar qual API de mapa está disponível
+function detectMapAPI() {
+    if (typeof google !== 'undefined' && google.maps) {
+        return 'google';
+    } else if (typeof L !== 'undefined') {
+        return 'leaflet';
+    }
+    return null;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const detectBtn = document.getElementById('detectLocationBtn');
     const searchInput = document.getElementById('locationSearch');
@@ -212,9 +222,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchResults = document.getElementById('searchResults');
     const manualForm = document.getElementById('manualLocationForm');
 
-    // Inicializar mapa (será chamado quando Google Maps carregar)
-    if (typeof google !== 'undefined' && google.maps) {
+    // Inicializar mapa quando DOM estiver pronto
+    const mapAPI = detectMapAPI();
+    if (mapAPI) {
         initMap();
+    } else {
+        // Aguardar carregamento das APIs
+        setTimeout(() => {
+            const mapAPI = detectMapAPI();
+            if (mapAPI) {
+                initMap();
+            } else {
+                console.warn('Nenhuma API de mapa disponível');
+            }
+        }, 1000);
     }
 
     // Auto-detect location
@@ -371,23 +392,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Função para inicializar o mapa
 function initMap() {
+    const mapAPI = detectMapAPI();
+    if (!mapAPI) {
+        console.error('Nenhuma API de mapa disponível');
+        return;
+    }
+    
     // Coordenadas padrão (São Paulo) se não houver localização
     const defaultLat = currentLat || -23.5505;
     const defaultLng = currentLng || -46.6333;
     
-    // Inicializar Google Maps
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: defaultLat, lng: defaultLng },
-        zoom: 15,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        styles: [
-            {
-                featureType: 'poi',
-                elementType: 'labels',
-                stylers: [{ visibility: 'on' }]
-            }
-        ]
-    });
+    if (mapAPI === 'google') {
+        // Inicializar Google Maps
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: defaultLat, lng: defaultLng },
+            zoom: 15,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            styles: [
+                {
+                    featureType: 'poi',
+                    elementType: 'labels',
+                    stylers: [{ visibility: 'on' }]
+                }
+            ]
+        });
+    } else if (mapAPI === 'leaflet') {
+        // Inicializar OpenStreetMap com Leaflet
+        map = L.map('map').setView([defaultLat, defaultLng], 15);
+        
+        // Adicionar tiles do OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+    }
     
     // Adicionar marcador se houver localização
     if (currentLat && currentLng) {
@@ -398,35 +435,52 @@ function initMap() {
 
 // Função para adicionar/atualizar marcador
 function addMarker(lat, lng, title = 'Localização') {
+    const mapAPI = detectMapAPI();
+    if (!mapAPI) return;
+    
     // Remover marcador anterior se existir
     if (marker) {
-        marker.setMap(null);
+        if (mapAPI === 'google') {
+            marker.setMap(null);
+        } else if (mapAPI === 'leaflet') {
+            map.removeLayer(marker);
+        }
     }
     
-    // Adicionar novo marcador
-    marker = new google.maps.Marker({
-        position: { lat: lat, lng: lng },
-        map: map,
-        title: title,
-        animation: google.maps.Animation.DROP,
-        icon: {
-            url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
-            scaledSize: new google.maps.Size(32, 32)
-        }
-    });
-    
-    // Adicionar info window
-    const infoWindow = new google.maps.InfoWindow({
-        content: `<div class="p-2"><strong>${title}</strong><br>${lat.toFixed(6)}, ${lng.toFixed(6)}</div>`
-    });
-    
-    marker.addListener('click', () => {
-        infoWindow.open(map, marker);
-    });
-    
-    // Centralizar mapa na nova localização
-    map.setCenter({ lat: lat, lng: lng });
-    map.setZoom(15);
+    if (mapAPI === 'google') {
+        // Adicionar marcador do Google Maps
+        marker = new google.maps.Marker({
+            position: { lat: lat, lng: lng },
+            map: map,
+            title: title,
+            animation: google.maps.Animation.DROP,
+            icon: {
+                url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+                scaledSize: new google.maps.Size(32, 32)
+            }
+        });
+        
+        // Adicionar info window
+        const infoWindow = new google.maps.InfoWindow({
+            content: `<div class="p-2"><strong>${title}</strong><br>${lat.toFixed(6)}, ${lng.toFixed(6)}</div>`
+        });
+        
+        marker.addListener('click', () => {
+            infoWindow.open(map, marker);
+        });
+        
+        // Centralizar mapa na nova localização
+        map.setCenter({ lat: lat, lng: lng });
+        map.setZoom(15);
+        
+    } else if (mapAPI === 'leaflet') {
+        // Adicionar marcador do Leaflet
+        marker = L.marker([lat, lng]).addTo(map);
+        marker.bindPopup(`<strong>${title}</strong><br>${lat.toFixed(6)}, ${lng.toFixed(6)}`).openPopup();
+        
+        // Centralizar mapa na nova localização
+        map.setView([lat, lng], 15);
+    }
 }
 
 // Função para atualizar informações do mapa
