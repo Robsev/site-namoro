@@ -20,13 +20,17 @@
                 </h2>
                 <div id="map" class="w-full h-96 rounded-lg border border-gray-200"></div>
                 <div class="mt-4 text-sm text-gray-600">
-                    <p><strong>Endereço:</strong> <span id="map-address">
+                    <p><strong>Localização:</strong> <span id="map-address">
                         @if($user->hasGeolocation())
-                            {{ $user->formatted_location ?: 'Endereço não disponível' }}
+                            {{ $user->formatted_location ?: 'Localização não disponível' }}
                         @else
                             -
                         @endif
                     </span></p>
+                    <p class="text-xs text-gray-500 mt-2">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Endereço completo é exibido apenas para verificação - não é armazenado por questões de privacidade
+                    </p>
                 </div>
             </div>
 

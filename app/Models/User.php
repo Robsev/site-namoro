@@ -35,16 +35,11 @@ class User extends Authenticatable
         'subscription_expires_at',
         'latitude',
         'longitude',
-        'address',
         'city',
         'state',
         'country',
         'postal_code',
         'neighborhood',
-        'district',
-        'county',
-        'road',
-        'house_number',
     ];
 
     /**
@@ -214,7 +209,6 @@ class User extends Authenticatable
     {
         $parts = array_filter([
             $this->neighborhood,
-            $this->district,
             $this->city,
             $this->state,
             $this->country
