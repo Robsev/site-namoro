@@ -8,6 +8,7 @@ use App\Http\Controllers\MatchingController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\LanguageController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -85,4 +86,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/subscriptions/{subscription}/resume', [SubscriptionController::class, 'resume'])->name('subscriptions.resume');
     Route::put('/subscriptions/{subscription}/payment-method', [SubscriptionController::class, 'updatePaymentMethod'])->name('subscriptions.update-payment');
     Route::get('/subscriptions/usage', [SubscriptionController::class, 'usage'])->name('subscriptions.usage');
+
+    // Language routes
+    Route::get('/language', [LanguageController::class, 'index'])->name('language.index');
+    Route::post('/language/change', [LanguageController::class, 'change'])->name('language.change');
+    Route::get('/language/current', [LanguageController::class, 'current'])->name('language.current');
+    Route::get('/language/available', [LanguageController::class, 'available'])->name('language.available');
+    Route::get('/language/detect', [LanguageController::class, 'detect'])->name('language.detect');
 });
