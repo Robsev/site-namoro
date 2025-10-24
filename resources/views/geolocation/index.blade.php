@@ -213,10 +213,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // Auto-detect location
     detectBtn.addEventListener('click', function() {
         if (navigator.geolocation) {
+            // Mostrar loading
+            detectBtn.disabled = true;
+            detectBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Detectando...';
+            
             navigator.geolocation.getCurrentPosition(
                 function(position) {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
+                    
+                    console.log('Localização detectada:', lat, lng, 'Precisão:', position.coords.accuracy + 'm');
+                    
+                    // Atualizar mapa IMEDIATAMENTE
+                    updateMapWithLocation(lat, lng, 'Localização detectada');
+                    
+                    // Update form fields
+                    document.querySelector('input[name="latitude"]').value = lat;
+                    document.querySelector('input[name="longitude"]').value = lng;
                     
                     // Get location details
                     fetch('{{ route("location.current") }}', {
@@ -233,9 +246,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            // Update form fields
-                            document.querySelector('input[name="latitude"]').value = lat;
-                            document.querySelector('input[name="longitude"]').value = lng;
+                            // Update form fields with detailed info
                             if (data.location.city) document.querySelector('input[name="city"]').value = data.location.city;
                             if (data.location.state) document.querySelector('input[name="state"]').value = data.location.state;
                             if (data.location.country) document.querySelector('input[name="country"]').value = data.location.country;
@@ -245,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             if (data.location.road) document.querySelector('input[name="road"]').value = data.location.road;
                             if (data.location.house_number) document.querySelector('input[name="house_number"]').value = data.location.house_number;
                             
-                            // Atualizar mapa
+                            // Atualizar mapa com endereço completo
                             updateMapWithLocation(lat, lng, data.location.address || 'Localização detectada');
                             
                             // Auto-submit form
@@ -254,11 +265,43 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert('Erro ao obter detalhes da localização');
+                        alert('Erro ao obter detalhes da localização, mas coordenadas foram detectadas');
+                        // Mesmo com erro, submeter com as coordenadas
+                        manualForm.submit();
+                    })
+                    .finally(() => {
+                        // Restaurar botão
+                        detectBtn.disabled = false;
+                        detectBtn.innerHTML = '<i class="fas fa-crosshairs mr-2"></i>Detectar Localização Atual';
                     });
                 },
                 function(error) {
-                    alert('Erro ao acessar localização: ' + error.message);
+                    console.error('Geolocation error:', error);
+                    let errorMessage = 'Erro ao acessar localização: ';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage += 'Permissão negada. Ative a localização no navegador.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage += 'Localização indisponível.';
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage += 'Tempo esgotado. Tente novamente.';
+                            break;
+                        default:
+                            errorMessage += error.message;
+                            break;
+                    }
+                    alert(errorMessage);
+                    
+                    // Restaurar botão
+                    detectBtn.disabled = false;
+                    detectBtn.innerHTML = '<i class="fas fa-crosshairs mr-2"></i>Detectar Localização Atual';
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 15000,
+                    maximumAge: 300000 // 5 minutos
                 }
             );
         } else {
