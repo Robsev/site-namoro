@@ -178,34 +178,13 @@ print_status "Criando link simbólico para storage..."
 php artisan storage:link
 print_success "Link simbólico para storage criado"
 
-# Configurar permissões
-print_status "Configurando permissões..."
-# Definir proprietário correto (www-data) e permissões
-sudo chown -R www-data:www-data storage/
-sudo chown -R www-data:www-data bootstrap/cache/
-sudo chown -R www-data:www-data public/storage/
-
-# Configurar permissões adequadas
-sudo chmod -R 775 storage/
-sudo chmod -R 775 bootstrap/cache/
-sudo chmod -R 775 public/storage/
-
-# Garantir que o usuário atual tenha acesso de escrita
-sudo usermod -a -G www-data $USER 2>/dev/null || true
-
-# Configurar permissões específicas para deploy
-print_status "Configurando permissões de deploy..."
-# Permitir que o usuário de deploy possa escrever nos diretórios
-sudo setfacl -R -m u:$USER:rwx storage/ 2>/dev/null || true
-sudo setfacl -R -m u:$USER:rwx bootstrap/cache/ 2>/dev/null || true
-sudo setfacl -R -m u:$USER:rwx public/storage/ 2>/dev/null || true
-
-# Configurar permissões padrão para novos arquivos
-sudo setfacl -R -d -m u:$USER:rwx storage/ 2>/dev/null || true
-sudo setfacl -R -d -m u:$USER:rwx bootstrap/cache/ 2>/dev/null || true
-sudo setfacl -R -d -m u:$USER:rwx public/storage/ 2>/dev/null || true
-
-print_success "Permissões configuradas (www-data:www-data, 775 + ACL para $USER)"
+# Verificar permissões (sem alterar)
+print_status "Verificando permissões..."
+if [ -w "storage" ] && [ -w "bootstrap/cache" ]; then
+    print_success "Permissões adequadas para deploy"
+else
+    print_warning "Verifique se o usuário tem permissão de escrita nos diretórios storage/ e bootstrap/cache/"
+fi
 
 # =============================================================================
 # 7. OTIMIZAÇÕES FINAIS
@@ -298,10 +277,11 @@ echo ""
 print_header "🛠️ COMANDOS ÚTEIS"
 
 echo -e "${CYAN}Para gerenciar o sistema:${NC}"
-echo -e "  • Manutenção: ${YELLOW}php artisan maintenance on/off${NC}"
+echo -e "  • Manutenção: ${YELLOW}php artisan down/up${NC}"
 echo -e "  • Cache: ${YELLOW}php artisan cache:clear${NC}"
 echo -e "  • Logs: ${YELLOW}tail -f storage/logs/laravel.log${NC}"
 echo -e "  • Queue: ${YELLOW}php artisan queue:work${NC}"
+echo -e "  • Apache: ${YELLOW}sudo service apache24 restart${NC}"
 echo ""
 echo -e "${CYAN}Para monitoramento:${NC}"
 echo -e "  • Status: ${YELLOW}php artisan about${NC}"
