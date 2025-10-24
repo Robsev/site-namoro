@@ -146,6 +146,22 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the user's notifications.
+     */
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    /**
+     * Get unread notifications count
+     */
+    public function getUnreadNotificationsCountAttribute()
+    {
+        return $this->notifications()->unread()->count();
+    }
+
+    /**
      * Get the user's age.
      */
     public function getAgeAttribute()

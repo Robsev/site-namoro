@@ -71,6 +71,14 @@
         <a href="{{ route('chat.conversations') }}" class="block w-full bg-green-500 text-white py-2 px-4 rounded-lg text-center hover:bg-green-600 transition duration-200">
             <i class="fas fa-comments mr-2"></i>Conversas
         </a>
+        <a href="{{ route('notifications.index') }}" class="block w-full bg-yellow-500 text-white py-2 px-4 rounded-lg text-center hover:bg-yellow-600 transition duration-200 relative">
+            <i class="fas fa-bell mr-2"></i>Notificações
+            @if(Auth::user()->unread_notifications_count > 0)
+                <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center">
+                    {{ Auth::user()->unread_notifications_count }}
+                </span>
+            @endif
+        </a>
         <a href="{{ route('profile.edit') }}" class="block w-full bg-purple-500 text-white py-2 px-4 rounded-lg text-center hover:bg-purple-600 transition duration-200">
             <i class="fas fa-edit mr-2"></i>Editar Perfil
         </a>
