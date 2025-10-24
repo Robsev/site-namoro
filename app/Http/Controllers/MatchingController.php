@@ -117,9 +117,14 @@ class MatchingController extends Controller
     /**
      * Pass on a user (reject)
      */
-    public function pass(Request $request, User $targetUser)
+    public function pass(Request $request, $userId)
     {
         $user = Auth::user();
+        $targetUser = User::find($userId);
+        
+        if (!$targetUser) {
+            return response()->json(['error' => 'Usuário não encontrado'], 404);
+        }
         
         // Create a rejected match to avoid showing this user again
         UserMatch::create([
@@ -139,9 +144,14 @@ class MatchingController extends Controller
     /**
      * Super like a user
      */
-    public function superLike(Request $request, User $targetUser)
+    public function superLike(Request $request, $userId)
     {
         $user = Auth::user();
+        $targetUser = User::find($userId);
+        
+        if (!$targetUser) {
+            return response()->json(['error' => 'Usuário não encontrado'], 404);
+        }
         
         // Check if user has super likes available
         if (!$this->hasSuperLikeAvailable($user)) {

@@ -1,4 +1,4 @@
-@extends('layouts.profile')
+@extends('layouts.admin')
 
 @section('title', 'Estatísticas de Moderação - Admin')
 
