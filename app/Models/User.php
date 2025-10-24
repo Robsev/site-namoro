@@ -104,6 +104,22 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the user's interests.
+     */
+    public function interests()
+    {
+        return $this->hasMany(UserInterest::class);
+    }
+
+    /**
+     * Get the user's psychological profile.
+     */
+    public function psychologicalProfile()
+    {
+        return $this->hasOne(PsychologicalProfile::class);
+    }
+
+    /**
      * Get matches where this user is user1.
      */
     public function matchesAsUser1()

@@ -47,7 +47,7 @@ class PhotoController extends Controller
             'is_approved' => false, // Require approval
         ]);
 
-        return redirect()->back()->with('success', 'Foto enviada com sucesso! Aguardando aprovação.');
+        return redirect()->back()->with('success', 'Foto enviada com sucesso! Aguardando aprovação.')->with('active_tab', 'photos');
     }
 
     /**
@@ -68,7 +68,7 @@ class PhotoController extends Controller
         // Set this photo as primary
         $photo->update(['is_primary' => true]);
 
-        return redirect()->back()->with('success', 'Foto principal atualizada!');
+        return redirect()->back()->with('success', 'Foto principal atualizada!')->with('active_tab', 'photos');
     }
 
     /**
@@ -113,6 +113,6 @@ class PhotoController extends Controller
         // Delete from database
         $photo->delete();
 
-        return redirect()->back()->with('success', 'Foto removida com sucesso!');
+        return redirect()->back()->with('success', 'Foto removida com sucesso!')->with('active_tab', 'photos');
     }
 }
