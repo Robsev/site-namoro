@@ -16,6 +16,8 @@ class UserProfileFactory extends Factory
      */
     public function definition(): array
     {
+        $faker = $this->faker ?? \Faker\Factory::create('pt_BR');
+        
         $interests = [
             'Música', 'Cinema', 'Leitura', 'Esportes', 'Viagem', 'Culinária',
             'Arte', 'Tecnologia', 'Natureza', 'Fotografia', 'Dança', 'Teatro',
@@ -35,23 +37,23 @@ class UserProfileFactory extends Factory
         ];
 
         return [
-            'bio' => $this->faker->paragraph(3),
-            'interests' => $this->faker->randomElements($interests, $this->faker->numberBetween(3, 8)),
-            'hobbies' => $this->faker->randomElements($hobbies, $this->faker->numberBetween(2, 6)),
-            'personality_traits' => $this->faker->randomElements($personalityTraits, $this->faker->numberBetween(3, 7)),
-            'relationship_goal' => $this->faker->randomElement(['friendship', 'romance', 'casual', 'serious', 'marriage']),
-            'education_level' => $this->faker->randomElement(['high_school', 'bachelor', 'master', 'phd', 'other']),
-            'occupation' => $this->faker->jobTitle(),
-            'smoking' => $this->faker->randomElement(['never', 'occasionally', 'regularly', 'prefer_not_to_say']),
-            'drinking' => $this->faker->randomElement(['never', 'occasionally', 'regularly', 'prefer_not_to_say']),
-            'exercise_frequency' => $this->faker->randomElement(['never', 'rarely', 'weekly', 'daily']),
-            'looking_for' => $this->faker->sentence(8),
-            'age_min' => $this->faker->numberBetween(18, 25),
-            'age_max' => $this->faker->numberBetween(30, 50),
-            'max_distance' => $this->faker->numberBetween(10, 100),
-            'show_distance' => $this->faker->boolean(80),
-            'show_age' => $this->faker->boolean(90),
-            'show_online_status' => $this->faker->boolean(70),
+            'bio' => $faker->paragraph(3),
+            'interests' => $faker->randomElements($interests, $faker->numberBetween(3, 8)),
+            'hobbies' => $faker->randomElements($hobbies, $faker->numberBetween(2, 6)),
+            'personality_traits' => $faker->randomElements($personalityTraits, $faker->numberBetween(3, 7)),
+            'relationship_goal' => $faker->randomElement(['friendship', 'romance', 'casual', 'serious', 'marriage']),
+            'education_level' => $faker->randomElement(['high_school', 'bachelor', 'master', 'phd', 'other']),
+            'occupation' => $faker->jobTitle(),
+            'smoking' => $faker->randomElement(['never', 'occasionally', 'regularly', 'prefer_not_to_say']),
+            'drinking' => $faker->randomElement(['never', 'occasionally', 'regularly', 'prefer_not_to_say']),
+            'exercise_frequency' => $faker->randomElement(['never', 'rarely', 'weekly', 'daily']),
+            'looking_for' => $faker->sentence(8),
+            'age_min' => $faker->numberBetween(18, 25),
+            'age_max' => $faker->numberBetween(30, 50),
+            'max_distance' => $faker->numberBetween(10, 100),
+            'show_distance' => $faker->boolean(80),
+            'show_age' => $faker->boolean(90),
+            'show_online_status' => $faker->boolean(70),
         ];
     }
 }
