@@ -159,7 +159,7 @@
                         <div class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition duration-200">
                             <!-- Photo -->
                             <div class="aspect-square bg-gray-100 relative">
-                                <img src="{{ Storage::url($photo->file_path) }}" 
+                                <img src="{{ Storage::url($photo->photo_path) }}" 
                                      alt="Foto do usuário {{ $photo->user->name }}"
                                      class="w-full h-full object-cover">
                                 <div class="absolute top-2 right-2">

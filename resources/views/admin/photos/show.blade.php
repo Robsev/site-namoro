@@ -33,7 +33,7 @@
                     </h2>
                     
                     <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-4">
-                        <img src="{{ Storage::url($photo->file_path) }}" 
+                        <img src="{{ Storage::url($photo->photo_path) }}" 
                              alt="Foto do usuário {{ $photo->user->name }}"
                              class="w-full h-full object-cover">
                     </div>
@@ -111,7 +111,7 @@
                     <div class="grid grid-cols-3 gap-4">
                         @foreach($userPhotos as $userPhoto)
                             <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                                <img src="{{ Storage::url($userPhoto->file_path) }}" 
+                                <img src="{{ Storage::url($userPhoto->photo_path) }}" 
                                      alt="Foto do usuário"
                                      class="w-full h-full object-cover">
                             </div>
