@@ -121,38 +121,12 @@
                                    class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4 mt-4">
-                            <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">Bairro</label>
-                                <input type="text" 
-                                       name="neighborhood" 
-                                       value="{{ $user->neighborhood }}"
-                                       class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">Distrito</label>
-                                <input type="text" 
-                                       name="district" 
-                                       value="{{ $user->district }}"
-                                       class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4 mt-4">
-                            <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">Rua</label>
-                                <input type="text" 
-                                       name="road" 
-                                       value="{{ $user->road }}"
-                                       class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">Número</label>
-                                <input type="text" 
-                                       name="house_number" 
-                                       value="{{ $user->house_number }}"
-                                       class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                            </div>
+                        <div class="mt-4">
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Bairro</label>
+                            <input type="text" 
+                                   name="neighborhood" 
+                                   value="{{ $user->neighborhood }}"
+                                   class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
                         </div>
 
                         <button type="submit" 
@@ -292,11 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             if (data.location.city) document.querySelector('input[name="city"]').value = data.location.city;
                             if (data.location.state) document.querySelector('input[name="state"]').value = data.location.state;
                             if (data.location.country) document.querySelector('input[name="country"]').value = data.location.country;
-                            if (data.location.postal_code) document.querySelector('input[name="postal_code"]').value = data.location.postal_code;
                             if (data.location.neighborhood) document.querySelector('input[name="neighborhood"]').value = data.location.neighborhood;
-                            if (data.location.district) document.querySelector('input[name="district"]').value = data.location.district;
-                            if (data.location.road) document.querySelector('input[name="road"]').value = data.location.road;
-                            if (data.location.house_number) document.querySelector('input[name="house_number"]').value = data.location.house_number;
                             
                             // Atualizar mapa com endereço completo
                             updateMapWithLocation(lat, lng, data.location.address || 'Localização detectada');

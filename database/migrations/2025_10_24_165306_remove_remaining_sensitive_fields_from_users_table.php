@@ -12,14 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // Remover campos sensíveis restantes
+            // Remover campos sensíveis restantes (apenas os que existem)
             $table->dropColumn([
                 'postal_code',      // CEP (sensível)
                 'phone',           // Telefone (sensível)
-                'district',        // Distrito (redundante)
-                'county',          // Condado (redundante)
-                'road',            // Rua (sensível)
-                'house_number',    // Número (sensível)
             ]);
         });
     }
@@ -33,10 +29,6 @@ return new class extends Migration
             // Restaurar campos removidos
             $table->string('postal_code')->nullable();
             $table->string('phone')->nullable();
-            $table->string('district')->nullable();
-            $table->string('county')->nullable();
-            $table->string('road')->nullable();
-            $table->string('house_number')->nullable();
         });
     }
 };
