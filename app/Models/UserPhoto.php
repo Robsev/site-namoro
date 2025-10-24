@@ -11,10 +11,12 @@ class UserPhoto extends Model
 
     protected $fillable = [
         'user_id',
-        'file_path',
-        'file_url',
+        'photo_path',
+        'photo_url',
         'is_primary',
         'sort_order',
+        'is_approved',
+        'rejection_reason',
         'moderation_status',
         'moderated_by',
         'moderated_at',

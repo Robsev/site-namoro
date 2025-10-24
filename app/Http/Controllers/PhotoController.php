@@ -41,10 +41,10 @@ class PhotoController extends Controller
         $nextOrder = $user->photos()->max('sort_order') + 1;
 
         $photo = $user->photos()->create([
-            'file_path' => $path,
-            'file_url' => Storage::disk('public')->url($path),
+            'photo_path' => $path,
+            'photo_url' => Storage::disk('public')->url($path),
             'sort_order' => $nextOrder,
-            'moderation_status' => 'pending', // Require approval
+            'is_approved' => false, // Require approval
         ]);
 
         return redirect()->back()->with('success', 'Foto enviada com sucesso! Aguardando aprovação.')->with('active_tab', 'photos');
@@ -106,8 +106,8 @@ class PhotoController extends Controller
         }
 
         // Delete file from storage
-        if (Storage::disk('public')->exists($photo->file_path)) {
-            Storage::disk('public')->delete($photo->file_path);
+        if (Storage::disk('public')->exists($photo->photo_path)) {
+            Storage::disk('public')->delete($photo->photo_path);
         }
 
         // Delete from database
