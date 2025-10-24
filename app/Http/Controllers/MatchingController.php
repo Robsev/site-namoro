@@ -190,10 +190,18 @@ class MatchingController extends Controller
             });
         }
 
-        // Apply distance filter (if location is available)
-        if ($userPreferences->max_distance && $user->location) {
-            // This would require geolocation implementation
-            // For now, we'll skip distance filtering
+        // Apply distance filter using geolocation
+        if ($userPreferences->max_distance && $user->hasGeolocation()) {
+            $maxDistance = $userPreferences->max_distance;
+            
+            // Use Haversine formula to filter by distance
+            $query->whereNotNull('latitude')
+                  ->whereNotNull('longitude')
+                  ->whereRaw("
+                      (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * 
+                      cos(radians(longitude) - radians(?)) + sin(radians(?)) * 
+                      sin(radians(latitude)))) <= ?
+                  ", [$user->latitude, $user->longitude, $user->latitude, $maxDistance]);
         }
 
         // Apply other filters
@@ -207,8 +215,12 @@ class MatchingController extends Controller
 
         return $query->limit(20)->get()->map(function($match) use ($user) {
             $match->compatibility_score = $this->calculateCompatibility($user, $match);
+            $match->distance = $match->distanceFrom($user->latitude, $user->longitude);
             return $match;
-        })->sortByDesc('compatibility_score');
+        })->sortBy(function($match) {
+            // Sort by distance first (if available), then by compatibility
+            return [$match->distance ?? 999, -$match->compatibility_score];
+        });
     }
 
     /**

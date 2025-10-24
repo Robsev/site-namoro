@@ -87,10 +87,18 @@ Route::middleware('auth')->group(function () {
     Route::put('/subscriptions/{subscription}/payment-method', [SubscriptionController::class, 'updatePaymentMethod'])->name('subscriptions.update-payment');
     Route::get('/subscriptions/usage', [SubscriptionController::class, 'usage'])->name('subscriptions.usage');
 
-    // Language routes
-    Route::get('/language', [LanguageController::class, 'index'])->name('language.index');
-    Route::post('/language/change', [LanguageController::class, 'change'])->name('language.change');
-    Route::get('/language/current', [LanguageController::class, 'current'])->name('language.current');
-    Route::get('/language/available', [LanguageController::class, 'available'])->name('language.available');
-    Route::get('/language/detect', [LanguageController::class, 'detect'])->name('language.detect');
+        // Language routes
+        Route::get('/language', [LanguageController::class, 'index'])->name('language.index');
+        Route::post('/language/change', [LanguageController::class, 'change'])->name('language.change');
+        Route::get('/language/current', [LanguageController::class, 'current'])->name('language.current');
+        Route::get('/language/available', [LanguageController::class, 'available'])->name('language.available');
+        Route::get('/language/detect', [LanguageController::class, 'detect'])->name('language.detect');
+
+        // Geolocation routes
+        Route::get('/location', [App\Http\Controllers\GeolocationController::class, 'index'])->name('location.index');
+        Route::post('/location/update', [App\Http\Controllers\GeolocationController::class, 'update'])->name('location.update');
+        Route::get('/location/search', [App\Http\Controllers\GeolocationController::class, 'search'])->name('location.search');
+        Route::post('/location/current', [App\Http\Controllers\GeolocationController::class, 'getCurrentLocation'])->name('location.current');
+        Route::post('/location/from-search', [App\Http\Controllers\GeolocationController::class, 'updateFromSearch'])->name('location.from-search');
+        Route::post('/profile/location', [App\Http\Controllers\ProfileController::class, 'updateLocation'])->name('profile.update.location');
 });

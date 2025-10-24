@@ -33,6 +33,13 @@
                                 {{ $match->age }} anos
                             </div>
                         @endif
+
+                        <!-- Distance Badge -->
+                        @if($match->distance !== null)
+                            <div class="absolute top-4 left-4 bg-white bg-opacity-90 rounded-full px-3 py-1 text-sm font-semibold">
+                                <i class="fas fa-map-marker-alt text-green-500 mr-1"></i>{{ round($match->distance, 1) }} km
+                            </div>
+                        @endif
                     </div>
 
                     <!-- Profile Info -->

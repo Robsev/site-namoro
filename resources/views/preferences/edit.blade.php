@@ -41,16 +41,41 @@
 
             <!-- Distance -->
             <div class="space-y-4">
-                <h2 class="text-lg font-semibold text-gray-900">Distância Máxima</h2>
+                <h2 class="text-lg font-semibold text-gray-900">
+                    <i class="fas fa-map-marker-alt text-green-500 mr-2"></i>Distância Máxima
+                </h2>
                 <div>
-                    <label for="max_distance" class="block text-sm font-medium text-gray-700 mb-2">Distância em quilômetros *</label>
-                    <input type="number" id="max_distance" name="max_distance" min="1" max="1000" 
+                    <label for="max_distance" class="block text-sm font-medium text-gray-700 mb-2">
+                        Distância em quilômetros: <span id="distance_value">{{ old('max_distance', $preferences?->max_distance ?? 50) }}</span> km
+                    </label>
+                    <input type="range" id="max_distance" name="max_distance" min="1" max="200" 
                            value="{{ old('max_distance', $preferences?->max_distance ?? 50) }}" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent" required>
+                           class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider" required>
+                    <div class="flex justify-between text-xs text-gray-500 mt-1">
+                        <span>1 km</span>
+                        <span>50 km</span>
+                        <span>100 km</span>
+                        <span>200 km</span>
+                    </div>
                     @error('max_distance')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
+                
+                @if(!auth()->user()->hasGeolocation())
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                        <div class="flex">
+                            <i class="fas fa-exclamation-triangle text-yellow-500 mt-1 mr-3"></i>
+                            <div>
+                                <h3 class="text-sm font-medium text-yellow-800">Localização não configurada</h3>
+                                <p class="text-sm text-yellow-700 mt-1">
+                                    Para usar filtros de distância, configure sua localização primeiro.
+                                    <a href="{{ route('location.index') }}" class="underline hover:text-yellow-800">Configurar localização</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
 
             <!-- Preferred Genders -->
@@ -225,4 +250,50 @@
         </form>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const distanceSlider = document.getElementById('max_distance');
+    const distanceValue = document.getElementById('distance_value');
+    
+    // Update distance value display
+    distanceSlider.addEventListener('input', function() {
+        distanceValue.textContent = this.value;
+    });
+    
+    // Initialize slider styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .slider {
+            -webkit-appearance: none;
+            appearance: none;
+            background: #e5e7eb;
+            outline: none;
+            border-radius: 8px;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #ec4899;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #ec4899;
+            cursor: pointer;
+            border-radius: 50%;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+    `;
+    document.head.appendChild(style);
+});
+</script>
 @endsection

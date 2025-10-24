@@ -33,6 +33,13 @@ class User extends Authenticatable
         'last_seen',
         'subscription_type',
         'subscription_expires_at',
+        'latitude',
+        'longitude',
+        'address',
+        'city',
+        'state',
+        'country',
+        'postal_code',
     ];
 
     /**
@@ -60,6 +67,8 @@ class User extends Authenticatable
             'subscription_expires_at' => 'datetime',
             'is_verified' => 'boolean',
             'is_active' => 'boolean',
+            'latitude' => 'decimal:8',
+            'longitude' => 'decimal:8',
         ];
     }
 
@@ -159,6 +168,46 @@ class User extends Authenticatable
     public function getUnreadNotificationsCountAttribute()
     {
         return $this->notifications()->unread()->count();
+    }
+
+    /**
+     * Calculate distance from another user in kilometers
+     */
+    public function distanceFrom($latitude, $longitude)
+    {
+        if (!$this->latitude || !$this->longitude || !$latitude || !$longitude) {
+            return null;
+        }
+        
+        $earthRadius = 6371; // Earth's radius in kilometers
+        
+        $latDiff = deg2rad($latitude - $this->latitude);
+        $lonDiff = deg2rad($longitude - $this->longitude);
+        
+        $a = sin($latDiff/2) * sin($latDiff/2) +
+             cos(deg2rad($this->latitude)) * cos(deg2rad($latitude)) *
+             sin($lonDiff/2) * sin($lonDiff/2);
+        
+        $c = 2 * atan2(sqrt($a), sqrt(1-$a));
+        
+        return $earthRadius * $c;
+    }
+
+    /**
+     * Get formatted location string
+     */
+    public function getFormattedLocationAttribute()
+    {
+        $parts = array_filter([$this->city, $this->state, $this->country]);
+        return implode(', ', $parts) ?: $this->location;
+    }
+
+    /**
+     * Check if user has geolocation data
+     */
+    public function hasGeolocation()
+    {
+        return !is_null($this->latitude) && !is_null($this->longitude);
     }
 
     /**

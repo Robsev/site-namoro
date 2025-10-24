@@ -9,6 +9,17 @@
 
 set -e  # Exit on any error
 
+# Função para limpeza em caso de erro
+cleanup() {
+    print_error "Erro detectado! Desativando modo de manutenção..."
+    php artisan maintenance:off 2>/dev/null || true
+    print_warning "Modo de manutenção desativado devido a erro"
+    exit 1
+}
+
+# Configurar trap para limpeza em caso de erro
+trap cleanup ERR
+
 # Cores para output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -48,6 +59,16 @@ if [ ! -f "artisan" ]; then
 fi
 
 print_header "🚀 INICIANDO DEPLOY - AMIGOS PARA SEMPRE"
+
+# =============================================================================
+# 0. MODO DE MANUTENÇÃO
+# =============================================================================
+print_header "🔧 ATIVANDO MODO DE MANUTENÇÃO"
+
+# Ativar modo de manutenção
+print_status "Ativando modo de manutenção..."
+php artisan maintenance:on
+print_success "Modo de manutenção ativado"
 
 # =============================================================================
 # 1. BACKUP E PREPARAÇÃO
@@ -184,7 +205,17 @@ php artisan view:cache
 print_success "Cache de produção reconfigurado"
 
 # =============================================================================
-# 8. VERIFICAÇÕES FINAIS
+# 8. DESATIVAR MODO DE MANUTENÇÃO
+# =============================================================================
+print_header "🔓 DESATIVANDO MODO DE MANUTENÇÃO"
+
+# Desativar modo de manutenção
+print_status "Desativando modo de manutenção..."
+php artisan maintenance:off
+print_success "Modo de manutenção desativado - Site online!"
+
+# =============================================================================
+# 9. VERIFICAÇÕES FINAIS
 # =============================================================================
 print_header "✅ VERIFICAÇÕES FINAIS"
 
@@ -207,13 +238,14 @@ else
 fi
 
 # =============================================================================
-# 9. INFORMAÇÕES DE DEPLOY
+# 10. INFORMAÇÕES DE DEPLOY
 # =============================================================================
 print_header "📋 INFORMAÇÕES DE DEPLOY"
 
 print_success "Deploy concluído com sucesso!"
 echo ""
 echo -e "${CYAN}📊 RESUMO DO DEPLOY:${NC}"
+echo -e "  • Modo de Manutenção: ${GREEN}✓${NC} Ativado durante deploy"
 echo -e "  • Dependências PHP: ${GREEN}✓${NC} Instaladas e otimizadas"
 echo -e "  • Dependências Node.js: ${GREEN}✓${NC} Instaladas"
 echo -e "  • Build Frontend: ${GREEN}✓${NC} Concluído com Vite"
@@ -221,6 +253,7 @@ echo -e "  • Cache de Produção: ${GREEN}✓${NC} Configurado"
 echo -e "  • Banco de Dados: ${GREEN}✓${NC} Migrations executadas"
 echo -e "  • Storage: ${GREEN}✓${NC} Link simbólico criado"
 echo -e "  • Permissões: ${GREEN}✓${NC} Configuradas"
+echo -e "  • Site Online: ${GREEN}✓${NC} Modo de manutenção desativado"
 echo ""
 echo -e "${CYAN}🚀 PRÓXIMOS PASSOS:${NC}"
 echo -e "  1. Configure seu servidor web (Apache/Nginx)"
@@ -237,7 +270,7 @@ echo -e "  • bootstrap/cache/: Cache de configuração"
 echo ""
 
 # =============================================================================
-# 10. COMANDOS ÚTEIS
+# 11. COMANDOS ÚTEIS
 # =============================================================================
 print_header "🛠️ COMANDOS ÚTEIS"
 
