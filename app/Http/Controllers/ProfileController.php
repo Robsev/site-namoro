@@ -159,4 +159,34 @@ class ProfileController extends Controller
 
         return redirect()->route('profile.edit')->with('success', 'Foto de perfil atualizada com sucesso!');
     }
+
+    /**
+     * Update user's geolocation.
+     */
+    public function updateLocation(Request $request)
+    {
+        $request->validate([
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
+            'address' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:100',
+            'state' => 'nullable|string|max:100',
+            'country' => 'nullable|string|max:100',
+            'postal_code' => 'nullable|string|max:20',
+        ]);
+
+        $user = Auth::user();
+        
+        $user->update([
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'address' => $request->address,
+            'city' => $request->city,
+            'state' => $request->state,
+            'country' => $request->country,
+            'postal_code' => $request->postal_code,
+        ]);
+
+        return redirect()->back()->with('success', 'Localização atualizada com sucesso!');
+    }
 }
