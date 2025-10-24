@@ -56,9 +56,12 @@ class MatchingController extends Controller
     /**
      * Like a user (create or update match)
      */
-    public function like(Request $request, User $targetUser)
+    public function like(Request $request, $userId)
     {
         $user = Auth::user();
+        
+        // Manually find the target user
+        $targetUser = User::find($userId);
         
         // Debug: Log the target user
         \Log::info('Like request', [
