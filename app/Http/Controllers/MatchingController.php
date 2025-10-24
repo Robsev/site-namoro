@@ -286,8 +286,9 @@ class MatchingController extends Controller
      */
     private function calculateInterestCompatibility(User $user1, User $user2)
     {
-        $interests1 = $user1->profile->interests ?? [];
-        $interests2 = $user2->profile->interests ?? [];
+        // Use the new interests relationship instead of profile
+        $interests1 = $user1->interests()->pluck('interest_value')->toArray();
+        $interests2 = $user2->interests()->pluck('interest_value')->toArray();
 
         if (empty($interests1) || empty($interests2)) {
             return 5; // Neutral score if no interest data
@@ -307,20 +308,27 @@ class MatchingController extends Controller
      */
     private function calculatePersonalityCompatibility(User $user1, User $user2)
     {
-        $traits1 = $user1->profile->personality_traits ?? [];
-        $traits2 = $user2->profile->personality_traits ?? [];
+        $profile1 = $user1->psychologicalProfile;
+        $profile2 = $user2->psychologicalProfile;
 
-        if (empty($traits1) || empty($traits2)) {
+        if (!$profile1 || !$profile2) {
             return 15; // Neutral score if no personality data
         }
 
-        $commonTraits = array_intersect($traits1, $traits2);
-        $totalTraits = count(array_unique(array_merge($traits1, $traits2)));
+        // Calculate Big Five compatibility
+        $bigFiveScore = 0;
+        $bigFiveTraits = ['openness', 'conscientiousness', 'extraversion', 'agreeableness', 'neuroticism'];
+        
+        foreach ($bigFiveTraits as $trait) {
+            $score1 = $profile1->$trait ?? 0;
+            $score2 = $profile2->$trait ?? 0;
+            $diff = abs($score1 - $score2);
+            
+            // Lower difference = higher compatibility
+            $bigFiveScore += max(0, 6 - $diff);
+        }
 
-        if ($totalTraits === 0) return 15;
-
-        $compatibility = (count($commonTraits) / $totalTraits) * 30;
-        return round($compatibility);
+        return min(30, $bigFiveScore);
     }
 
     /**
@@ -329,6 +337,11 @@ class MatchingController extends Controller
     private function calculateLifestyleCompatibility(User $user1, User $user2)
     {
         $score = 0;
+
+        // Check if profiles exist
+        if (!$user1->profile || !$user2->profile) {
+            return 10; // Neutral score if no profile data
+        }
 
         // Smoking compatibility
         if ($user1->profile->smoking === $user2->profile->smoking) {
@@ -361,6 +374,11 @@ class MatchingController extends Controller
      */
     private function calculateRelationshipCompatibility(User $user1, User $user2)
     {
+        // Check if profiles exist
+        if (!$user1->profile || !$user2->profile) {
+            return 10; // Neutral score if no profile data
+        }
+
         $goal1 = $user1->profile->relationship_goal;
         $goal2 = $user2->profile->relationship_goal;
 
@@ -395,6 +413,11 @@ class MatchingController extends Controller
      */
     private function calculateEducationCompatibility(User $user1, User $user2)
     {
+        // Check if profiles exist
+        if (!$user1->profile || !$user2->profile) {
+            return 5; // Neutral score if no profile data
+        }
+
         $edu1 = $user1->profile->education_level;
         $edu2 = $user2->profile->education_level;
 
@@ -429,21 +452,20 @@ class MatchingController extends Controller
         $reasons = [];
 
         // Interest-based reasons
-        $interests1 = $user1->profile->interests ?? [];
-        $interests2 = $user2->profile->interests ?? [];
-        $commonInterests = array_intersect($interests1, $interests2);
+        $user1Interests = $user1->interests()->pluck('interest_value')->toArray();
+        $user2Interests = $user2->interests()->pluck('interest_value')->toArray();
+        $commonInterests = array_intersect($user1Interests, $user2Interests);
 
         if (!empty($commonInterests)) {
             $reasons[] = "Vocês compartilham interesses em: " . implode(', ', array_slice($commonInterests, 0, 3));
         }
 
         // Personality-based reasons
-        $traits1 = $user1->profile->personality_traits ?? [];
-        $traits2 = $user2->profile->personality_traits ?? [];
-        $commonTraits = array_intersect($traits1, $traits2);
-
-        if (!empty($commonTraits)) {
-            $reasons[] = "Traços de personalidade em comum: " . implode(', ', array_slice($commonTraits, 0, 2));
+        $profile1 = $user1->psychologicalProfile;
+        $profile2 = $user2->psychologicalProfile;
+        
+        if ($profile1 && $profile2) {
+            $reasons[] = "Perfis psicológicos compatíveis";
         }
 
         // Age-based reasons
