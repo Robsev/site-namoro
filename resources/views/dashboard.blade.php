@@ -79,6 +79,9 @@
                 </span>
             @endif
         </a>
+        <a href="{{ route('subscriptions.plans') }}" class="block w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white py-2 px-4 rounded-lg text-center hover:from-yellow-600 hover:to-orange-600 transition duration-200">
+            <i class="fas fa-crown mr-2"></i>Assinaturas
+        </a>
         <a href="{{ route('profile.edit') }}" class="block w-full bg-purple-500 text-white py-2 px-4 rounded-lg text-center hover:bg-purple-600 transition duration-200">
             <i class="fas fa-edit mr-2"></i>Editar Perfil
         </a>

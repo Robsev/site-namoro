@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\MatchingController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\SubscriptionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -75,4 +76,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
     Route::get('/notifications/recent', [NotificationController::class, 'recent'])->name('notifications.recent');
     Route::get('/notifications/type/{type}', [NotificationController::class, 'byType'])->name('notifications.by-type');
+
+    // Subscription routes
+    Route::get('/subscriptions/plans', [SubscriptionController::class, 'plans'])->name('subscriptions.plans');
+    Route::get('/subscriptions', [SubscriptionController::class, 'show'])->name('subscriptions.show');
+    Route::post('/subscriptions', [SubscriptionController::class, 'create'])->name('subscriptions.create');
+    Route::post('/subscriptions/{subscription}/cancel', [SubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
+    Route::post('/subscriptions/{subscription}/resume', [SubscriptionController::class, 'resume'])->name('subscriptions.resume');
+    Route::put('/subscriptions/{subscription}/payment-method', [SubscriptionController::class, 'updatePaymentMethod'])->name('subscriptions.update-payment');
+    Route::get('/subscriptions/usage', [SubscriptionController::class, 'usage'])->name('subscriptions.usage');
 });
