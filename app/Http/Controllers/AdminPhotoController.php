@@ -180,21 +180,27 @@ class AdminPhotoController extends Controller
      */
     public function statistics()
     {
-        $stats = [
-            'pending' => UserPhoto::where('moderation_status', 'pending')->count(),
-            'approved' => UserPhoto::where('moderation_status', 'approved')->count(),
-            'rejected' => UserPhoto::where('moderation_status', 'rejected')->count(),
-            'total' => UserPhoto::count(),
-        ];
+        try {
+            $stats = [
+                'pending' => UserPhoto::where('moderation_status', 'pending')->count(),
+                'approved' => UserPhoto::where('moderation_status', 'approved')->count(),
+                'rejected' => UserPhoto::where('moderation_status', 'rejected')->count(),
+                'total' => UserPhoto::count(),
+            ];
 
-        // Recent activity
-        $recentActivity = UserPhoto::with(['user', 'moderator'])
-            ->whereNotNull('moderated_at')
-            ->orderBy('moderated_at', 'desc')
-            ->limit(10)
-            ->get();
+            // Recent activity
+            $recentActivity = UserPhoto::with(['user', 'moderator'])
+                ->whereNotNull('moderated_at')
+                ->orderBy('moderated_at', 'desc')
+                ->limit(10)
+                ->get();
 
-        return view('admin.photos.statistics', compact('stats', 'recentActivity'));
+            return view('admin.photos.statistics', compact('stats', 'recentActivity'));
+        } catch (\Exception $e) {
+            \Log::error('Error in AdminPhotoController::statistics: ' . $e->getMessage());
+            return redirect()->route('admin.photos.index')
+                ->with('error', 'Erro ao carregar estatísticas: ' . $e->getMessage());
+        }
     }
 
     /**

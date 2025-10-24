@@ -60,6 +60,18 @@ class MatchingController extends Controller
     {
         $user = Auth::user();
         
+        // Debug: Log the target user
+        \Log::info('Like request', [
+            'user_id' => $user->id,
+            'target_user_id' => $targetUser ? $targetUser->id : 'NULL',
+            'target_user' => $targetUser
+        ]);
+        
+        // Check if targetUser is valid
+        if (!$targetUser) {
+            return response()->json(['error' => 'Usuário não encontrado'], 404);
+        }
+        
         // Prevent self-liking
         if ($user->id === $targetUser->id) {
             return response()->json(['error' => 'Você não pode curtir a si mesmo'], 400);
@@ -168,7 +180,6 @@ class MatchingController extends Controller
             ->push($user->id);
 
         $query = User::whereNotIn('id', $excludedUserIds)
-            ->where('is_active', true)
             ->with(['profile', 'photos' => function($query) {
                 $query->where('is_approved', true)->orderBy('sort_order');
             }]);
