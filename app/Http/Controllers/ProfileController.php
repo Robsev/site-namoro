@@ -140,70 +140,6 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         $request->validate([
-            'profile_photo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
-        ]);
-
-        // Delete old photo if exists
-        if ($user->profile_photo && Storage::disk('public')->exists($user->profile_photo)) {
-            Storage::disk('public')->delete($user->profile_photo);
-        }
-
-        // Store new photo
-        $path = $request->file('profile_photo')->store('profile-photos', 'public');
-        
-        $user->update(['profile_photo' => $path]);
-
-        return redirect()->route('profile.edit')->with('success', 'Foto de perfil atualizada com sucesso!');
-    }
-
-    /**
-     * Update user's geolocation.
-     */
-    public function updateLocation(Request $request)
-    {
-        $request->validate([
-            'latitude' => 'required|numeric|between:-90,90',
-            'longitude' => 'required|numeric|between:-180,180',
-            'address' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:100',
-            'state' => 'nullable|string|max:100',
-            'country' => 'nullable|string|max:100',
-            'postal_code' => 'nullable|string|max:20',
-            'neighborhood' => 'nullable|string|max:100',
-            'district' => 'nullable|string|max:100',
-            'county' => 'nullable|string|max:100',
-            'road' => 'nullable|string|max:255',
-            'house_number' => 'nullable|string|max:20',
-        ]);
-
-        $user = Auth::user();
-        
-        $user->update([
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'address' => $request->address,
-            'city' => $request->city,
-            'state' => $request->state,
-            'country' => $request->country,
-            'postal_code' => $request->postal_code,
-            'neighborhood' => $request->neighborhood,
-            'district' => $request->district,
-            'county' => $request->county,
-            'road' => $request->road,
-            'house_number' => $request->house_number,
-        ]);
-
-        return redirect()->back()->with('success', 'Localização atualizada com sucesso!');
-    }
-
-    /**
-     * Update user profile photo.
-     */
-    public function updatePhoto(Request $request)
-    {
-        $user = Auth::user();
-
-        $request->validate([
             'profile_photo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'], // 2MB max
         ]);
 
@@ -223,6 +159,34 @@ class ProfileController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Foto de perfil atualizada com sucesso!');
+    }
+
+    /**
+     * Update user's geolocation.
+     */
+    public function updateLocation(Request $request)
+    {
+        $request->validate([
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
+            'city' => 'nullable|string|max:100',
+            'state' => 'nullable|string|max:100',
+            'country' => 'nullable|string|max:100',
+            'neighborhood' => 'nullable|string|max:100',
+        ]);
+
+        $user = Auth::user();
+        
+        $user->update([
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'city' => $request->city,
+            'state' => $request->state,
+            'country' => $request->country,
+            'neighborhood' => $request->neighborhood,
+        ]);
+
+        return redirect()->back()->with('success', 'Localização atualizada com sucesso!');
     }
 
     /**
