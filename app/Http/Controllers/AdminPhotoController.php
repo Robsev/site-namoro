@@ -13,8 +13,7 @@ class AdminPhotoController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
-        $this->middleware('admin'); // We'll create this middleware
+        // Middleware is applied in routes, not in controller
     }
 
     /**
