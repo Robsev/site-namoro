@@ -35,7 +35,6 @@ class GeolocationController extends Controller
             'city' => 'nullable|string|max:100',
             'state' => 'nullable|string|max:100',
             'country' => 'nullable|string|max:100',
-            'postal_code' => 'nullable|string|max:20',
             'neighborhood' => 'nullable|string|max:100',
         ]);
 
@@ -57,7 +56,6 @@ class GeolocationController extends Controller
             'city' => $request->city ?: $locationData['city'] ?? null,
             'state' => $request->state ?: $locationData['state'] ?? null,
             'country' => $request->country ?: $locationData['country'] ?? null,
-            'postal_code' => $request->postal_code ?: $locationData['postal_code'] ?? null,
             'neighborhood' => $request->neighborhood ?: $locationData['neighborhood'] ?? null,
         ]);
 
@@ -99,7 +97,6 @@ class GeolocationController extends Controller
                     'city' => $address['city'] ?? $address['town'] ?? $address['village'] ?? $address['municipality'] ?? null,
                     'state' => $address['state'] ?? $address['region'] ?? $address['province'] ?? null,
                     'country' => $address['country'] ?? null,
-                    'postal_code' => $address['postcode'] ?? null,
                     'neighborhood' => $address['suburb'] ?? $address['neighbourhood'] ?? $address['quarter'] ?? 
                                     $address['city_district'] ?? $address['district'] ?? $address['county'] ?? 
                                     $address['hamlet'] ?? $address['village'] ?? null,

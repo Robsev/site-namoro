@@ -77,27 +77,11 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // Criar usuários de exemplo (apenas se não existirem muitos)
-        $existingUsersCount = User::count();
-        $usersToCreate = max(0, 50 - $existingUsersCount);
-        
-        if ($usersToCreate > 0) {
-            $users = User::factory($usersToCreate)->create();
-
-            // Criar perfis e preferências para cada usuário
-            foreach ($users as $user) {
-                if (!$user->profile) {
-                    $user->profile()->create();
-                }
-                if (!$user->matchingPreferences) {
-                    $user->matchingPreferences()->create();
-                }
-            }
-        }
+        // Criar usuários de teste coerentes
+        $this->call(TestUsersSeeder::class);
 
         $this->command->info('✅ Database seeded successfully!');
         $this->command->info('👤 Admin user: admin@amigosparasempre.com');
         $this->command->info('👥 Total users: ' . User::count());
-        $this->command->info('👥 New users created: ' . ($usersToCreate ?? 0));
     }
 }

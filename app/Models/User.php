@@ -38,7 +38,6 @@ class User extends Authenticatable
         'city',
         'state',
         'country',
-        'postal_code',
         'neighborhood',
     ];
 

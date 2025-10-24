@@ -52,7 +52,6 @@ class ProfileController extends Controller
             'last_name' => ['required', 'string', 'max:255'],
             'birth_date' => ['required', 'date', 'before:today'],
             'gender' => ['required', 'in:male,female,other,prefer_not_to_say'],
-            'phone' => ['nullable', 'string', 'max:20'],
         ]);
 
         $user->update([
@@ -61,7 +60,6 @@ class ProfileController extends Controller
             'name' => $request->first_name . ' ' . $request->last_name,
             'birth_date' => $request->birth_date,
             'gender' => $request->gender,
-            'phone' => $request->phone,
         ]);
 
         return redirect()->route('profile.edit')->with('success', 'Informações básicas atualizadas com sucesso!');

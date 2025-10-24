@@ -12,8 +12,12 @@ set -e  # Exit on any error
 # Função para limpeza em caso de erro
 cleanup() {
     print_error "Erro detectado! Desativando modo de manutenção..."
-    php artisan up 2>/dev/null || true
-    print_warning "Modo de manutenção desativado devido a erro"
+    if [ "$MAINTENANCE_AVAILABLE" = true ]; then
+        php artisan up 2>/dev/null || true
+        print_warning "Modo de manutenção desativado devido a erro"
+    else
+        print_warning "Modo de manutenção não estava ativo"
+    fi
     exit 1
 }
 
@@ -87,7 +91,21 @@ else
 fi
 
 # =============================================================================
-# 1. BACKUP E PREPARAÇÃO
+# 1. MODO DE MANUTENÇÃO
+# =============================================================================
+if [ "$MAINTENANCE_AVAILABLE" = true ]; then
+    print_header "🔧 ATIVANDO MODO DE MANUTENÇÃO"
+    
+    # Ativar modo de manutenção
+    print_status "Ativando modo de manutenção..."
+    php artisan down
+    print_success "Modo de manutenção ativado"
+else
+    print_warning "Pulando modo de manutenção - permissões insuficientes"
+fi
+
+# =============================================================================
+# 2. BACKUP E PREPARAÇÃO
 # =============================================================================
 print_header "📦 BACKUP E PREPARAÇÃO"
 
@@ -99,7 +117,7 @@ if [ -f ".env" ]; then
 fi
 
 # =============================================================================
-# 2. INSTALAÇÃO DE DEPENDÊNCIAS
+# 3. INSTALAÇÃO DE DEPENDÊNCIAS
 # =============================================================================
 print_header "📚 INSTALAÇÃO DE DEPENDÊNCIAS"
 
@@ -114,7 +132,7 @@ npm install
 print_success "Dependências Node.js instaladas"
 
 # =============================================================================
-# 3. BUILD DO FRONTEND
+# 4. BUILD DO FRONTEND
 # =============================================================================
 print_header "🎨 BUILD DO FRONTEND"
 
@@ -225,12 +243,16 @@ print_success "Cache de produção reconfigurado"
 # =============================================================================
 # 8. DESATIVAR MODO DE MANUTENÇÃO
 # =============================================================================
-print_header "🔓 DESATIVANDO MODO DE MANUTENÇÃO"
-
-# Desativar modo de manutenção
-print_status "Desativando modo de manutenção..."
-php artisan up
-print_success "Modo de manutenção desativado - Site online!"
+if [ "$MAINTENANCE_AVAILABLE" = true ]; then
+    print_header "🔓 DESATIVANDO MODO DE MANUTENÇÃO"
+    
+    # Desativar modo de manutenção
+    print_status "Desativando modo de manutenção..."
+    php artisan up
+    print_success "Modo de manutenção desativado - Site online!"
+else
+    print_warning "Modo de manutenção não estava ativo - site já online"
+fi
 
 # =============================================================================
 # 9. VERIFICAÇÕES FINAIS

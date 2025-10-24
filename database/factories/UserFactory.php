@@ -23,17 +23,24 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        // Gerar gênero primeiro para garantir coerência
+        $gender = $this->faker->randomElement(['male', 'female', 'other', 'prefer_not_to_say']);
+        
+        // Gerar nome baseado no gênero
+        $firstName = $this->faker->firstName($gender === 'male' ? 'male' : ($gender === 'female' ? 'female' : null));
+        $lastName = $this->faker->lastName();
+        $fullName = $firstName . ' ' . $lastName;
+        
         return [
-            'name' => $this->faker->name(),
+            'name' => $fullName,
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
-            'first_name' => $this->faker->firstName(),
-            'last_name' => $this->faker->lastName(),
+            'first_name' => $firstName,
+            'last_name' => $lastName,
             'birth_date' => $this->faker->dateTimeBetween('-65 years', '-18 years')->format('Y-m-d'),
-            'gender' => $this->faker->randomElement(['male', 'female', 'other', 'prefer_not_to_say']),
-            'phone' => $this->faker->phoneNumber(),
+            'gender' => $gender,
             'location' => $this->faker->city() . ', ' . $this->faker->state(),
             'is_verified' => $this->faker->boolean(30), // 30% chance of being verified
             'is_active' => true,
