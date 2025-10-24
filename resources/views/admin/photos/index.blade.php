@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.profile')
 
 @section('title', 'Moderação de Fotos - Admin')
 
