@@ -28,13 +28,6 @@
                 <span class="font-medium">Continuar com Google</span>
             </a>
 
-            <!-- Microsoft Login -->
-            <a href="{{ route('auth.microsoft') }}" 
-               class="w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-white text-gray-700 hover:bg-gray-50 transition duration-200">
-                <i class="fab fa-microsoft text-blue-500 mr-3"></i>
-                <span class="font-medium">Continuar com Microsoft</span>
-            </a>
-
             <!-- Divider -->
             <div class="relative">
                 <div class="absolute inset-0 flex items-center">

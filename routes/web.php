@@ -22,10 +22,6 @@ Route::prefix('auth')->group(function () {
     // Google OAuth
     Route::get('/google', [OAuthController::class, 'redirectToGoogle'])->name('auth.google');
     Route::get('/google/callback', [OAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
-    
-    // Microsoft OAuth
-    Route::get('/microsoft', [OAuthController::class, 'redirectToMicrosoft'])->name('auth.microsoft');
-    Route::get('/microsoft/callback', [OAuthController::class, 'handleMicrosoftCallback'])->name('auth.microsoft.callback');
 });
 
 // Protected routes

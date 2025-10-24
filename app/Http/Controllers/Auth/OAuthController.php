@@ -38,31 +38,6 @@ class OAuthController extends Controller
         }
     }
 
-    /**
-     * Redirect to Microsoft OAuth.
-     */
-    public function redirectToMicrosoft()
-    {
-        return Socialite::driver('microsoft')->redirect();
-    }
-
-    /**
-     * Handle Microsoft OAuth callback.
-     */
-    public function handleMicrosoftCallback()
-    {
-        try {
-            $microsoftUser = Socialite::driver('microsoft')->user();
-            
-            $user = $this->findOrCreateUser($microsoftUser, 'microsoft');
-            
-            Auth::login($user);
-            
-            return redirect()->intended('/dashboard');
-        } catch (\Exception $e) {
-            return redirect('/login')->with('error', 'Erro ao fazer login com Microsoft: ' . $e->getMessage());
-        }
-    }
 
     /**
      * Find or create user from OAuth provider.
