@@ -103,6 +103,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/location/from-search', [App\Http\Controllers\GeolocationController::class, 'updateFromSearch'])->name('location.from-search');
     Route::post('/profile/location', [App\Http\Controllers\ProfileController::class, 'updateLocation'])->name('profile.update.location');
 
+    // Conversation routes
+    Route::get('/conversations', [App\Http\Controllers\ConversationController::class, 'index'])->name('conversations.index');
+    Route::get('/conversations/{conversation}', [App\Http\Controllers\ConversationController::class, 'show'])->name('conversations.show');
+    Route::post('/conversations/start', [App\Http\Controllers\ConversationController::class, 'start'])->name('conversations.start');
+    Route::post('/conversations/{conversation}/send', [App\Http\Controllers\ConversationController::class, 'sendMessage'])->name('conversations.send-message');
+    Route::post('/conversations/{conversation}/read', [App\Http\Controllers\ConversationController::class, 'markAsRead'])->name('conversations.mark-read');
+    Route::get('/conversations/unread/count', [App\Http\Controllers\ConversationController::class, 'getUnreadCount'])->name('conversations.unread-count');
+    Route::post('/conversations/{conversation}/archive', [App\Http\Controllers\ConversationController::class, 'archive'])->name('conversations.archive');
+    Route::post('/conversations/{conversation}/unarchive', [App\Http\Controllers\ConversationController::class, 'unarchive'])->name('conversations.unarchive');
+
     // Interests routes
     Route::get('/interests', [App\Http\Controllers\InterestController::class, 'index'])->name('interests.index');
     Route::post('/interests', [App\Http\Controllers\InterestController::class, 'update'])->name('interests.update');

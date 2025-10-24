@@ -11,6 +11,7 @@ class Message extends Model
     use HasFactory;
 
     protected $fillable = [
+        'conversation_id',
         'sender_id',
         'receiver_id',
         'message',
@@ -42,6 +43,14 @@ class Message extends Model
     public function receiver(): BelongsTo
     {
         return $this->belongsTo(User::class, 'receiver_id');
+    }
+
+    /**
+     * Get the conversation this message belongs to
+     */
+    public function conversation(): BelongsTo
+    {
+        return $this->belongsTo(Conversation::class);
     }
 
     /**
