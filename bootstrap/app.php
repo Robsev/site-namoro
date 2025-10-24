@@ -13,6 +13,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         // Register maintenance mode middleware globally
         $middleware->append(\App\Http\Middleware\MaintenanceMode::class);
+        
+        // Register locale middleware for web routes
+        $middleware->web(append: [
+            \App\Http\Middleware\SetLocale::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

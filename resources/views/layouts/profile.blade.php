@@ -32,6 +32,9 @@
                         <a href="{{ route('profile.show') }}" class="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium">
                             <i class="fas fa-user mr-1"></i>Meu Perfil
                         </a>
+                        <a href="{{ route('location.index') }}" class="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-map-marker-alt mr-1"></i>Localização
+                        </a>
                         <a href="{{ route('preferences.edit') }}" class="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium">
                             <i class="fas fa-cog mr-1"></i>Preferências
                         </a>

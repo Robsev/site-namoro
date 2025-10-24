@@ -9,6 +9,8 @@ class UserMatch extends Model
 {
     use HasFactory;
 
+    protected $table = 'matches';
+
     protected $fillable = [
         'user1_id',
         'user2_id',
