@@ -63,22 +63,6 @@ class PhotoModerationResult extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'photo_id' => $this->photo->id,
-            'status' => $this->status,
-            'message' => $this->status === 'approved' 
-                ? 'Sua foto foi aprovada e está visível no seu perfil!'
-                : 'Sua foto foi rejeitada. Motivo: ' . ($this->photo->moderation_notes ?? 'Não especificado'),
-        ];
-    }
-
-    /**
-     * Get the notification's database representation.
-     *
-     * @return array<string, mixed>
-     */
-    public function toDatabase(object $notifiable): array
-    {
-        return [
             'type' => 'photo_moderation',
             'title' => $this->status === 'approved' 
                 ? 'Foto Aprovada'
@@ -86,10 +70,8 @@ class PhotoModerationResult extends Notification
             'message' => $this->status === 'approved' 
                 ? 'Sua foto foi aprovada e está visível no seu perfil!'
                 : 'Sua foto foi rejeitada. Motivo: ' . ($this->photo->moderation_notes ?? 'Não especificado'),
-            'data' => [
-                'photo_id' => $this->photo->id,
-                'status' => $this->status,
-            ],
+            'photo_id' => $this->photo->id,
+            'status' => $this->status,
         ];
     }
 }
