@@ -200,6 +200,11 @@ let marker;
 let currentLat = {{ $user->latitude ?? 'null' }};
 let currentLng = {{ $user->longitude ?? 'null' }};
 
+// Função global para inicializar Google Maps (chamada pela API)
+function initGoogleMaps() {
+    initMap();
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const detectBtn = document.getElementById('detectLocationBtn');
     const searchInput = document.getElementById('locationSearch');
@@ -207,8 +212,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchResults = document.getElementById('searchResults');
     const manualForm = document.getElementById('manualLocationForm');
 
-    // Inicializar mapa
-    initMap();
+    // Inicializar mapa (será chamado quando Google Maps carregar)
+    if (typeof google !== 'undefined' && google.maps) {
+        initMap();
+    }
 
     // Auto-detect location
     detectBtn.addEventListener('click', function() {
@@ -368,13 +375,19 @@ function initMap() {
     const defaultLat = currentLat || -23.5505;
     const defaultLng = currentLng || -46.6333;
     
-    // Inicializar mapa
-    map = L.map('map').setView([defaultLat, defaultLng], 13);
-    
-    // Adicionar tiles do OpenStreetMap
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
+    // Inicializar Google Maps
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: defaultLat, lng: defaultLng },
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        styles: [
+            {
+                featureType: 'poi',
+                elementType: 'labels',
+                stylers: [{ visibility: 'on' }]
+            }
+        ]
+    });
     
     // Adicionar marcador se houver localização
     if (currentLat && currentLng) {
@@ -387,15 +400,33 @@ function initMap() {
 function addMarker(lat, lng, title = 'Localização') {
     // Remover marcador anterior se existir
     if (marker) {
-        map.removeLayer(marker);
+        marker.setMap(null);
     }
     
     // Adicionar novo marcador
-    marker = L.marker([lat, lng]).addTo(map);
-    marker.bindPopup(title).openPopup();
+    marker = new google.maps.Marker({
+        position: { lat: lat, lng: lng },
+        map: map,
+        title: title,
+        animation: google.maps.Animation.DROP,
+        icon: {
+            url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+            scaledSize: new google.maps.Size(32, 32)
+        }
+    });
+    
+    // Adicionar info window
+    const infoWindow = new google.maps.InfoWindow({
+        content: `<div class="p-2"><strong>${title}</strong><br>${lat.toFixed(6)}, ${lng.toFixed(6)}</div>`
+    });
+    
+    marker.addListener('click', () => {
+        infoWindow.open(map, marker);
+    });
     
     // Centralizar mapa na nova localização
-    map.setView([lat, lng], 15);
+    map.setCenter({ lat: lat, lng: lng });
+    map.setZoom(15);
 }
 
 // Função para atualizar informações do mapa
