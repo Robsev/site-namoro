@@ -188,12 +188,15 @@ class MatchingController extends Controller
         }
 
         // Get users that haven't been matched with yet
-        $excludedUserIds = UserMatch::where('user1_id', $user->id)
-            ->orWhere('user2_id', $user->id)
-            ->pluck('user1_id', 'user2_id')
-            ->flatten()
-            ->unique()
-            ->push($user->id);
+        $excludedUserIds = UserMatch::where(function($query) use ($user) {
+            $query->where('user1_id', $user->id)
+                  ->orWhere('user2_id', $user->id);
+        })->get()
+        ->map(function($match) use ($user) {
+            return $match->user1_id === $user->id ? $match->user2_id : $match->user1_id;
+        })
+        ->unique()
+        ->push($user->id);
 
         $query = User::whereNotIn('id', $excludedUserIds)
             ->with(['profile', 'photos' => function($query) {
