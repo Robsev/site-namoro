@@ -12,6 +12,19 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Map -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">
+                    <i class="fas fa-map text-blue-500 mr-2"></i>
+                    Mapa da Localização
+                </h2>
+                <div id="map" class="w-full h-96 rounded-lg border border-gray-200"></div>
+                <div class="mt-4 text-sm text-gray-600">
+                    <p><strong>Coordenadas:</strong> <span id="map-coordinates">-</span></p>
+                    <p><strong>Endereço:</strong> <span id="map-address">-</span></p>
+                </div>
+            </div>
+
             <!-- Current Location -->
             <div class="bg-white rounded-lg shadow-md p-6">
                 <h2 class="text-xl font-semibold text-gray-900 mb-4">
@@ -219,12 +232,21 @@
 </div>
 
 <script>
+// Variáveis globais para o mapa
+let map;
+let marker;
+let currentLat = {{ $user->latitude ?? 'null' }};
+let currentLng = {{ $user->longitude ?? 'null' }};
+
 document.addEventListener('DOMContentLoaded', function() {
     const detectBtn = document.getElementById('detectLocationBtn');
     const searchInput = document.getElementById('locationSearch');
     const searchBtn = document.getElementById('searchLocationBtn');
     const searchResults = document.getElementById('searchResults');
     const manualForm = document.getElementById('manualLocationForm');
+
+    // Inicializar mapa
+    initMap();
 
     // Auto-detect location
     detectBtn.addEventListener('click', function() {
@@ -260,6 +282,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             if (data.location.district) document.querySelector('input[name="district"]').value = data.location.district;
                             if (data.location.road) document.querySelector('input[name="road"]').value = data.location.road;
                             if (data.location.house_number) document.querySelector('input[name="house_number"]').value = data.location.house_number;
+                            
+                            // Atualizar mapa
+                            updateMapWithLocation(lat, lng, data.location.address || 'Localização detectada');
                             
                             // Auto-submit form
                             manualForm.submit();
@@ -331,5 +356,55 @@ document.addEventListener('DOMContentLoaded', function() {
         searchInput.value = '';
     }
 });
+
+// Função para inicializar o mapa
+function initMap() {
+    // Coordenadas padrão (São Paulo) se não houver localização
+    const defaultLat = currentLat || -23.5505;
+    const defaultLng = currentLng || -46.6333;
+    
+    // Inicializar mapa
+    map = L.map('map').setView([defaultLat, defaultLng], 13);
+    
+    // Adicionar tiles do OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    
+    // Adicionar marcador se houver localização
+    if (currentLat && currentLng) {
+        addMarker(currentLat, currentLng, 'Sua localização atual');
+        updateMapInfo(currentLat, currentLng, '{{ $user->formatted_location ?? "Localização atual" }}');
+    }
+}
+
+// Função para adicionar/atualizar marcador
+function addMarker(lat, lng, title = 'Localização') {
+    // Remover marcador anterior se existir
+    if (marker) {
+        map.removeLayer(marker);
+    }
+    
+    // Adicionar novo marcador
+    marker = L.marker([lat, lng]).addTo(map);
+    marker.bindPopup(title).openPopup();
+    
+    // Centralizar mapa na nova localização
+    map.setView([lat, lng], 15);
+}
+
+// Função para atualizar informações do mapa
+function updateMapInfo(lat, lng, address = '') {
+    document.getElementById('map-coordinates').textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+    document.getElementById('map-address').textContent = address || 'Endereço não disponível';
+}
+
+// Função para atualizar mapa quando localização for detectada
+function updateMapWithLocation(lat, lng, address = '') {
+    currentLat = lat;
+    currentLng = lng;
+    addMarker(lat, lng, 'Nova localização detectada');
+    updateMapInfo(lat, lng, address);
+}
 </script>
 @endsection
