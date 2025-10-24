@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\UserPhoto;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -11,12 +12,16 @@ class PhotoModerationResult extends Notification
 {
     use Queueable;
 
+    protected $photo;
+    protected $status;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct(UserPhoto $photo, string $status)
     {
-        //
+        $this->photo = $photo;
+        $this->status = $status;
     }
 
     /**
@@ -26,7 +31,7 @@ class PhotoModerationResult extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['database', 'mail'];
     }
 
     /**
@@ -34,10 +39,20 @@ class PhotoModerationResult extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+        $message = new MailMessage();
+        
+        if ($this->status === 'approved') {
+            $message->subject('Foto Aprovada - Amigos Para Sempre')
+                    ->line('Sua foto foi aprovada e está agora visível no seu perfil!')
+                    ->line('Obrigado por usar o Amigos Para Sempre.');
+        } else {
+            $message->subject('Foto Rejeitada - Amigos Para Sempre')
+                    ->line('Infelizmente, sua foto não foi aprovada.')
+                    ->line('Motivo: ' . ($this->photo->moderation_notes ?? 'Não especificado'))
+                    ->line('Por favor, envie uma nova foto seguindo nossas diretrizes da comunidade.');
+        }
+        
+        return $message->action('Ver Perfil', route('profile.show'));
     }
 
     /**
@@ -48,7 +63,12 @@ class PhotoModerationResult extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            'type' => 'photo_moderation',
+            'photo_id' => $this->photo->id,
+            'status' => $this->status,
+            'message' => $this->status === 'approved' 
+                ? 'Sua foto foi aprovada e está visível no seu perfil!'
+                : 'Sua foto foi rejeitada. Motivo: ' . ($this->photo->moderation_notes ?? 'Não especificado'),
         ];
     }
 }

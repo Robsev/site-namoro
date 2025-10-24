@@ -11,19 +11,21 @@ class UserPhoto extends Model
 
     protected $fillable = [
         'user_id',
-        'photo_path',
-        'photo_url',
+        'file_path',
+        'file_url',
         'is_primary',
         'sort_order',
-        'is_approved',
-        'rejection_reason',
+        'moderation_status',
+        'moderated_by',
+        'moderated_at',
+        'moderation_notes',
     ];
 
     protected function casts(): array
     {
         return [
             'is_primary' => 'boolean',
-            'is_approved' => 'boolean',
+            'moderated_at' => 'datetime',
         ];
     }
 
@@ -36,11 +38,35 @@ class UserPhoto extends Model
     }
 
     /**
+     * Get the moderator who reviewed this photo.
+     */
+    public function moderator()
+    {
+        return $this->belongsTo(User::class, 'moderated_by');
+    }
+
+    /**
      * Scope to get only approved photos.
      */
     public function scopeApproved($query)
     {
-        return $query->where('is_approved', true);
+        return $query->where('moderation_status', 'approved');
+    }
+
+    /**
+     * Scope to get pending photos.
+     */
+    public function scopePending($query)
+    {
+        return $query->where('moderation_status', 'pending');
+    }
+
+    /**
+     * Scope to get rejected photos.
+     */
+    public function scopeRejected($query)
+    {
+        return $query->where('moderation_status', 'rejected');
     }
 
     /**

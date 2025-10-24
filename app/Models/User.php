@@ -30,6 +30,7 @@ class User extends Authenticatable
         'profile_photo',
         'is_verified',
         'is_active',
+        'is_admin',
         'last_seen',
         'subscription_type',
         'subscription_expires_at',
@@ -66,6 +67,7 @@ class User extends Authenticatable
             'subscription_expires_at' => 'datetime',
             'is_verified' => 'boolean',
             'is_active' => 'boolean',
+            'is_admin' => 'boolean',
             'latitude' => 'decimal:8',
             'longitude' => 'decimal:8',
         ];
