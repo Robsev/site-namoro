@@ -64,6 +64,9 @@ class PhotoModerationResult extends Notification
     {
         return [
             'type' => 'photo_moderation',
+            'title' => $this->status === 'approved' 
+                ? 'Foto Aprovada'
+                : 'Foto Rejeitada',
             'photo_id' => $this->photo->id,
             'status' => $this->status,
             'message' => $this->status === 'approved' 
