@@ -94,11 +94,23 @@ Route::middleware('auth')->group(function () {
         Route::get('/language/available', [LanguageController::class, 'available'])->name('language.available');
         Route::get('/language/detect', [LanguageController::class, 'detect'])->name('language.detect');
 
-        // Geolocation routes
-        Route::get('/location', [App\Http\Controllers\GeolocationController::class, 'index'])->name('location.index');
-        Route::post('/location/update', [App\Http\Controllers\GeolocationController::class, 'update'])->name('location.update');
-        Route::get('/location/search', [App\Http\Controllers\GeolocationController::class, 'search'])->name('location.search');
-        Route::post('/location/current', [App\Http\Controllers\GeolocationController::class, 'getCurrentLocation'])->name('location.current');
-        Route::post('/location/from-search', [App\Http\Controllers\GeolocationController::class, 'updateFromSearch'])->name('location.from-search');
-        Route::post('/profile/location', [App\Http\Controllers\ProfileController::class, 'updateLocation'])->name('profile.update.location');
+    // Geolocation routes
+    Route::get('/location', [App\Http\Controllers\GeolocationController::class, 'index'])->name('location.index');
+    Route::post('/location/update', [App\Http\Controllers\GeolocationController::class, 'update'])->name('location.update');
+    Route::get('/location/search', [App\Http\Controllers\GeolocationController::class, 'search'])->name('location.search');
+    Route::post('/location/current', [App\Http\Controllers\GeolocationController::class, 'getCurrentLocation'])->name('location.current');
+    Route::post('/location/from-search', [App\Http\Controllers\GeolocationController::class, 'updateFromSearch'])->name('location.from-search');
+    Route::post('/profile/location', [App\Http\Controllers\ProfileController::class, 'updateLocation'])->name('profile.update.location');
+
+    // Interests routes
+    Route::get('/interests', [App\Http\Controllers\InterestController::class, 'index'])->name('interests.index');
+    Route::post('/interests', [App\Http\Controllers\InterestController::class, 'update'])->name('interests.update');
+    Route::get('/api/interests/categories', [App\Http\Controllers\InterestController::class, 'getCategories'])->name('interests.categories');
+    Route::get('/api/interests/user', [App\Http\Controllers\InterestController::class, 'getUserInterests'])->name('interests.user');
+
+    // Psychological Profile routes
+    Route::get('/psychological-profile', [App\Http\Controllers\PsychologicalProfileController::class, 'index'])->name('psychological-profile.index');
+    Route::post('/psychological-profile', [App\Http\Controllers\PsychologicalProfileController::class, 'store'])->name('psychological-profile.store');
+    Route::get('/psychological-profile/show', [App\Http\Controllers\PsychologicalProfileController::class, 'show'])->name('psychological-profile.show');
+    Route::get('/api/psychological-profile', [App\Http\Controllers\PsychologicalProfileController::class, 'getProfile'])->name('psychological-profile.api');
 });

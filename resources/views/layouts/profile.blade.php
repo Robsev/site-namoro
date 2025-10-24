@@ -43,6 +43,12 @@
                         <a href="{{ route('location.index') }}" class="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium">
                             <i class="fas fa-map-marker-alt mr-1"></i>Localização
                         </a>
+                        <a href="{{ route('interests.index') }}" class="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-heart mr-1"></i>Interesses
+                        </a>
+                        <a href="{{ route('psychological-profile.index') }}" class="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-brain mr-1"></i>Perfil Psicológico
+                        </a>
                         <a href="{{ route('preferences.edit') }}" class="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium">
                             <i class="fas fa-cog mr-1"></i>Preferências
                         </a>
