@@ -180,9 +180,32 @@ print_success "Link simbólico para storage criado"
 
 # Configurar permissões
 print_status "Configurando permissões..."
-chmod -R 755 storage
-chmod -R 755 bootstrap/cache
-print_success "Permissões configuradas"
+# Definir proprietário correto (www-data) e permissões
+sudo chown -R www-data:www-data storage/
+sudo chown -R www-data:www-data bootstrap/cache/
+sudo chown -R www-data:www-data public/storage/
+
+# Configurar permissões adequadas
+sudo chmod -R 775 storage/
+sudo chmod -R 775 bootstrap/cache/
+sudo chmod -R 775 public/storage/
+
+# Garantir que o usuário atual tenha acesso de escrita
+sudo usermod -a -G www-data $USER 2>/dev/null || true
+
+# Configurar permissões específicas para deploy
+print_status "Configurando permissões de deploy..."
+# Permitir que o usuário de deploy possa escrever nos diretórios
+sudo setfacl -R -m u:$USER:rwx storage/ 2>/dev/null || true
+sudo setfacl -R -m u:$USER:rwx bootstrap/cache/ 2>/dev/null || true
+sudo setfacl -R -m u:$USER:rwx public/storage/ 2>/dev/null || true
+
+# Configurar permissões padrão para novos arquivos
+sudo setfacl -R -d -m u:$USER:rwx storage/ 2>/dev/null || true
+sudo setfacl -R -d -m u:$USER:rwx bootstrap/cache/ 2>/dev/null || true
+sudo setfacl -R -d -m u:$USER:rwx public/storage/ 2>/dev/null || true
+
+print_success "Permissões configuradas (www-data:www-data, 775 + ACL para $USER)"
 
 # =============================================================================
 # 7. OTIMIZAÇÕES FINAIS
