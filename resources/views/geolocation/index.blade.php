@@ -479,17 +479,27 @@ function addMarker(lat, lng, title = 'Localização') {
     }
     
     if (mapAPI === 'google') {
-        // Adicionar marcador do Google Maps
-        marker = new google.maps.Marker({
-            position: { lat: lat, lng: lng },
-            map: map,
-            title: title,
-            animation: google.maps.Animation.DROP,
-            icon: {
-                url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
-                scaledSize: new google.maps.Size(32, 32)
-            }
-        });
+        // Adicionar marcador do Google Maps (usando API moderna)
+        if (google.maps.marker && google.maps.marker.AdvancedMarkerElement) {
+            // Usar AdvancedMarkerElement (recomendado)
+            marker = new google.maps.marker.AdvancedMarkerElement({
+                position: { lat: lat, lng: lng },
+                map: map,
+                title: title
+            });
+        } else {
+            // Fallback para Marker clássico
+            marker = new google.maps.Marker({
+                position: { lat: lat, lng: lng },
+                map: map,
+                title: title,
+                animation: google.maps.Animation.DROP,
+                icon: {
+                    url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+                    scaledSize: new google.maps.Size(32, 32)
+                }
+            });
+        }
         
         // Adicionar info window
         const infoWindow = new google.maps.InfoWindow({
@@ -516,8 +526,16 @@ function addMarker(lat, lng, title = 'Localização') {
 
 // Função para atualizar informações do mapa
 function updateMapInfo(lat, lng, address = '') {
-    document.getElementById('map-coordinates').textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-    document.getElementById('map-address').textContent = address || 'Endereço não disponível';
+    const coordinatesEl = document.getElementById('map-coordinates');
+    const addressEl = document.getElementById('map-address');
+    
+    if (coordinatesEl) {
+        coordinatesEl.textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+    }
+    
+    if (addressEl) {
+        addressEl.textContent = address || 'Endereço não disponível';
+    }
 }
 
 // Função para atualizar mapa quando localização for detectada
