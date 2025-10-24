@@ -195,12 +195,9 @@ print_status "Executando migrations..."
 php artisan migrate --force
 print_success "Migrations executadas"
 
-# Executar seeders se existirem
-if [ -d "database/seeders" ] && [ "$(ls -A database/seeders)" ]; then
-    print_status "Executando seeders..."
-    php artisan db:seed --force
-    print_success "Seeders executados"
-fi
+# Seeders removidos do deploy automático
+# Para executar seeders manualmente: php artisan db:seed
+print_status "Seeders não executados automaticamente (preserva dados existentes)"
 
 # =============================================================================
 # 6. STORAGE E PERMISSÕES

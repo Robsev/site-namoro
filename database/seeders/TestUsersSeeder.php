@@ -15,10 +15,15 @@ class TestUsersSeeder extends Seeder
      */
     public function run(): void
     {
-        // Remover apenas usuários de teste existentes (example.com)
-        User::where('email', 'like', '%@example.com')->delete();
+        // Verificar se já existem usuários de teste
+        $existingTestUsers = User::where('email', 'like', '%@example.com')->count();
         
-        $this->command->info('🗑️ Usuários de teste antigos removidos');
+        if ($existingTestUsers > 0) {
+            $this->command->info("⚠️  Já existem {$existingTestUsers} usuários de teste. Pulando criação de novos usuários.");
+            return;
+        }
+        
+        $this->command->info('📝 Criando usuários de teste...');
 
         // Dados de usuários de teste coerentes
         $testUsers = [

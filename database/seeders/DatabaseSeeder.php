@@ -77,7 +77,7 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // Criar usuários de teste coerentes
+        // Criar usuários de teste coerentes (apenas se não existirem)
         $this->call(TestUsersSeeder::class);
 
         $this->command->info('✅ Database seeded successfully!');
