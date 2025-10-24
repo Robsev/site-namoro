@@ -52,6 +52,18 @@
                         <a href="{{ route('preferences.edit') }}" class="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium">
                             <i class="fas fa-cog mr-1"></i>Preferências
                         </a>
+                        <a href="{{ route('matching.discover') }}" class="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-search mr-1"></i>Descobrir
+                        </a>
+                        <a href="{{ route('matching.likes-sent') }}" class="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-heart mr-1"></i>Likes Enviados
+                        </a>
+                        <a href="{{ route('matching.likes-received') }}" class="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-heart-broken mr-1"></i>Likes Recebidos
+                        </a>
+                        <a href="{{ route('matching.matches') }}" class="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-users mr-1"></i>Matches
+                        </a>
                         <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
                             <button type="submit" class="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium">
