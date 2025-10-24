@@ -64,7 +64,10 @@ class MatchingController extends Controller
         \Log::info('Like request', [
             'user_id' => $user->id,
             'target_user_id' => $targetUser ? $targetUser->id : 'NULL',
-            'target_user' => $targetUser
+            'target_user' => $targetUser,
+            'request_route' => $request->route()->getName(),
+            'request_url' => $request->url(),
+            'route_parameters' => $request->route()->parameters()
         ]);
         
         // Check if targetUser is valid

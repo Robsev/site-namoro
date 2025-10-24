@@ -79,7 +79,8 @@
                             </button>
                             
                             <button onclick="likeUser({{ $match->id }})" 
-                                    class="flex-1 bg-pink-500 text-white py-2 px-4 rounded-lg hover:bg-pink-600 transition duration-200">
+                                    class="flex-1 bg-pink-500 text-white py-2 px-4 rounded-lg hover:bg-pink-600 transition duration-200"
+                                    data-user-id="{{ $match->id }}">
                                 <i class="fas fa-heart mr-1"></i>Curtir
                             </button>
                             
@@ -117,6 +118,13 @@
 <!-- JavaScript for AJAX actions -->
 <script>
 function likeUser(userId) {
+    console.log('Like user ID:', userId);
+    
+    if (!userId) {
+        showNotification('ID do usuário não encontrado', 'error');
+        return;
+    }
+    
     fetch(`/matching/like/${userId}`, {
         method: 'POST',
         headers: {
