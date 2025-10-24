@@ -130,11 +130,11 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     // Photo moderation routes
     Route::get('/photos', [App\Http\Controllers\AdminPhotoController::class, 'index'])->name('photos.index');
+    Route::get('/photos/statistics', [App\Http\Controllers\AdminPhotoController::class, 'statistics'])->name('photos.statistics');
     Route::get('/photos/{photo}', [App\Http\Controllers\AdminPhotoController::class, 'show'])->name('photos.show');
     Route::post('/photos/{photo}/approve', [App\Http\Controllers\AdminPhotoController::class, 'approve'])->name('photos.approve');
     Route::post('/photos/{photo}/reject', [App\Http\Controllers\AdminPhotoController::class, 'reject'])->name('photos.reject');
     Route::post('/photos/bulk-approve', [App\Http\Controllers\AdminPhotoController::class, 'bulkApprove'])->name('photos.bulk-approve');
     Route::post('/photos/bulk-reject', [App\Http\Controllers\AdminPhotoController::class, 'bulkReject'])->name('photos.bulk-reject');
-    Route::get('/photos/statistics', [App\Http\Controllers\AdminPhotoController::class, 'statistics'])->name('photos.statistics');
     Route::delete('/photos/{photo}', [App\Http\Controllers\AdminPhotoController::class, 'destroy'])->name('photos.destroy');
 });
