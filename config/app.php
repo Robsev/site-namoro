@@ -69,6 +69,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Maintenance Mode
+    |--------------------------------------------------------------------------
+    |
+    | When your application is in maintenance mode, a custom view will be shown
+    | to all users. You can specify which IPs should be allowed to access
+    | the application during maintenance mode.
+    |
+    */
+
+    'maintenance_mode' => env('MAINTENANCE_MODE', false),
+    'maintenance_allowed_ips' => explode(',', env('MAINTENANCE_ALLOWED_IPS', '127.0.0.1,::1')),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Locale Configuration
     |--------------------------------------------------------------------------
     |
