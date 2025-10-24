@@ -18,22 +18,21 @@
 /public/storage
 /storage/*.key
 /storage/pail
-/storage/app/private/*
-!/storage/app/private/.gitignore
-/storage/app/public/*
-!/storage/app/public/.gitignore
-/storage/framework/cache/*
-!/storage/framework/cache/.gitignore
-/storage/framework/sessions/*
-!/storage/framework/sessions/.gitignore
-/storage/framework/testing/*
-!/storage/framework/testing/.gitignore
-/storage/framework/views/*
-!/storage/framework/views/.gitignore
-/storage/logs/*
-!/storage/logs/.gitignore
-/bootstrap/cache/*
-!/bootstrap/cache/.gitignore
+# Storage directories - ignore everything including .gitignore files
+/storage/app/private/
+/storage/app/public/
+/storage/framework/cache/
+/storage/framework/sessions/
+/storage/framework/testing/
+/storage/framework/views/
+/storage/logs/
+/bootstrap/cache/
+
+# But keep the main storage structure
+!/storage/
+!/storage/app/
+!/storage/framework/
+!/bootstrap/
 /vendor
 Homestead.json
 Homestead.yaml
