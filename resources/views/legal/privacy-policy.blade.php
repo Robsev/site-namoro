@@ -1,246 +1,271 @@
-@extends('layouts.profile')
-
-@section('title', 'Política de Privacidade - Amigos Para Sempre')
-
-@section('content')
-<div class="max-w-4xl mx-auto py-8 px-4">
-    <div class="bg-white rounded-lg shadow-lg p-8">
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-gray-900 mb-4">
-                <i class="fas fa-shield-alt text-pink-500 mr-3"></i>Política de Privacidade
-            </h1>
-            <p class="text-lg text-gray-600">Última atualização: {{ date('d/m/Y') }}</p>
-        </div>
-
-        <!-- Introduction -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-900 mb-4">1. Introdução</h2>
-            <p class="text-gray-700 leading-relaxed mb-4">
-                A <strong>Amigos Para Sempre</strong> ("nós", "nosso" ou "aplicativo") valoriza sua privacidade e está comprometida em proteger seus dados pessoais. Esta Política de Privacidade explica como coletamos, usamos, armazenamos e protegemos suas informações quando você utiliza nosso aplicativo de relacionamentos.
-            </p>
-            <p class="text-gray-700 leading-relaxed">
-                Ao usar nosso serviço, você concorda com a coleta e uso de informações de acordo com esta política. Se você não concordar com os termos desta política, por favor, não use nosso aplicativo.
-            </p>
-        </div>
-
-        <!-- Data Collection -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-900 mb-4">2. Informações que Coletamos</h2>
-            
-            <h3 class="text-xl font-medium text-gray-800 mb-3">2.1 Informações Fornecidas por Você</h3>
-            <ul class="list-disc list-inside text-gray-700 space-y-2 mb-6">
-                <li><strong>Informações de Conta:</strong> Nome, sobrenome, data de nascimento, gênero, e-mail</li>
-                <li><strong>Informações de Perfil:</strong> Biografia, objetivos de relacionamento, nível de educação, hábitos (fumar, beber)</li>
-                <li><strong>Fotos e Mídia:</strong> Fotos de perfil e galeria de imagens</li>
-                <li><strong>Localização:</strong> Cidade, estado, país e coordenadas geográficas (quando permitido)</li>
-                <li><strong>Interesses e Preferências:</strong> Interesses pessoais, traços de personalidade, preferências de matching</li>
-                <li><strong>Perfil Psicológico:</strong> Respostas a questionários de personalidade</li>
-                <li><strong>Comunicações:</strong> Mensagens trocadas com outros usuários</li>
-            </ul>
-
-            <h3 class="text-xl font-medium text-gray-800 mb-3">2.2 Informações Coletadas Automaticamente</h3>
-            <ul class="list-disc list-inside text-gray-700 space-y-2 mb-6">
-                <li><strong>Dados de Uso:</strong> Páginas visitadas, tempo de permanência, cliques e interações</li>
-                <li><strong>Informações do Dispositivo:</strong> Tipo de dispositivo, sistema operacional, navegador</li>
-                <li><strong>Dados de Localização:</strong> Coordenadas GPS (quando permitido)</li>
-                <li><strong>Logs de Sistema:</strong> Endereços IP, timestamps, erros e falhas</li>
-                <li><strong>Cookies e Tecnologias Similares:</strong> Para melhorar sua experiência</li>
-            </ul>
-        </div>
-
-        <!-- Data Usage -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-900 mb-4">3. Como Usamos Suas Informações</h2>
-            
-            <h3 class="text-xl font-medium text-gray-800 mb-3">3.1 Finalidades Principais</h3>
-            <ul class="list-disc list-inside text-gray-700 space-y-2 mb-6">
-                <li><strong>Fornecimento do Serviço:</strong> Criar e manter sua conta, facilitar conexões</li>
-                <li><strong>Matching e Recomendações:</strong> Sugerir perfis compatíveis baseados em suas preferências</li>
-                <li><strong>Comunicação:</strong> Permitir mensagens entre usuários e notificações do sistema</li>
-                <li><strong>Segurança:</strong> Verificar identidades, prevenir fraudes e manter a segurança</li>
-                <li><strong>Melhoria do Serviço:</strong> Analisar uso para melhorar funcionalidades</li>
-            </ul>
-
-            <h3 class="text-xl font-medium text-gray-800 mb-3">3.2 Finalidades Secundárias</h3>
-            <ul class="list-disc list-inside text-gray-700 space-y-2 mb-6">
-                <li><strong>Marketing:</strong> Enviar ofertas e novidades (com seu consentimento)</li>
-                <li><strong>Pesquisas:</strong> Realizar estudos para melhorar o serviço</li>
-                <li><strong>Suporte:</strong> Responder a suas dúvidas e solicitações</li>
-                <li><strong>Conformidade Legal:</strong> Cumprir obrigações legais e regulamentares</li>
-            </ul>
-        </div>
-
-        <!-- Data Sharing -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-900 mb-4">4. Compartilhamento de Informações</h2>
-            
-            <h3 class="text-xl font-medium text-gray-800 mb-3">4.1 Compartilhamento com Outros Usuários</h3>
-            <p class="text-gray-700 leading-relaxed mb-4">
-                Suas informações de perfil (nome, idade, fotos, biografia, interesses) são visíveis para outros usuários do aplicativo para facilitar conexões e matching.
-            </p>
-
-            <h3 class="text-xl font-medium text-gray-800 mb-3">4.2 Compartilhamento com Terceiros</h3>
-            <ul class="list-disc list-inside text-gray-700 space-y-2 mb-6">
-                <li><strong>Prestadores de Serviço:</strong> Empresas que nos ajudam a operar o aplicativo (hospedagem, análise, pagamentos)</li>
-                <li><strong>Autoridades Legais:</strong> Quando exigido por lei ou para proteger direitos</li>
-                <li><strong>Transações Empresariais:</strong> Em caso de fusão, aquisição ou venda de ativos</li>
-                <li><strong>Com seu Consentimento:</strong> Em outras situações com sua autorização explícita</li>
-            </ul>
-        </div>
-
-        <!-- Data Security -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-900 mb-4">5. Segurança dos Dados</h2>
-            <p class="text-gray-700 leading-relaxed mb-4">
-                Implementamos medidas de segurança técnicas e organizacionais para proteger suas informações:
-            </p>
-            <ul class="list-disc list-inside text-gray-700 space-y-2 mb-6">
-                <li><strong>Criptografia:</strong> Dados sensíveis são criptografados em trânsito e em repouso</li>
-                <li><strong>Controle de Acesso:</strong> Apenas pessoal autorizado tem acesso aos dados</li>
-                <li><strong>Monitoramento:</strong> Sistemas de detecção de intrusão e monitoramento contínuo</li>
-                <li><strong>Backup Seguro:</strong> Cópias de segurança regulares e seguras</li>
-                <li><strong>Atualizações:</strong> Manutenção regular de sistemas e correção de vulnerabilidades</li>
-            </ul>
-        </div>
-
-        <!-- User Rights -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-900 mb-4">6. Seus Direitos (LGPD/GDPR)</h2>
-            
-            <h3 class="text-xl font-medium text-gray-800 mb-3">6.1 Direitos Fundamentais</h3>
-            <ul class="list-disc list-inside text-gray-700 space-y-2 mb-6">
-                <li><strong>Acesso:</strong> Solicitar informações sobre seus dados pessoais</li>
-                <li><strong>Correção:</strong> Retificar dados incorretos ou incompletos</li>
-                <li><strong>Exclusão:</strong> Solicitar a remoção de seus dados ("direito ao esquecimento")</li>
-                <li><strong>Portabilidade:</strong> Receber seus dados em formato estruturado</li>
-                <li><strong>Oposição:</strong> Opor-se ao processamento de seus dados</li>
-                <li><strong>Limitação:</strong> Restringir o processamento em certas circunstâncias</li>
-            </ul>
-
-            <h3 class="text-xl font-medium text-gray-800 mb-3">6.2 Como Exercer Seus Direitos</h3>
-            <p class="text-gray-700 leading-relaxed mb-4">
-                Para exercer qualquer um desses direitos, entre em contato conosco através do e-mail:
-            </p>
-            <div class="bg-pink-50 border border-pink-200 rounded-lg p-4 mb-6">
-                <p class="text-pink-800 font-medium">
-                    <i class="fas fa-envelope mr-2"></i>suporte@amigosparasempre.com
-                </p>
-                <p class="text-pink-700 text-sm mt-1">
-                    Responderemos em até 15 dias úteis conforme a LGPD
-                </p>
-            </div>
-        </div>
-
-        <!-- Data Retention -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-900 mb-4">7. Retenção de Dados</h2>
-            <p class="text-gray-700 leading-relaxed mb-4">
-                Mantemos suas informações pelo tempo necessário para cumprir as finalidades descritas nesta política:
-            </p>
-            <ul class="list-disc list-inside text-gray-700 space-y-2 mb-6">
-                <li><strong>Conta Ativa:</strong> Enquanto sua conta estiver ativa e você usar o serviço</li>
-                <li><strong>Conta Inativa:</strong> Até 2 anos após inatividade, com notificação prévia</li>
-                <li><strong>Dados Legais:</strong> Conforme exigido por lei (até 5 anos para fins fiscais)</li>
-                <li><strong>Dados de Comunicação:</strong> Até 1 ano após a última mensagem</li>
-            </ul>
-        </div>
-
-        <!-- Cookies -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-900 mb-4">8. Cookies e Tecnologias Similares</h2>
-            <p class="text-gray-700 leading-relaxed mb-4">
-                Utilizamos cookies e tecnologias similares para melhorar sua experiência:
-            </p>
-            <ul class="list-disc list-inside text-gray-700 space-y-2 mb-6">
-                <li><strong>Cookies Essenciais:</strong> Necessários para o funcionamento básico do aplicativo</li>
-                <li><strong>Cookies de Performance:</strong> Para analisar como você usa o aplicativo</li>
-                <li><strong>Cookies de Funcionalidade:</strong> Para lembrar suas preferências</li>
-                <li><strong>Cookies de Marketing:</strong> Para personalizar anúncios (com seu consentimento)</li>
-            </ul>
-            <p class="text-gray-700 leading-relaxed">
-                Você pode gerenciar suas preferências de cookies através das configurações do seu navegador.
-            </p>
-        </div>
-
-        <!-- International Transfers -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-900 mb-4">9. Transferências Internacionais</h2>
-            <p class="text-gray-700 leading-relaxed mb-4">
-                Seus dados podem ser transferidos e processados em países fora do Brasil. Quando isso ocorrer, garantimos que:
-            </p>
-            <ul class="list-disc list-inside text-gray-700 space-y-2 mb-6">
-                <li>O país de destino ofereça nível adequado de proteção de dados</li>
-                <li>Existam salvaguardas apropriadas (cláusulas contratuais padrão)</li>
-                <li>Você tenha dado consentimento explícito para a transferência</li>
-            </ul>
-        </div>
-
-        <!-- Children's Privacy -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-900 mb-4">10. Privacidade de Menores</h2>
-            <p class="text-gray-700 leading-relaxed mb-4">
-                Nosso aplicativo é destinado a pessoas com 18 anos ou mais. Não coletamos intencionalmente informações de menores de idade. Se descobrirmos que coletamos dados de um menor, tomaremos medidas para excluir essas informações imediatamente.
-            </p>
-        </div>
-
-        <!-- Policy Changes -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-900 mb-4">11. Alterações nesta Política</h2>
-            <p class="text-gray-700 leading-relaxed mb-4">
-                Podemos atualizar esta Política de Privacidade periodicamente. Quando fizermos alterações significativas, notificaremos você através de:
-            </p>
-            <ul class="list-disc list-inside text-gray-700 space-y-2 mb-6">
-                <li>Notificação no aplicativo</li>
-                <li>E-mail para o endereço cadastrado</li>
-                <li>Atualização da data "Última atualização" no topo desta página</li>
-            </ul>
-            <p class="text-gray-700 leading-relaxed">
-                Recomendamos que você revise esta política regularmente para se manter informado sobre como protegemos suas informações.
-            </p>
-        </div>
-
-        <!-- Contact Information -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-900 mb-4">12. Contato</h2>
-            <p class="text-gray-700 leading-relaxed mb-4">
-                Se você tiver dúvidas sobre esta Política de Privacidade ou sobre como tratamos seus dados pessoais, entre em contato conosco:
-            </p>
-            
-            <div class="bg-gray-50 rounded-lg p-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">Informações de Contato</h3>
-                <div class="space-y-3">
-                    <div class="flex items-center">
-                        <i class="fas fa-envelope text-pink-500 mr-3"></i>
-                        <div>
-                            <p class="font-medium text-gray-800">E-mail de Privacidade</p>
-                            <p class="text-gray-600">suporte@amigosparasempre.com</p>
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ __('messages.legal.privacy.title') }} - {{ config('app.name') }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <a href="{{ route('welcome') }}" class="flex items-center">
+                        <i class="fas fa-heart text-4xl text-pink-500 mr-3"></i>
+                        <h1 class="text-2xl font-bold text-gray-800">{{ config('app.name') }}</h1>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <!-- Language Selector -->
+                    <div class="relative group">
+                        <button class="text-gray-600 hover:text-gray-800 px-2 py-2 rounded-md text-sm font-medium flex items-center">
+                            <i class="fas fa-globe mr-1"></i>
+                            @switch(app()->getLocale())
+                                @case('pt_BR') 🇧🇷 @break
+                                @case('en') 🇺🇸 @break
+                                @case('es') 🇪🇸 @break
+                                @default 🇧🇷
+                            @endswitch
+                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <div class="py-1">
+                                <a href="{{ route('language.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-cog mr-2"></i>{{ __('messages.language.title') }}
+                                </a>
+                                <div class="border-t border-gray-100"></div>
+                                <form action="{{ route('language.change') }}" method="POST" class="block">
+                                    @csrf
+                                    <input type="hidden" name="locale" value="pt_BR">
+                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                        <span class="mr-3">🇧🇷</span>Português
+                                        @if(app()->getLocale() === 'pt_BR')
+                                            <i class="fas fa-check ml-auto text-green-500"></i>
+                                        @endif
+                                    </button>
+                                </form>
+                                <form action="{{ route('language.change') }}" method="POST" class="block">
+                                    @csrf
+                                    <input type="hidden" name="locale" value="en">
+                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                        <span class="mr-3">🇺🇸</span>English
+                                        @if(app()->getLocale() === 'en')
+                                            <i class="fas fa-check ml-auto text-green-500"></i>
+                                        @endif
+                                    </button>
+                                </form>
+                                <form action="{{ route('language.change') }}" method="POST" class="block">
+                                    @csrf
+                                    <input type="hidden" name="locale" value="es">
+                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                        <span class="mr-3">🇪🇸</span>Español
+                                        @if(app()->getLocale() === 'es')
+                                            <i class="fas fa-check ml-auto text-green-500"></i>
+                                        @endif
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                    <div class="flex items-center">
-                        <i class="fas fa-clock text-pink-500 mr-3"></i>
-                        <div>
-                            <p class="font-medium text-gray-800">Tempo de Resposta</p>
-                            <p class="text-gray-600">Até 15 dias úteis (conforme LGPD)</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center">
-                        <i class="fas fa-shield-alt text-pink-500 mr-3"></i>
-                        <div>
-                            <p class="font-medium text-gray-800">Encarregado de Dados (DPO)</p>
-                            <p class="text-gray-600">Disponível através do e-mail acima</p>
-                        </div>
-                    </div>
+                    
+                    @if (Route::has('login'))
+                        @auth
+                            <a href="{{ url('/dashboard') }}" class="text-gray-600 hover:text-gray-800">
+                                <i class="fas fa-tachometer-alt mr-2"></i>{{ __('messages.nav.dashboard') }}
+                            </a>
+                            <form method="POST" action="{{ route('logout') }}" class="inline">
+                                @csrf
+                                <button type="submit" class="text-gray-600 hover:text-gray-800">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>{{ __('messages.nav.logout') }}
+                                </button>
+                            </form>
+                        @else
+                            <a href="{{ route('login') }}" class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-200">
+                                <i class="fas fa-sign-in-alt mr-2"></i>{{ __('messages.auth.login') }}
+                            </a>
+                            @if (Route::has('register'))
+                                <a href="{{ route('register') }}" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition duration-200">
+                                    <i class="fas fa-user-plus mr-2"></i>{{ __('messages.auth.register') }}
+                                </a>
+                            @endif
+                        @endauth
+                    @endif
                 </div>
             </div>
         </div>
+    </nav>
 
-        <!-- Footer -->
-        <div class="border-t border-gray-200 pt-6 text-center">
-            <p class="text-gray-600 text-sm">
-                Esta Política de Privacidade é efetiva a partir de {{ date('d/m/Y') }} e foi elaborada em conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei 13.709/2018) e o Regulamento Geral sobre a Proteção de Dados (GDPR) da União Europeia.
-            </p>
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto py-8 px-4">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                    <i class="fas fa-shield-alt text-pink-500 mr-3"></i>{{ __('messages.legal.privacy.title') }}
+                </h1>
+                <p class="text-lg text-gray-600">{{ __('messages.legal.privacy.last_updated') }}: {{ date('d/m/Y') }}</p>
+            </div>
+
+            <!-- Introduction -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ __('messages.legal.privacy.sections.introduction.title') }}</h2>
+                <p class="text-gray-700 leading-relaxed mb-4">
+                    {{ __('messages.legal.privacy.sections.introduction.content') }}
+                </p>
+            </div>
+
+            <!-- Information We Collect -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ __('messages.legal.privacy.sections.information_collection.title') }}</h2>
+                <p class="text-gray-700 leading-relaxed mb-4">
+                    {{ __('messages.legal.privacy.sections.information_collection.content') }}
+                </p>
+                
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ __('messages.legal.privacy.sections.information_collection.personal_info.title') }}</h3>
+                <ul class="list-disc list-inside text-gray-700 mb-4 space-y-2">
+                    <li>{{ __('messages.legal.privacy.sections.information_collection.personal_info.item1') }}</li>
+                    <li>{{ __('messages.legal.privacy.sections.information_collection.personal_info.item2') }}</li>
+                    <li>{{ __('messages.legal.privacy.sections.information_collection.personal_info.item3') }}</li>
+                    <li>{{ __('messages.legal.privacy.sections.information_collection.personal_info.item4') }}</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ __('messages.legal.privacy.sections.information_collection.usage_info.title') }}</h3>
+                <ul class="list-disc list-inside text-gray-700 mb-4 space-y-2">
+                    <li>{{ __('messages.legal.privacy.sections.information_collection.usage_info.item1') }}</li>
+                    <li>{{ __('messages.legal.privacy.sections.information_collection.usage_info.item2') }}</li>
+                    <li>{{ __('messages.legal.privacy.sections.information_collection.usage_info.item3') }}</li>
+                </ul>
+            </div>
+
+            <!-- How We Use Information -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ __('messages.legal.privacy.sections.how_we_use.title') }}</h2>
+                <p class="text-gray-700 leading-relaxed mb-4">
+                    {{ __('messages.legal.privacy.sections.how_we_use.content') }}
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4 space-y-2">
+                    <li>{{ __('messages.legal.privacy.sections.how_we_use.item1') }}</li>
+                    <li>{{ __('messages.legal.privacy.sections.how_we_use.item2') }}</li>
+                    <li>{{ __('messages.legal.privacy.sections.how_we_use.item3') }}</li>
+                    <li>{{ __('messages.legal.privacy.sections.how_we_use.item4') }}</li>
+                </ul>
+            </div>
+
+            <!-- Information Sharing -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ __('messages.legal.privacy.sections.information_sharing.title') }}</h2>
+                <p class="text-gray-700 leading-relaxed mb-4">
+                    {{ __('messages.legal.privacy.sections.information_sharing.content') }}
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4 space-y-2">
+                    <li>{{ __('messages.legal.privacy.sections.information_sharing.item1') }}</li>
+                    <li>{{ __('messages.legal.privacy.sections.information_sharing.item2') }}</li>
+                    <li>{{ __('messages.legal.privacy.sections.information_sharing.item3') }}</li>
+                </ul>
+            </div>
+
+            <!-- Data Security -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ __('messages.legal.privacy.sections.data_security.title') }}</h2>
+                <p class="text-gray-700 leading-relaxed mb-4">
+                    {{ __('messages.legal.privacy.sections.data_security.content') }}
+                </p>
+            </div>
+
+            <!-- Your Rights -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ __('messages.legal.privacy.sections.your_rights.title') }}</h2>
+                <p class="text-gray-700 leading-relaxed mb-4">
+                    {{ __('messages.legal.privacy.sections.your_rights.content') }}
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4 space-y-2">
+                    <li>{{ __('messages.legal.privacy.sections.your_rights.item1') }}</li>
+                    <li>{{ __('messages.legal.privacy.sections.your_rights.item2') }}</li>
+                    <li>{{ __('messages.legal.privacy.sections.your_rights.item3') }}</li>
+                    <li>{{ __('messages.legal.privacy.sections.your_rights.item4') }}</li>
+                </ul>
+            </div>
+
+            <!-- Contact -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ __('messages.legal.privacy.sections.contact.title') }}</h2>
+                <p class="text-gray-700 leading-relaxed mb-4">
+                    {{ __('messages.legal.privacy.sections.contact.content') }}
+                </p>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <p class="text-gray-700">
+                        <strong>{{ __('messages.legal.privacy.sections.contact.email') }}:</strong> 
+                        <a href="mailto:privacy@amigosparasempre.com" class="text-pink-600 hover:text-pink-500">privacy@amigosparasempre.com</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Updates -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ __('messages.legal.privacy.sections.updates.title') }}</h2>
+                <p class="text-gray-700 leading-relaxed mb-4">
+                    {{ __('messages.legal.privacy.sections.updates.content') }}
+                </p>
+            </div>
         </div>
     </div>
-</div>
-@endsection
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">
+                        <i class="fas fa-heart text-pink-400 mr-2"></i>{{ config('app.name') }}
+                    </h3>
+                    <p class="text-gray-300 text-sm">
+                        {{ __('messages.footer.description') }}
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-md font-semibold mb-4">{{ __('messages.footer.legal') }}</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li>
+                            <a href="{{ route('privacy-policy') }}" class="text-gray-300 hover:text-pink-400 transition duration-200">
+                                <i class="fas fa-shield-alt mr-1"></i>{{ __('messages.footer.privacy_policy') }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('terms') }}" class="text-gray-300 hover:text-pink-400 transition duration-200">
+                                <i class="fas fa-file-contract mr-1"></i>{{ __('messages.legal.terms.title') }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('cookies') }}" class="text-gray-300 hover:text-pink-400 transition duration-200">
+                                <i class="fas fa-cookie-bite mr-1"></i>{{ __('messages.legal.cookies.title') }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('contact') }}" class="text-gray-300 hover:text-pink-400 transition duration-200">
+                                <i class="fas fa-envelope mr-1"></i>{{ __('messages.footer.contact') }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-md font-semibold mb-4">{{ __('messages.footer.support') }}</h4>
+                    <div class="text-sm text-gray-300">
+                        <p class="mb-2">
+                            <i class="fas fa-envelope mr-2"></i>{{ __('messages.footer.support_email') }}
+                        </p>
+                        <p class="text-xs text-gray-400">
+                            {{ __('messages.footer.response_time') }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-400">
+                <p>&copy; {{ date('Y') }} {{ config('app.name') }}. {{ __('messages.footer.copyright') }}</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

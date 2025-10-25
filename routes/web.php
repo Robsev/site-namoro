@@ -12,7 +12,7 @@ use App\Http\Controllers\LanguageController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 // Legal Pages
 Route::get('/privacy-policy', function () {
