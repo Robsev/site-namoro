@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.profile')
 
 @section('title', 'Conversa com ' . $otherUser->name . ' - Amigos Para Sempre')
 
