@@ -725,6 +725,23 @@ return [
     'legal.terms.governing.title' => '12. Lei Aplicável',
     'legal.terms.governing.content' => 'Estes Termos são regidos pelas leis brasileiras. Qualquer disputa será resolvida nos tribunais competentes do Brasil.',
 
+    // Dashboard
+    'dashboard.title' => 'Dashboard',
+    'dashboard.welcome' => 'Olá, :name!',
+    'dashboard.profile_photo' => 'Foto de perfil',
+    'dashboard.premium' => 'Premium',
+    'dashboard.free' => 'Gratuito',
+    'dashboard.verified' => 'Verificado',
+    'dashboard.quick_actions' => 'Ações Rápidas',
+    'dashboard.likes_sent' => 'Likes Enviados',
+    'dashboard.likes_received' => 'Likes Recebidos',
+    'dashboard.statistics' => 'Estatísticas',
+    'dashboard.matches_count' => 'Matches',
+    'dashboard.views_count' => 'Visualizações',
+    'dashboard.profile_completeness' => 'Completude do Perfil',
+    'dashboard.edit_profile' => 'Editar Perfil',
+    'dashboard.view_profile' => 'Ver Perfil',
+
     // Welcome Page
     'welcome.title' => 'Conecte-se com pessoas especiais',
     'welcome.subtitle' => 'Encontre pessoas incríveis baseado em compatibilidade psicológica, interesses compartilhados e valores similares. Construa amizades verdadeiras que duram para sempre.',
