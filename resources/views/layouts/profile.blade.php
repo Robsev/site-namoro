@@ -6,6 +6,12 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', 'Perfil') - {{ config('app.name', 'Amigos Para Sempre') }}</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('images/icons/favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/icons/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/icons/favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/icons/apple-touch-icon.png') }}">
+    <link rel="manifest" href="{{ asset('images/icons/site.webmanifest') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -38,9 +44,13 @@
                     <!-- Logo -->
                     <div class="flex items-center">
                         <a href="{{ route('dashboard') }}" class="text-xl sm:text-2xl font-bold text-pink-600">
-                            <i class="fas fa-heart mr-2"></i>
-                            <span class="hidden sm:inline">Amigos Para Sempre</span>
-                            <span class="sm:hidden">APS</span>
+                            @if(File::exists(public_path('images/logo/logo.png')))
+                        <img src="{{ asset('images/logo/logo.png') }}" alt="{{ config('app.name') }}" class="h-8 w-auto">
+                    @else
+                        <i class="fas fa-heart mr-2"></i>
+                        <span class="hidden sm:inline">Amigos Para Sempre</span>
+                        <span class="sm:hidden">APS</span>
+                    @endif
                         </a>
                     </div>
                     

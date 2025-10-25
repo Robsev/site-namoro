@@ -25,22 +25,21 @@
 1. **Copie sua logomarca** para `public/images/logo/logo.png`
 2. **Copie seu ícone** para `public/images/icons/favicon.ico`
 3. **Execute o comando** para atualizar as referências no código
+4. **Faça commit** das imagens no Git
+5. **Deploy automático** - as imagens vão para produção automaticamente!
 
 ## 📝 Após adicionar as imagens, execute:
 
 ```bash
-php artisan make:command UpdateLogoAndFavicon
+php artisan logo:update
+git add .
+git commit -m "feat: Adicionar logomarca e favicon"
+git push origin main
 ```
-
-Isso criará um comando que irá:
-- Atualizar o layout principal
-- Adicionar a logomarca na navegação
-- Configurar o favicon
-- Otimizar as imagens se necessário
 
 ## 🎯 Resultado esperado:
 
 - **Logomarca** aparecerá no topo esquerdo da navegação
 - **Favicon** aparecerá na aba do navegador
 - **Responsivo** para desktop e mobile
-- **Otimizado** para performance
+- **Deploy automático** - funciona em desenvolvimento e produção

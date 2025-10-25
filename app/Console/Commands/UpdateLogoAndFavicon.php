@@ -35,6 +35,7 @@ class UpdateLogoAndFavicon extends Command
         if (!File::exists($logoPath)) {
             $this->warn('⚠️  Logomarca não encontrada em: ' . $logoPath);
             $this->info('📁 Coloque sua logomarca em: public/images/logo/logo.png');
+            $this->info('💡 Depois execute: git add . && git commit -m "feat: Adicionar logomarca"');
         } else {
             $this->info('✅ Logomarca encontrada!');
         }
@@ -42,6 +43,7 @@ class UpdateLogoAndFavicon extends Command
         if (!File::exists($faviconPath)) {
             $this->warn('⚠️  Favicon não encontrado em: ' . $faviconPath);
             $this->info('📁 Coloque seu favicon em: public/images/icons/favicon.ico');
+            $this->info('💡 Depois execute: git add . && git commit -m "feat: Adicionar favicon"');
         } else {
             $this->info('✅ Favicon encontrado!');
         }
@@ -51,6 +53,7 @@ class UpdateLogoAndFavicon extends Command
 
         $this->info('🎉 Atualização concluída!');
         $this->info('🌐 Acesse o site para ver as mudanças.');
+        $this->info('🚀 Para produção: git push origin main');
     }
 
     private function updateLayout()
