@@ -127,7 +127,38 @@ class MatchingController extends Controller
         })->first();
 
         if ($existingMatch) {
-            return response()->json(['error' => 'Match já existe'], 400);
+            // Check if this is a mutual like (both users liked each other)
+            if ($existingMatch->status === 'pending') {
+                // Check if there's a reverse match
+                $reverseMatch = UserMatch::where('user1_id', $targetUser->id)
+                    ->where('user2_id', $user->id)
+                    ->where('status', 'pending')
+                    ->first();
+                
+                if ($reverseMatch) {
+                    // Mutual like! Update both matches to accepted
+                    $existingMatch->update(['status' => 'accepted']);
+                    $reverseMatch->update(['status' => 'accepted']);
+                    
+                    // Create conversation
+                    \App\Models\Conversation::create([
+                        'user1_id' => $user->id,
+                        'user2_id' => $targetUser->id,
+                        'last_message_at' => now(),
+                    ]);
+                    
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Match criado! Vocês podem conversar agora!',
+                        'match' => $existingMatch,
+                        'is_mutual' => true
+                    ]);
+                } else {
+                    return response()->json(['error' => 'Match já existe'], 400);
+                }
+            } else {
+                return response()->json(['error' => 'Match já existe'], 400);
+            }
         }
 
         // Calculate compatibility score
