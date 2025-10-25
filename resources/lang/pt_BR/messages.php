@@ -721,6 +721,7 @@ return [
     'legal.terms.changes.content' => 'Podemos atualizar estes Termos periodicamente. Notificaremos sobre mudanças significativas. O uso continuado do aplicativo após as alterações constitui aceitação dos novos termos.',
     'legal.terms.contact.title' => '11. Contato',
     'legal.terms.contact.content' => 'Se você tiver dúvidas sobre estes Termos, entre em contato conosco através da nossa página de contato.',
+    'legal.terms.contact.email' => 'E-mail',
     'legal.terms.governing.title' => '12. Lei Aplicável',
     'legal.terms.governing.content' => 'Estes Termos são regidos pelas leis brasileiras. Qualquer disputa será resolvida nos tribunais competentes do Brasil.',
 
