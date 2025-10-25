@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
@@ -237,5 +238,32 @@ class ProfileController extends Controller
             \Log::warning('Failed to resize profile photo: ' . $e->getMessage());
             // Continue without resizing if intervention/image is not available
         }
+    }
+
+    /**
+     * Update user password
+     */
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required|current_password',
+            'password' => 'required|min:8|confirmed',
+        ], [
+            'current_password.required' => 'A senha atual é obrigatória.',
+            'current_password.current_password' => 'A senha atual está incorreta.',
+            'password.required' => 'A nova senha é obrigatória.',
+            'password.min' => 'A nova senha deve ter pelo menos 8 caracteres.',
+            'password.confirmed' => 'A confirmação da senha não confere.',
+        ]);
+
+        $user = Auth::user();
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Senha alterada com sucesso!'
+        ]);
     }
 }

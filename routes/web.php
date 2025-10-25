@@ -44,6 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/privacy', [App\Http\Controllers\ProfileController::class, 'updatePrivacy'])->name('profile.update.privacy');
     Route::post('/profile/photo', [App\Http\Controllers\ProfileController::class, 'updatePhoto'])->name('profile.update.photo');
     Route::delete('/profile/photo', [App\Http\Controllers\ProfileController::class, 'removePhoto'])->name('profile.remove.photo');
+    Route::post('/profile/password', [App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.update.password');
 
     // Photo routes
     Route::post('/photos', [App\Http\Controllers\PhotoController::class, 'store'])->name('photos.store');
