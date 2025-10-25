@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
 
     // Profile routes
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/view/{user}', [App\Http\Controllers\ProfileViewController::class, 'show'])->name('profile.view');
     Route::get('/profile/edit', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/basic', [App\Http\Controllers\ProfileController::class, 'updateBasic'])->name('profile.update.basic');
     Route::post('/profile/details', [App\Http\Controllers\ProfileController::class, 'updateProfile'])->name('profile.update.details');

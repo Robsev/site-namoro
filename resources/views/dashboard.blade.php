@@ -1,3 +1,21 @@
+@php
+use Illuminate\Support\Facades\Storage;
+use App\Models\UserMatch;
+
+$user = Auth::user();
+
+// Calculate statistics
+$matchesCount = UserMatch::where(function($query) use ($user) {
+    $query->where('user1_id', $user->id)->orWhere('user2_id', $user->id);
+})->where('status', 'accepted')->count();
+
+$likesSentCount = UserMatch::where('user1_id', $user->id)->where('status', 'pending')->count();
+$likesReceivedCount = UserMatch::where('user2_id', $user->id)->where('status', 'pending')->count();
+
+// For now, we'll use likes as a proxy for views (in a real app, you'd track profile views separately)
+$viewsCount = $likesReceivedCount + $matchesCount;
+@endphp
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -35,7 +53,7 @@
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="text-center">
                     @if(Auth::user()->profile_photo)
-                        <img src="{{ Auth::user()->profile_photo }}" 
+                        <img src="{{ Storage::url(Auth::user()->profile_photo) }}" 
                              alt="Foto de perfil" 
                              class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
                     @else
@@ -67,6 +85,12 @@
         </a>
         <a href="{{ route('matching.matches') }}" class="block w-full bg-red-500 text-white py-2 px-4 rounded-lg text-center hover:bg-red-600 transition duration-200">
             <i class="fas fa-heart mr-2"></i>Meus Matches
+        </a>
+        <a href="{{ route('matching.likes-sent') }}" class="block w-full bg-blue-500 text-white py-2 px-4 rounded-lg text-center hover:bg-blue-600 transition duration-200">
+            <i class="fas fa-heart mr-2"></i>Likes Enviados ({{ $likesSentCount }})
+        </a>
+        <a href="{{ route('matching.likes-received') }}" class="block w-full bg-green-500 text-white py-2 px-4 rounded-lg text-center hover:bg-green-600 transition duration-200">
+            <i class="fas fa-heart-broken mr-2"></i>Likes Recebidos ({{ $likesReceivedCount }})
         </a>
         <a href="{{ route('chat.conversations') }}" class="block w-full bg-green-500 text-white py-2 px-4 rounded-lg text-center hover:bg-green-600 transition duration-200">
             <i class="fas fa-comments mr-2"></i>Conversas
@@ -103,15 +127,19 @@
                 <div class="space-y-4">
                     <div class="flex justify-between items-center">
                         <span class="text-gray-600">Matches</span>
-                        <span class="font-semibold text-pink-600">0</span>
+                        <span class="font-semibold text-pink-600">{{ $matchesCount }}</span>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-gray-600">Visualizações</span>
-                        <span class="font-semibold text-purple-600">0</span>
+                        <span class="font-semibold text-purple-600">{{ $viewsCount }}</span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-600">Likes</span>
-                        <span class="font-semibold text-blue-600">0</span>
+                        <span class="text-gray-600">Likes Enviados</span>
+                        <span class="font-semibold text-blue-600">{{ $likesSentCount }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Likes Recebidos</span>
+                        <span class="font-semibold text-green-600">{{ $likesReceivedCount }}</span>
                     </div>
                 </div>
             </div>
