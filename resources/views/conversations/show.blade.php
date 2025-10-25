@@ -169,27 +169,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add message to UI
     function addMessageToUI(message) {
+        const currentUserId = {{ auth()->id() }};
         const messageDiv = document.createElement('div');
-        messageDiv.className = `flex ${message.sender_id === {{ auth()->id() }} ? 'justify-end' : 'justify-start'}`;
+        messageDiv.className = `flex ${message.sender_id === currentUserId ? 'justify-end' : 'justify-start'}`;
         
         const now = new Date();
         const timeString = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
         
         messageDiv.innerHTML = `
             <div class="max-w-xs lg:max-w-md">
-                <div class="px-4 py-2 rounded-lg ${message.sender_id === {{ auth()->id() }} 
+                <div class="px-4 py-2 rounded-lg ${message.sender_id === currentUserId 
                     ? 'bg-blue-500 text-white' 
                     : 'bg-gray-200 text-gray-900'}">
                     <p class="text-sm">${message.message}</p>
                 </div>
-                <div class="mt-1 text-xs text-gray-500 ${message.sender_id === {{ auth()->id() }} ? 'text-right' : 'text-left'}">
+                <div class="mt-1 text-xs text-gray-500 ${message.sender_id === currentUserId ? 'text-right' : 'text-left'}">
                     ${timeString}
-                    ${message.sender_id === {{ auth()->id() }} ? '<i class="fas fa-check text-gray-400 ml-1"></i>' : ''}
+                    ${message.sender_id === currentUserId ? '<i class="fas fa-check text-gray-400 ml-1"></i>' : ''}
                 </div>
             </div>
         `;
         
         messagesContainer.querySelector('.space-y-4').appendChild(messageDiv);
+        
+        // Debug log
+        console.log('Adding message to UI:', {
+            message_id: message.id,
+            sender_id: message.sender_id,
+            current_user_id: currentUserId,
+            is_from_current_user: message.sender_id === currentUserId
+        });
     }
 
     // Focus input on load

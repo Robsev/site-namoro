@@ -52,6 +52,22 @@ class ConversationController extends Controller
             ->orderBy('created_at', 'asc')
             ->get();
 
+        // Debug log
+        \Log::info('Messages loaded', [
+            'conversation_id' => $conversation->id,
+            'user_id' => $user->id,
+            'messages_count' => $messages->count(),
+            'messages' => $messages->map(function($msg) {
+                return [
+                    'id' => $msg->id,
+                    'sender_id' => $msg->sender_id,
+                    'receiver_id' => $msg->receiver_id,
+                    'message' => $msg->message,
+                    'created_at' => $msg->created_at
+                ];
+            })
+        ]);
+
         // Get the other user
         $otherUser = $conversation->getOtherUser($user->id);
 
@@ -128,6 +144,16 @@ class ConversationController extends Controller
             'message' => $request->message,
             'message_type' => $request->message_type ?? 'text',
             'is_read' => false,
+        ]);
+
+        // Debug log
+        \Log::info('Message created', [
+            'conversation_id' => $conversation->id,
+            'sender_id' => $user->id,
+            'receiver_id' => $otherUser->id,
+            'message' => $request->message,
+            'user_name' => $user->name,
+            'other_user_name' => $otherUser->name
         ]);
 
         // Update conversation last message time
