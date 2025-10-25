@@ -38,6 +38,9 @@ class ConversationController extends Controller
     {
         $user = Auth::user();
         
+        // Update current user's last_seen immediately when accessing conversation
+        $user->update(['last_seen' => now()]);
+        
         // Check if user is part of this conversation
         if (!$conversation->hasUser($user->id)) {
             abort(403, 'Você não tem acesso a esta conversa.');
@@ -159,6 +162,9 @@ class ConversationController extends Controller
     {
         try {
             $user = Auth::user();
+            
+            // Update current user's last_seen when sending message
+            $user->update(['last_seen' => now()]);
             
             // Check if user is part of this conversation
             if (!$conversation->hasUser($user->id)) {

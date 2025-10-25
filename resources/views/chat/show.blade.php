@@ -1,7 +1,7 @@
 @extends('layouts.profile')
 
 @section('content')
-<div class="bg-white rounded-lg shadow-md h-screen flex flex-col">
+<div class="bg-white rounded-lg shadow-md max-h-[80vh] h-[70vh] sm:h-[75vh] md:h-[80vh] flex flex-col">
     <!-- Chat Header -->
     <div class="bg-pink-500 text-white p-4 rounded-t-lg flex items-center justify-between">
         <div class="flex items-center">
@@ -406,6 +406,17 @@ function openImageModal(imageSrc) {
         }
     });
 }
+
+// Update last_seen periodically while in chat
+setInterval(function() {
+    fetch('/api/update-last-seen', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    }).catch(error => console.log('Last seen update failed:', error));
+}, 30000); // Update every 30 seconds
 
 // Scroll to bottom on page load
 window.addEventListener('load', scrollToBottom);

@@ -23,6 +23,9 @@ class ChatController extends Controller
     {
         $currentUser = Auth::user();
         
+        // Update current user's last_seen immediately when accessing chat
+        $currentUser->update(['last_seen' => now()]);
+        
         // Check if users are matched
         $match = UserMatch::where(function($query) use ($currentUser, $user) {
             $query->where('user1_id', $currentUser->id)->where('user2_id', $user->id);
@@ -59,6 +62,9 @@ class ChatController extends Controller
     public function sendMessage(Request $request, User $user)
     {
         $currentUser = Auth::user();
+        
+        // Update current user's last_seen when sending message
+        $currentUser->update(['last_seen' => now()]);
         
         // Check if users are matched
         $match = UserMatch::where(function($query) use ($currentUser, $user) {

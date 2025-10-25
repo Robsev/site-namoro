@@ -74,6 +74,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/chat/read/{user}', [ChatController::class, 'markAsRead'])->name('chat.read');
     Route::delete('/chat/message/{message}', [ChatController::class, 'deleteMessage'])->name('chat.delete');
     Route::get('/chat/unread-count', [ChatController::class, 'unreadCount'])->name('chat.unread-count');
+    
+    // API routes for real-time updates
+    Route::post('/api/update-last-seen', function() {
+        $user = Auth::user();
+        if ($user) {
+            $user->update(['last_seen' => now()]);
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false], 401);
+    })->name('api.update-last-seen');
 
     // Notification routes
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');

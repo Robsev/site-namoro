@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Register locale middleware for web routes
         $middleware->web(append: [
             \App\Http\Middleware\SetLocale::class,
+            \App\Http\Middleware\UpdateLastSeen::class,
         ]);
         
         // Register admin middleware

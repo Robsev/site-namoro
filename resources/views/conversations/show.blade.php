@@ -49,7 +49,7 @@
         </div>
 
         <!-- Messages Container -->
-        <div class="bg-white h-96 overflow-y-auto" id="messagesContainer">
+        <div class="bg-white max-h-[70vh] h-[60vh] overflow-y-auto" id="messagesContainer">
             <div class="p-6 space-y-4">
                 @forelse($messages as $message)
                     <div class="flex {{ $message->sender_id === auth()->id() ? 'justify-end' : 'justify-start' }}" data-message-id="{{ $message->id }}">
