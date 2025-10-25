@@ -347,14 +347,17 @@ class User extends Authenticatable
             $missing[] = 'Informações do perfil';
         }
 
-        // Photos - check both profile_photo and gallery photos
+        // Photos - check both profile_photo and gallery photos (including pending)
         $hasProfilePhoto = !empty($this->profile_photo);
-        $totalPhotos = $photoCount + ($hasProfilePhoto ? 1 : 0);
+        $pendingPhotoCount = $this->photos()->where('is_approved', false)->count();
+        $totalPhotos = $photoCount + $pendingPhotoCount + ($hasProfilePhoto ? 1 : 0);
         
         if ($totalPhotos == 0) {
             $missing[] = 'Fotos do perfil';
         } elseif ($totalPhotos < 2) {
             $missing[] = 'Mais fotos (recomendado: 2-3)';
+        } elseif ($pendingPhotoCount > 0) {
+            $missing[] = 'Aguardando aprovação de ' . $pendingPhotoCount . ' foto(s)';
         }
 
         // Interests
