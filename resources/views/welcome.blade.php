@@ -26,24 +26,76 @@
                     <h1 class="text-2xl font-bold text-gray-800">{{ config('app.name', 'Amigos Para Sempre') }}</h1>
                 </div>
                 <div class="flex items-center space-x-4">
+                    <!-- Language Selector -->
+                    <div class="relative group">
+                        <button class="text-gray-600 hover:text-gray-800 px-2 py-2 rounded-md text-sm font-medium flex items-center">
+                            <i class="fas fa-globe mr-1"></i>
+                            @switch(app()->getLocale())
+                                @case('pt_BR') 🇧🇷 @break
+                                @case('en') 🇺🇸 @break
+                                @case('es') 🇪🇸 @break
+                                @default 🇧🇷
+                            @endswitch
+                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <div class="py-1">
+                                <a href="{{ route('language.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-cog mr-2"></i>{{ __('messages.language.title') }}
+                                </a>
+                                <div class="border-t border-gray-100"></div>
+                                <form action="{{ route('language.change') }}" method="POST" class="block">
+                                    @csrf
+                                    <input type="hidden" name="locale" value="pt_BR">
+                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                        <span class="mr-3">🇧🇷</span>Português
+                                        @if(app()->getLocale() === 'pt_BR')
+                                            <i class="fas fa-check ml-auto text-green-500"></i>
+                                        @endif
+                                    </button>
+                                </form>
+                                <form action="{{ route('language.change') }}" method="POST" class="block">
+                                    @csrf
+                                    <input type="hidden" name="locale" value="en">
+                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                        <span class="mr-3">🇺🇸</span>English
+                                        @if(app()->getLocale() === 'en')
+                                            <i class="fas fa-check ml-auto text-green-500"></i>
+                                        @endif
+                                    </button>
+                                </form>
+                                <form action="{{ route('language.change') }}" method="POST" class="block">
+                                    @csrf
+                                    <input type="hidden" name="locale" value="es">
+                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                        <span class="mr-3">🇪🇸</span>Español
+                                        @if(app()->getLocale() === 'es')
+                                            <i class="fas fa-check ml-auto text-green-500"></i>
+                                        @endif
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
                     @if (Route::has('login'))
                         @auth
                             <a href="{{ url('/dashboard') }}" class="text-gray-600 hover:text-gray-800">
-                                <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                                <i class="fas fa-tachometer-alt mr-2"></i>{{ __('messages.nav.dashboard') }}
                             </a>
                             <form method="POST" action="{{ route('logout') }}" class="inline">
                                 @csrf
                                 <button type="submit" class="text-gray-600 hover:text-gray-800">
-                                    <i class="fas fa-sign-out-alt mr-2"></i>Sair
+                                    <i class="fas fa-sign-out-alt mr-2"></i>{{ __('messages.nav.logout') }}
                                 </button>
                             </form>
                         @else
                             <a href="{{ route('login') }}" class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-200">
-                                <i class="fas fa-sign-in-alt mr-2"></i>Entrar
+                                <i class="fas fa-sign-in-alt mr-2"></i>{{ __('messages.auth.login') }}
                             </a>
                             @if (Route::has('register'))
                                 <a href="{{ route('register') }}" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition duration-200">
-                                    <i class="fas fa-user-plus mr-2"></i>Cadastrar
+                                    <i class="fas fa-user-plus mr-2"></i>{{ __('messages.auth.register') }}
                                 </a>
                             @endif
                         @endauth
@@ -69,21 +121,20 @@
             </div>
             
             <h2 class="text-3xl font-bold text-gray-900 mb-6 sm:text-4xl md:text-5xl">
-                Conecte-se com <span class="text-pink-500">pessoas especiais</span>
+                {{ __('messages.welcome.title') }}
             </h2>
             <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                Encontre pessoas incríveis baseado em compatibilidade psicológica, interesses compartilhados e valores similares. 
-                Construa amizades verdadeiras que duram para sempre.
+                {{ __('messages.welcome.subtitle') }}
             </p>
             
             @if (Route::has('login'))
                 @guest
                     <div class="flex flex-col sm:flex-row gap-4 justify-center">
                         <a href="{{ route('register') }}" class="bg-pink-500 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-pink-600 transition duration-200 shadow-lg">
-                            <i class="fas fa-heart mr-2"></i>Começar Agora
+                            <i class="fas fa-heart mr-2"></i>{{ __('messages.welcome.get_started') }}
                         </a>
                         <a href="{{ route('login') }}" class="bg-white text-pink-500 px-8 py-4 rounded-lg text-lg font-semibold border-2 border-pink-500 hover:bg-pink-50 transition duration-200 shadow-lg">
-                            <i class="fas fa-sign-in-alt mr-2"></i>Já Tenho Conta
+                            <i class="fas fa-sign-in-alt mr-2"></i>{{ __('messages.welcome.have_account') }}
                         </a>
                     </div>
                 @endguest
@@ -95,7 +146,7 @@
     <div class="bg-white py-16">
         <div class="max-w-7xl mx-auto px-4">
             <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">
-                Por que escolher o Amigos Para Sempre?
+                {{ __('messages.welcome.why_choose') }}
             </h2>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -104,9 +155,9 @@
                     <div class="bg-pink-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-brain text-2xl text-pink-500"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Matching Inteligente</h3>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ __('messages.welcome.feature1_title') }}</h3>
                     <p class="text-gray-600">
-                        Algoritmo baseado em personalidade, interesses e valores para encontrar pessoas realmente compatíveis.
+                        {{ __('messages.welcome.feature1_desc') }}
                     </p>
                 </div>
 
@@ -115,9 +166,9 @@
                     <div class="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-shield-alt text-2xl text-purple-500"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Seguro e Verificado</h3>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ __('messages.welcome.feature2_title') }}</h3>
                     <p class="text-gray-600">
-                        Sistema de verificação e moderação para garantir um ambiente seguro e confiável.
+                        {{ __('messages.welcome.feature2_desc') }}
                     </p>
                 </div>
 
@@ -126,9 +177,9 @@
                     <div class="bg-indigo-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-users text-2xl text-indigo-500"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Comunidade Ativa</h3>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ __('messages.welcome.feature3_title') }}</h3>
                     <p class="text-gray-600">
-                        Conecte-se com pessoas reais que compartilham seus interesses e valores.
+                        {{ __('messages.welcome.feature3_desc') }}
                     </p>
                 </div>
             </div>

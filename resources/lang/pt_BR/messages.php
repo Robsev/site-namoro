@@ -3,6 +3,7 @@
 return [
     // Navigation
     'nav.home' => 'Início',
+    'nav.dashboard' => 'Dashboard',
     'nav.discover' => 'Descobrir',
     'nav.matches' => 'Matches',
     'nav.chat' => 'Conversas',
@@ -270,4 +271,17 @@ return [
     'footer.support_email' => 'suporte@amigosparasempre.com',
     'footer.response_time' => 'Respondemos em até 24 horas',
     'footer.copyright' => 'Todos os direitos reservados.',
+
+    // Welcome Page
+    'welcome.title' => 'Conecte-se com pessoas especiais',
+    'welcome.subtitle' => 'Encontre pessoas incríveis baseado em compatibilidade psicológica, interesses compartilhados e valores similares. Construa amizades verdadeiras que duram para sempre.',
+    'welcome.get_started' => 'Começar Agora',
+    'welcome.have_account' => 'Já Tenho Conta',
+    'welcome.why_choose' => 'Por que escolher o Amigos Para Sempre?',
+    'welcome.feature1_title' => 'Matching Inteligente',
+    'welcome.feature1_desc' => 'Algoritmo baseado em personalidade, interesses e valores para encontrar pessoas realmente compatíveis.',
+    'welcome.feature2_title' => 'Seguro e Verificado',
+    'welcome.feature2_desc' => 'Sistema de verificação e moderação para garantir um ambiente seguro e confiável.',
+    'welcome.feature3_title' => 'Comunidade Ativa',
+    'welcome.feature3_desc' => 'Conecte-se com pessoas reais que compartilham seus interesses e valores.',
 ];

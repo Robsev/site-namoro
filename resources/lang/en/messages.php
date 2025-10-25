@@ -270,4 +270,17 @@ return [
     'footer.support_email' => 'suporte@amigosparasempre.com',
     'footer.response_time' => 'We respond within 24 hours',
     'footer.copyright' => 'All rights reserved.',
+
+    // Welcome Page
+    'welcome.title' => 'Connect with special people',
+    'welcome.subtitle' => 'Find amazing people based on psychological compatibility, shared interests and similar values. Build true friendships that last forever.',
+    'welcome.get_started' => 'Get Started',
+    'welcome.have_account' => 'I Already Have an Account',
+    'welcome.why_choose' => 'Why choose Amigos Para Sempre?',
+    'welcome.feature1_title' => 'Smart Matching',
+    'welcome.feature1_desc' => 'Algorithm based on personality, interests and values to find truly compatible people.',
+    'welcome.feature2_title' => 'Safe and Verified',
+    'welcome.feature2_desc' => 'Verification and moderation system to ensure a safe and reliable environment.',
+    'welcome.feature3_title' => 'Active Community',
+    'welcome.feature3_desc' => 'Connect with real people who share your interests and values.',
 ];
