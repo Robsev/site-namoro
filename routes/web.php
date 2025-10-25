@@ -27,6 +27,31 @@ Route::get('/terms', function () {
     return view('legal.terms');
 })->name('terms');
 
+// Contact routes
+Route::get('/contact', [App\Http\Controllers\ContactController::class, 'index'])->name('contact');
+Route::post('/contact/send', [App\Http\Controllers\ContactController::class, 'send'])->name('contact.send');
+
+// Placeholder routes for pages not yet created
+Route::get('/help', function () {
+    return view('legal.help');
+})->name('help');
+
+Route::get('/features', function () {
+    return view('legal.features');
+})->name('features');
+
+Route::get('/how-it-works', function () {
+    return view('legal.how-it-works');
+})->name('how-it-works');
+
+Route::get('/pricing', function () {
+    return view('legal.pricing');
+})->name('pricing');
+
+Route::get('/community', function () {
+    return view('legal.community');
+})->name('community');
+
 // Language routes (public)
 Route::get('/language', [LanguageController::class, 'index'])->name('language.index');
 Route::post('/language/change', [LanguageController::class, 'change'])->name('language.change');

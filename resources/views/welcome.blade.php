@@ -271,40 +271,40 @@
                         <h3 class="text-xl font-bold">{{ config('app.name', 'Amigos Para Sempre') }}</h3>
                     </div>
                     <p class="text-gray-400">
-                        Conectando pessoas, criando amizades para sempre.
+                        {{ __('messages.footer.description') }}
                     </p>
                 </div>
                 
                 <div>
-                    <h4 class="text-lg font-semibold mb-4">Produto</h4>
+                    <h4 class="text-lg font-semibold mb-4">{{ __('messages.footer.product') }}</h4>
                     <ul class="space-y-2 text-gray-400">
-                        <li><a href="#" class="hover:text-white">Como Funciona</a></li>
-                        <li><a href="#" class="hover:text-white">Recursos</a></li>
-                        <li><a href="#" class="hover:text-white">Preços</a></li>
+                        <li><a href="{{ route('how-it-works') }}" class="hover:text-white">{{ __('messages.footer.how_it_works') }}</a></li>
+                        <li><a href="{{ route('features') }}" class="hover:text-white">{{ __('messages.footer.features') }}</a></li>
+                        <li><a href="{{ route('pricing') }}" class="hover:text-white">{{ __('messages.footer.pricing') }}</a></li>
                     </ul>
                 </div>
                 
                 <div>
-                    <h4 class="text-lg font-semibold mb-4">Suporte</h4>
+                    <h4 class="text-lg font-semibold mb-4">{{ __('messages.footer.support') }}</h4>
                     <ul class="space-y-2 text-gray-400">
-                        <li><a href="#" class="hover:text-white">Central de Ajuda</a></li>
-                        <li><a href="#" class="hover:text-white">Contato</a></li>
-                        <li><a href="#" class="hover:text-white">Comunidade</a></li>
+                        <li><a href="{{ route('help') }}" class="hover:text-white">{{ __('messages.footer.help_center') }}</a></li>
+                        <li><a href="{{ route('contact') }}" class="hover:text-white">{{ __('messages.footer.contact') }}</a></li>
+                        <li><a href="{{ route('community') }}" class="hover:text-white">{{ __('messages.footer.community') }}</a></li>
                     </ul>
                 </div>
                 
                 <div>
-                    <h4 class="text-lg font-semibold mb-4">Legal</h4>
+                    <h4 class="text-lg font-semibold mb-4">{{ __('messages.footer.legal') }}</h4>
                     <ul class="space-y-2 text-gray-400">
-                        <li><a href="#" class="hover:text-white">Termos de Uso</a></li>
-                        <li><a href="#" class="hover:text-white">Privacidade</a></li>
-                        <li><a href="#" class="hover:text-white">Cookies</a></li>
+                        <li><a href="{{ route('terms') }}" class="hover:text-white">{{ __('messages.legal.terms.title') }}</a></li>
+                        <li><a href="{{ route('privacy-policy') }}" class="hover:text-white">{{ __('messages.footer.privacy_policy') }}</a></li>
+                        <li><a href="{{ route('cookies') }}" class="hover:text-white">{{ __('messages.legal.cookies.title') }}</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; {{ date('Y') }} {{ config('app.name', 'Amigos Para Sempre') }}. Todos os direitos reservados.</p>
+                <p>&copy; {{ date('Y') }} {{ config('app.name', 'Amigos Para Sempre') }}. {{ __('messages.footer.copyright') }}</p>
             </div>
         </div>
     </footer>
