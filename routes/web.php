@@ -111,6 +111,7 @@ Route::middleware('auth')->group(function () {
     // Conversation routes
     Route::get('/conversations', [App\Http\Controllers\ConversationController::class, 'index'])->name('conversations.index');
     Route::get('/conversations/{conversation}', [App\Http\Controllers\ConversationController::class, 'show'])->name('conversations.show');
+    Route::get('/conversations/{conversation}/messages', [App\Http\Controllers\ConversationController::class, 'getMessages'])->name('conversations.messages');
     Route::post('/conversations/start', [App\Http\Controllers\ConversationController::class, 'start'])->name('conversations.start');
     Route::post('/conversations/{conversation}/send', [App\Http\Controllers\ConversationController::class, 'sendMessage'])->name('conversations.send-message');
     Route::post('/conversations/{conversation}/read', [App\Http\Controllers\ConversationController::class, 'markAsRead'])->name('conversations.mark-read');

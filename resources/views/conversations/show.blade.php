@@ -371,7 +371,54 @@ document.addEventListener('DOMContentLoaded', function() {
     // Focus input on load
     messageInput.focus();
     
+    // Auto-refresh messages every 3 seconds
+    setInterval(function() {
+        refreshMessages();
+    }, 3000);
+    
     console.log('✅ Chat inicializado com sucesso!');
+    
+    // Function to refresh messages
+    function refreshMessages() {
+        fetch(`{{ route('conversations.messages', $conversation) }}`, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const currentMessages = messagesContainer.querySelectorAll('.space-y-4 > div');
+                
+                // Check if there are new messages
+                if (data.messages.length > currentMessages.length) {
+                    console.log('🔄 New messages detected, updating...');
+                    updateMessagesUI(data.messages);
+                }
+            }
+        })
+        .catch(error => {
+            console.log('Refresh error:', error);
+        });
+    }
+    
+    // Function to update messages UI
+    function updateMessagesUI(messages) {
+        const messagesContainer = document.getElementById('messagesContainer');
+        const messagesDiv = messagesContainer.querySelector('.space-y-4');
+        
+        // Clear existing messages
+        messagesDiv.innerHTML = '';
+        
+        // Add all messages
+        messages.forEach(message => {
+            addMessageToUI(message);
+        });
+        
+        // Scroll to bottom
+        scrollToBottom();
+    }
 });
 
 function archiveConversation(conversationId) {

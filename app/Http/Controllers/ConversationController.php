@@ -75,6 +75,41 @@ class ConversationController extends Controller
     }
 
     /**
+     * Get messages for a conversation (API endpoint).
+     */
+    public function getMessages(Conversation $conversation)
+    {
+        $user = Auth::user();
+        
+        // Check if user is part of this conversation
+        if (!$conversation->hasUser($user->id)) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        // Get messages for this conversation
+        $messages = $conversation->messages()
+            ->with(['sender', 'receiver'])
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'messages' => $messages->map(function($msg) {
+                return [
+                    'id' => $msg->id,
+                    'sender_id' => $msg->sender_id,
+                    'receiver_id' => $msg->receiver_id,
+                    'message' => $msg->message,
+                    'message_type' => $msg->message_type,
+                    'attachment_path' => $msg->attachment_path,
+                    'created_at' => $msg->created_at,
+                    'sender' => $msg->sender
+                ];
+            })
+        ]);
+    }
+
+    /**
      * Start a new conversation with a user.
      */
     public function start(Request $request)
