@@ -130,19 +130,47 @@ class ConversationController extends Controller
         }
 
         $request->validate([
-            'message' => 'required|string|max:1000',
+            'message' => 'nullable|string|max:1000',
             'message_type' => 'nullable|in:text,image,file',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // 5MB max
         ]);
 
         $otherUser = $conversation->getOtherUser($user->id);
+        $messageType = $request->message_type ?? 'text';
+        $messageContent = $request->message;
+        $attachmentPath = null;
+
+        // Handle image upload
+        if ($request->hasFile('image') && $messageType === 'image') {
+            $image = $request->file('image');
+            
+            // Generate unique filename
+            $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            
+            // Store image in storage/app/public/chat-images
+            $path = $image->storeAs('chat-images', $filename, 'public');
+            $attachmentPath = $path;
+            
+            // Update message content to show image info
+            $messageContent = $messageContent ?: '📷 Imagem enviada';
+            
+            \Log::info('Image uploaded for chat', [
+                'conversation_id' => $conversation->id,
+                'sender_id' => $user->id,
+                'filename' => $filename,
+                'path' => $path,
+                'size' => $image->getSize()
+            ]);
+        }
 
         // Create message
         $message = Message::create([
             'conversation_id' => $conversation->id,
             'sender_id' => $user->id,
             'receiver_id' => $otherUser->id,
-            'message' => $request->message,
-            'message_type' => $request->message_type ?? 'text',
+            'message' => $messageContent,
+            'message_type' => $messageType,
+            'attachment_path' => $attachmentPath,
             'is_read' => false,
         ]);
 
@@ -151,11 +179,12 @@ class ConversationController extends Controller
             'conversation_id' => $conversation->id,
             'sender_id' => $user->id,
             'receiver_id' => $otherUser->id,
-            'message' => $request->message,
+            'message' => $messageContent,
+            'message_type' => $messageType,
+            'attachment_path' => $attachmentPath,
             'user_name' => $user->name,
             'other_user_name' => $otherUser->name,
             'is_ajax' => $request->ajax(),
-            'request_headers' => $request->headers->all()
         ]);
 
         // Update conversation last message time
