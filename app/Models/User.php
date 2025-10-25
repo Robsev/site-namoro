@@ -347,10 +347,13 @@ class User extends Authenticatable
             $missing[] = 'Informações do perfil';
         }
 
-        // Photos (only if no profile photo and no gallery photos)
-        if ($photoCount == 0) {
+        // Photos - check both profile_photo and gallery photos
+        $hasProfilePhoto = !empty($this->profile_photo);
+        $totalPhotos = $photoCount + ($hasProfilePhoto ? 1 : 0);
+        
+        if ($totalPhotos == 0) {
             $missing[] = 'Fotos do perfil';
-        } elseif ($photoCount < 2) {
+        } elseif ($totalPhotos < 2) {
             $missing[] = 'Mais fotos (recomendado: 2-3)';
         }
 
