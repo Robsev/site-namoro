@@ -19,6 +19,14 @@ Route::get('/privacy-policy', function () {
     return view('legal.privacy-policy');
 })->name('privacy-policy');
 
+Route::get('/cookies', function () {
+    return view('legal.cookies');
+})->name('cookies');
+
+Route::get('/terms', function () {
+    return view('legal.terms');
+})->name('terms');
+
 // Language routes (public)
 Route::get('/language', [LanguageController::class, 'index'])->name('language.index');
 Route::post('/language/change', [LanguageController::class, 'change'])->name('language.change');
