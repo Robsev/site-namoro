@@ -46,6 +46,7 @@ class User extends Authenticatable
         'email_new_messages',
         'email_photo_approvals',
         'email_marketing',
+        'preferred_language',
     ];
 
     /**

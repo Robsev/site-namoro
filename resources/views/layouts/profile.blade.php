@@ -52,6 +52,58 @@
                     
                     <!-- Desktop Menu -->
                     <div class="hidden lg:flex items-center space-x-2">
+                        <!-- Language Selector -->
+                        <div class="relative group">
+                            <button class="text-gray-700 hover:text-pink-600 px-2 py-2 rounded-md text-sm font-medium flex items-center">
+                                <i class="fas fa-globe mr-1"></i>
+                                @switch(app()->getLocale())
+                                    @case('pt_BR') 🇧🇷 @break
+                                    @case('en') 🇺🇸 @break
+                                    @case('es') 🇪🇸 @break
+                                    @default 🇧🇷
+                                @endswitch
+                                <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                            </button>
+                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                <div class="py-1">
+                                    <a href="{{ route('language.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-cog mr-2"></i>{{ __('messages.language.title') }}
+                                    </a>
+                                    <div class="border-t border-gray-100"></div>
+                                    <form action="{{ route('language.change') }}" method="POST" class="block">
+                                        @csrf
+                                        <input type="hidden" name="locale" value="pt_BR">
+                                        <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                            <span class="mr-3">🇧🇷</span>Português
+                                            @if(app()->getLocale() === 'pt_BR')
+                                                <i class="fas fa-check ml-auto text-green-500"></i>
+                                            @endif
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('language.change') }}" method="POST" class="block">
+                                        @csrf
+                                        <input type="hidden" name="locale" value="en">
+                                        <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                            <span class="mr-3">🇺🇸</span>English
+                                            @if(app()->getLocale() === 'en')
+                                                <i class="fas fa-check ml-auto text-green-500"></i>
+                                            @endif
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('language.change') }}" method="POST" class="block">
+                                        @csrf
+                                        <input type="hidden" name="locale" value="es">
+                                        <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                            <span class="mr-3">🇪🇸</span>Español
+                                            @if(app()->getLocale() === 'es')
+                                                <i class="fas fa-check ml-auto text-green-500"></i>
+                                            @endif
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <a href="{{ route('profile.show') }}" class="text-gray-700 hover:text-pink-600 px-2 py-2 rounded-md text-sm font-medium">
                             <i class="fas fa-user mr-1"></i>Perfil
                         </a>
@@ -90,6 +142,9 @@
                                     </a>
                                     <a href="{{ route('email-preferences.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         <i class="fas fa-envelope mr-2"></i>E-mail
+                                    </a>
+                                    <a href="{{ route('language.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-globe mr-2"></i>{{ __('messages.language.title') }}
                                     </a>
                                     <a href="{{ route('matching.likes-received') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         <i class="fas fa-heart-broken mr-2"></i>Likes Recebidos
@@ -149,6 +204,9 @@
                         </a>
                         <a href="{{ route('email-preferences.edit') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-pink-600 hover:bg-gray-50 rounded-md">
                             <i class="fas fa-envelope mr-2"></i>E-mail
+                        </a>
+                        <a href="{{ route('language.index') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-pink-600 hover:bg-gray-50 rounded-md">
+                            <i class="fas fa-globe mr-2"></i>{{ __('messages.language.title') }}
                         </a>
                         <div class="border-t border-gray-200 pt-2">
                             <form method="POST" action="{{ route('logout') }}">
