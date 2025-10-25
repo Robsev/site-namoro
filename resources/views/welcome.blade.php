@@ -56,9 +56,21 @@
     <!-- Hero Section -->
     <div class="max-w-7xl mx-auto px-4 py-16">
         <div class="text-center">
-            <h1 class="text-5xl font-bold text-gray-900 mb-6">
-                Conecte-se com <span class="text-pink-500">Amigos Para Sempre</span>
-            </h1>
+            <!-- Logo Grande e Central -->
+            <div class="mb-8">
+                <img src="{{ asset('images/logo/logo.png') }}" 
+                     alt="{{ config('app.name') }}" 
+                     class="mx-auto h-32 w-auto sm:h-40 md:h-48"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <div style="display: none;" class="text-center">
+                    <i class="fas fa-heart text-8xl text-pink-500 mb-4"></i>
+                    <h1 class="text-4xl font-bold text-gray-800">{{ config('app.name', 'Amigos Para Sempre') }}</h1>
+                </div>
+            </div>
+            
+            <h2 class="text-3xl font-bold text-gray-900 mb-6 sm:text-4xl md:text-5xl">
+                Conecte-se com <span class="text-pink-500">pessoas especiais</span>
+            </h2>
             <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
                 Encontre pessoas incríveis baseado em compatibilidade psicológica, interesses compartilhados e valores similares. 
                 Construa amizades verdadeiras que duram para sempre.

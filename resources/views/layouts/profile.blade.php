@@ -44,15 +44,9 @@
                     <!-- Logo -->
                     <div class="flex items-center">
                         <a href="{{ route('dashboard') }}" class="text-xl sm:text-2xl font-bold text-pink-600">
-                            <img src="{{ asset('images/logo/logo.png') }}" 
-                                 alt="{{ config('app.name') }}" 
-                                 class="h-8 w-auto"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                            <span style="display: none;">
-                                <i class="fas fa-heart mr-2"></i>
-                                <span class="hidden sm:inline">Amigos Para Sempre</span>
-                                <span class="sm:hidden">APS</span>
-                            </span>
+                            <i class="fas fa-heart mr-2"></i>
+                            <span class="hidden sm:inline">Amigos Para Sempre</span>
+                            <span class="sm:hidden">APS</span>
                         </a>
                     </div>
                     
