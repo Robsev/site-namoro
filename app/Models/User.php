@@ -331,7 +331,7 @@ class User extends Authenticatable
         if (empty($this->location)) $missing[] = 'Localização';
         
         // Check if user has any photos before asking for profile photo
-        $photoCount = $this->photos()->where('is_approved', true)->count();
+        $photoCount = $this->photos()->where('moderation_status', 'approved')->count();
         if (empty($this->profile_photo) && $photoCount == 0) {
             $missing[] = 'Foto de perfil';
         }
@@ -349,7 +349,7 @@ class User extends Authenticatable
 
         // Photos - check both profile_photo and gallery photos (including pending)
         $hasProfilePhoto = !empty($this->profile_photo);
-        $pendingPhotoCount = $this->photos()->where('is_approved', false)->count();
+        $pendingPhotoCount = $this->photos()->where('moderation_status', 'pending')->count();
         $totalPhotos = $photoCount + $pendingPhotoCount + ($hasProfilePhoto ? 1 : 0);
         
         if ($totalPhotos == 0) {

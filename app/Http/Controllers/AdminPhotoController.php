@@ -130,6 +130,7 @@ class AdminPhotoController extends Controller
         foreach ($photos as $photo) {
             $photo->update([
                 'moderation_status' => 'approved',
+                'is_approved' => true,
                 'moderated_by' => auth()->id(),
                 'moderated_at' => now(),
                 'moderation_notes' => $request->moderation_notes,
