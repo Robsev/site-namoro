@@ -124,9 +124,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Teste simples primeiro
     console.log('JavaScript carregado!');
+    console.log('User ID:', {{ auth()->id() }});
+    console.log('Conversation ID:', {{ $conversation->id }});
     console.log('Form element:', messageForm);
     console.log('Input element:', messageInput);
     console.log('Button element:', sendButton);
+    
+    // Verificar se os elementos existem
+    if (!messageForm) {
+        console.error('ERRO: messageForm não encontrado!');
+    }
+    if (!messageInput) {
+        console.error('ERRO: messageInput não encontrado!');
+    }
+    if (!sendButton) {
+        console.error('ERRO: sendButton não encontrado!');
+    }
     
     // Handle form submission
     messageForm.addEventListener('submit', function(e) {
