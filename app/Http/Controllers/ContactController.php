@@ -46,6 +46,19 @@ class ContactController extends Controller
         }
 
         try {
+            // Check if mail is configured
+            if (config('mail.default') === 'log') {
+                // If using log driver, just log the message
+                \Log::info('Contact form submission (logged instead of sent):', [
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'subject' => $request->subject,
+                    'message' => $request->message
+                ]);
+                
+                return redirect()->back()->with('success', __('messages.legal.contact.form.success'));
+            }
+            
             // Send email
             Mail::raw($this->formatMessage($request), function ($message) use ($request) {
                 $message->to('suporte@amigosparasempre.com')
@@ -56,6 +69,12 @@ class ContactController extends Controller
             return redirect()->back()->with('success', __('messages.legal.contact.form.success'));
 
         } catch (\Exception $e) {
+            // Log the error for debugging
+            \Log::error('Contact form error: ' . $e->getMessage(), [
+                'request' => $request->all(),
+                'exception' => $e
+            ]);
+            
             return redirect()->back()
                 ->withErrors(['error' => __('messages.legal.contact.form.error')])
                 ->withInput();
