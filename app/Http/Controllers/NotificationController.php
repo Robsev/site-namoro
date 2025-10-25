@@ -22,7 +22,15 @@ class NotificationController extends Controller
         
         $notifications = $user->notifications()
             ->recent(50)
-            ->get();
+            ->get()
+            ->map(function($notification) {
+                // Extract title and message from data field for Laravel notifications
+                $data = $notification->data ?? [];
+                $notification->title = $data['title'] ?? 'Notificação';
+                $notification->message = $data['message'] ?? 'Nova notificação';
+                $notification->type = $data['type'] ?? $notification->type;
+                return $notification;
+            });
 
         return view('notifications.index', compact('notifications'));
     }
@@ -101,16 +109,22 @@ class NotificationController extends Controller
             ->recent(10)
             ->get()
             ->map(function($notification) {
+                // Extract title and message from data field for Laravel notifications
+                $data = $notification->data ?? [];
+                $title = $data['title'] ?? 'Notificação';
+                $message = $data['message'] ?? 'Nova notificação';
+                $type = $data['type'] ?? $notification->type;
+                
                 return [
                     'id' => $notification->id,
-                    'type' => $notification->type,
-                    'title' => $notification->title,
-                    'message' => $notification->message,
-                    'icon' => $notification->icon,
-                    'color' => $notification->color,
-                    'is_read' => $notification->is_read,
+                    'type' => $type,
+                    'title' => $title,
+                    'message' => $message,
+                    'icon' => $this->getNotificationIcon($type),
+                    'color' => $this->getNotificationColor($type),
+                    'is_read' => $notification->read_at !== null,
                     'created_at' => $notification->created_at->diffForHumans(),
-                    'data' => $notification->data
+                    'data' => $data
                 ];
             });
 
@@ -130,5 +144,41 @@ class NotificationController extends Controller
             ->get();
 
         return view('notifications.by-type', compact('notifications', 'type'));
+    }
+
+    /**
+     * Get notification icon based on type
+     */
+    private function getNotificationIcon($type)
+    {
+        return match($type) {
+            'new_match' => 'fas fa-heart',
+            'new_message' => 'fas fa-comment',
+            'new_like' => 'fas fa-thumbs-up',
+            'new_super_like' => 'fas fa-star',
+            'photo_moderation' => 'fas fa-camera',
+            'match' => 'fas fa-heart',
+            'message' => 'fas fa-comment',
+            'like' => 'fas fa-thumbs-up',
+            'super_like' => 'fas fa-star',
+            'profile_view' => 'fas fa-eye',
+            default => 'fas fa-bell'
+        };
+    }
+
+    /**
+     * Get notification color based on type
+     */
+    private function getNotificationColor($type)
+    {
+        return match($type) {
+            'new_match', 'match' => 'text-red-500',
+            'new_message', 'message' => 'text-blue-500',
+            'new_like', 'like' => 'text-green-500',
+            'new_super_like', 'super_like' => 'text-yellow-500',
+            'photo_moderation' => 'text-purple-500',
+            'profile_view' => 'text-purple-500',
+            default => 'text-gray-500'
+        };
     }
 }

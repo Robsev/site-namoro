@@ -26,8 +26,26 @@
                     <div class="flex items-start">
                         <!-- Notification Icon -->
                         <div class="flex-shrink-0 mr-4">
-                            <div class="w-10 h-10 rounded-full {{ $notification->color }} bg-opacity-20 flex items-center justify-center">
-                                <i class="{{ $notification->icon }} {{ $notification->color }}"></i>
+                            @php
+                                $icon = match($notification->type) {
+                                    'new_match', 'match' => 'fas fa-heart',
+                                    'new_message', 'message' => 'fas fa-comment',
+                                    'new_like', 'like' => 'fas fa-thumbs-up',
+                                    'new_super_like', 'super_like' => 'fas fa-star',
+                                    'photo_moderation' => 'fas fa-camera',
+                                    default => 'fas fa-bell'
+                                };
+                                $color = match($notification->type) {
+                                    'new_match', 'match' => 'text-red-500',
+                                    'new_message', 'message' => 'text-blue-500',
+                                    'new_like', 'like' => 'text-green-500',
+                                    'new_super_like', 'super_like' => 'text-yellow-500',
+                                    'photo_moderation' => 'text-purple-500',
+                                    default => 'text-gray-500'
+                                };
+                            @endphp
+                            <div class="w-10 h-10 rounded-full {{ $color }} bg-opacity-20 flex items-center justify-center">
+                                <i class="{{ $icon }} {{ $color }}"></i>
                             </div>
                         </div>
 
