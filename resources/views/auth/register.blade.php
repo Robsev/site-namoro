@@ -30,7 +30,7 @@
             <!-- Personal Information -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label for="first_name" class="block text-sm font-medium text-gray-700 mb-1">Nome *</label>
+                    <label for="first_name" class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.register.first_name') }} *</label>
                     <input type="text" 
                            id="first_name" 
                            name="first_name" 
@@ -40,7 +40,7 @@
                 </div>
 
                 <div>
-                    <label for="last_name" class="block text-sm font-medium text-gray-700 mb-1">Sobrenome *</label>
+                    <label for="last_name" class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.register.last_name') }} *</label>
                     <input type="text" 
                            id="last_name" 
                            name="last_name" 
@@ -52,7 +52,7 @@
 
             <!-- Contact Information -->
             <div>
-                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">E-mail *</label>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.auth.email') }} *</label>
                 <input type="email" 
                        id="email" 
                        name="email" 
@@ -63,7 +63,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Senha *</label>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.auth.password') }} *</label>
                     <input type="password" 
                            id="password" 
                            name="password"
@@ -72,7 +72,7 @@
                 </div>
 
                 <div>
-                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Confirmar Senha *</label>
+                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.auth.password_confirmation') }} *</label>
                     <input type="password" 
                            id="password_confirmation" 
                            name="password_confirmation"
@@ -84,7 +84,7 @@
             <!-- Personal Details -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label for="birth_date" class="block text-sm font-medium text-gray-700 mb-1">Data de Nascimento *</label>
+                    <label for="birth_date" class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.register.birth_date') }} *</label>
                     <input type="date" 
                            id="birth_date" 
                            name="birth_date" 
@@ -94,16 +94,16 @@
                 </div>
 
                 <div>
-                    <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">Gênero *</label>
+                    <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.register.gender') }} *</label>
                     <select id="gender" 
                             name="gender"
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                             required>
-                        <option value="">Selecione...</option>
-                        <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Masculino</option>
-                        <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Feminino</option>
-                        <option value="other" {{ old('gender') == 'other' ? 'selected' : '' }}>Outro</option>
-                        <option value="prefer_not_to_say" {{ old('gender') == 'prefer_not_to_say' ? 'selected' : '' }}>Prefiro não dizer</option>
+                        <option value="">{{ __('messages.common.select') }}</option>
+                        <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>{{ __('messages.register.gender_male') }}</option>
+                        <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>{{ __('messages.register.gender_female') }}</option>
+                        <option value="other" {{ old('gender') == 'other' ? 'selected' : '' }}>{{ __('messages.register.gender_other') }}</option>
+                        <option value="prefer_not_to_say" {{ old('gender') == 'prefer_not_to_say' ? 'selected' : '' }}>{{ __('messages.register.gender_prefer_not_to_say') }}</option>
                     </select>
                 </div>
             </div>
@@ -111,7 +111,7 @@
             <!-- Optional Information -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
+                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.register.phone') }}</label>
                     <input type="tel" 
                            id="phone" 
                            name="phone" 
@@ -120,12 +120,12 @@
                 </div>
 
                 <div>
-                    <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Localização</label>
+                    <label for="location" class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.register.location') }}</label>
                     <input type="text" 
                            id="location" 
                            name="location" 
                            value="{{ old('location') }}"
-                           placeholder="Cidade, Estado"
+                           placeholder="{{ __('messages.register.location_placeholder') }}"
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
                 </div>
             </div>
@@ -138,24 +138,24 @@
                        class="mt-1 rounded border-gray-300 text-pink-600 focus:ring-pink-500"
                        required>
                 <label for="terms" class="ml-2 text-sm text-gray-600">
-                    Eu concordo com os 
-                    <a href="#" class="text-pink-600 hover:text-pink-500">Termos de Uso</a> 
-                    e 
-                    <a href="#" class="text-pink-600 hover:text-pink-500">Política de Privacidade</a>
+                    {{ __('messages.register.terms_agreement') }}
+                    <a href="#" class="text-pink-600 hover:text-pink-500">{{ __('messages.register.terms_of_use') }}</a> 
+                    {{ __('messages.common.and') }}
+                    <a href="{{ route('privacy-policy') }}" class="text-pink-600 hover:text-pink-500">{{ __('messages.register.privacy_policy') }}</a>
                 </label>
             </div>
 
             <!-- Submit Button -->
             <button type="submit" 
                     class="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white py-3 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition duration-200">
-                Criar Conta
+                {{ __('messages.auth.register') }}
             </button>
 
             <!-- Login Link -->
             <div class="text-center">
                 <p class="text-gray-600">
-                    Já tem uma conta? 
-                    <a href="{{ route('login') }}" class="text-pink-600 hover:text-pink-500 font-medium">Fazer login</a>
+                    {{ __('messages.auth.already_have_account') }} 
+                    <a href="{{ route('login') }}" class="text-pink-600 hover:text-pink-500 font-medium">{{ __('messages.auth.login_here') }}</a>
                 </p>
             </div>
         </form>
@@ -163,9 +163,27 @@
         <!-- Language Selector -->
         <div class="mt-8 pt-6 border-t border-gray-200">
             <div class="flex justify-center space-x-4">
-                <a href="#" class="text-sm text-gray-500 hover:text-gray-700">🇧🇷 Português</a>
-                <a href="#" class="text-sm text-gray-500 hover:text-gray-700">🇺🇸 English</a>
-                <a href="#" class="text-sm text-gray-500 hover:text-gray-700">🇪🇸 Español</a>
+                <form action="{{ route('language.change') }}" method="POST" class="inline">
+                    @csrf
+                    <input type="hidden" name="locale" value="pt_BR">
+                    <button type="submit" class="text-sm {{ app()->getLocale() === 'pt_BR' ? 'text-pink-600 font-medium' : 'text-gray-500 hover:text-gray-700' }}">
+                        🇧🇷 Português
+                    </button>
+                </form>
+                <form action="{{ route('language.change') }}" method="POST" class="inline">
+                    @csrf
+                    <input type="hidden" name="locale" value="en">
+                    <button type="submit" class="text-sm {{ app()->getLocale() === 'en' ? 'text-pink-600 font-medium' : 'text-gray-500 hover:text-gray-700' }}">
+                        🇺🇸 English
+                    </button>
+                </form>
+                <form action="{{ route('language.change') }}" method="POST" class="inline">
+                    @csrf
+                    <input type="hidden" name="locale" value="es">
+                    <button type="submit" class="text-sm {{ app()->getLocale() === 'es' ? 'text-pink-600 font-medium' : 'text-gray-500 hover:text-gray-700' }}">
+                        🇪🇸 Español
+                    </button>
+                </form>
             </div>
         </div>
     </div>
