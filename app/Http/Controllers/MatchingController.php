@@ -391,8 +391,33 @@ class MatchingController extends Controller
 
         if ($userPreferences->photos_only) {
             $query->whereHas('photos', function($q) {
-                $q->where('is_approved', true);
+                $q->where('moderation_status', 'approved');
             });
+        }
+
+        if ($userPreferences->complete_profiles_only) {
+            // Filter for users with 100% profile completeness
+            $query->whereRaw('
+                (CASE 
+                    WHEN first_name IS NOT NULL AND first_name != "" THEN 5 ELSE 0 END +
+                    WHEN last_name IS NOT NULL AND last_name != "" THEN 5 ELSE 0 END +
+                    WHEN birth_date IS NOT NULL THEN 5 ELSE 0 END +
+                    WHEN gender IS NOT NULL AND gender != "" THEN 5 ELSE 0 END +
+                    WHEN location IS NOT NULL AND location != "" THEN 5 ELSE 0 END +
+                    WHEN profile_photo IS NOT NULL AND profile_photo != "" THEN 5 ELSE 0 END +
+                    (SELECT CASE WHEN bio IS NOT NULL AND bio != "" THEN 10 ELSE 0 END FROM profiles WHERE profiles.user_id = users.id) +
+                    (SELECT CASE WHEN relationship_goal IS NOT NULL AND relationship_goal != "" THEN 5 ELSE 0 END FROM profiles WHERE profiles.user_id = users.id) +
+                    (SELECT CASE WHEN education_level IS NOT NULL AND education_level != "" THEN 5 ELSE 0 END FROM profiles WHERE profiles.user_id = users.id) +
+                    (SELECT CASE WHEN smoking IS NOT NULL AND smoking != "" THEN 2.5 ELSE 0 END FROM profiles WHERE profiles.user_id = users.id) +
+                    (SELECT CASE WHEN drinking IS NOT NULL AND drinking != "" THEN 2.5 ELSE 0 END FROM profiles WHERE profiles.user_id = users.id) +
+                    (SELECT CASE WHEN COUNT(*) >= 1 THEN 10 ELSE 0 END FROM user_photos WHERE user_photos.user_id = users.id AND moderation_status = "approved") +
+                    (SELECT CASE WHEN COUNT(*) >= 2 THEN 5 ELSE 0 END FROM user_photos WHERE user_photos.user_id = users.id AND moderation_status = "approved") +
+                    (SELECT CASE WHEN COUNT(*) >= 3 THEN 5 ELSE 0 END FROM user_photos WHERE user_photos.user_id = users.id AND moderation_status = "approved") +
+                    (SELECT CASE WHEN COUNT(*) >= 3 THEN 10 ELSE 0 END FROM user_interests WHERE user_interests.user_id = users.id) +
+                    (SELECT CASE WHEN COUNT(*) >= 5 THEN 5 ELSE 0 END FROM user_interests WHERE user_interests.user_id = users.id) +
+                    (SELECT CASE WHEN COUNT(*) > 0 THEN 10 ELSE 0 END FROM psychological_profiles WHERE psychological_profiles.user_id = users.id)
+                ) / 100 * 100 = 100
+            ');
         }
 
         return $query->offset($offset)->limit($limit)->get()->map(function($match) use ($user) {
