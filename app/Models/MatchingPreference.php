@@ -25,6 +25,7 @@ class MatchingPreference extends Model
         'online_only',
         'verified_only',
         'photos_only',
+        'complete_profiles_only',
     ];
 
     protected function casts(): array

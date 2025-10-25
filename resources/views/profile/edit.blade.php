@@ -4,6 +4,9 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto">
+    <!-- Profile Completeness Indicator -->
+    @include('profile.completeness-indicator')
+    
     <!-- Tabs Navigation -->
     <div class="bg-white rounded-lg shadow-sm border mb-6">
         <div class="border-b border-gray-200">

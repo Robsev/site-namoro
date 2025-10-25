@@ -4,6 +4,9 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto">
+    <!-- Profile Completeness Indicator -->
+    @include('profile.completeness-indicator')
+    
     <!-- Profile Header -->
     <div class="bg-white rounded-lg shadow-sm border p-6 mb-6">
         <div class="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6">

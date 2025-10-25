@@ -398,6 +398,7 @@ class MatchingController extends Controller
         return $query->offset($offset)->limit($limit)->get()->map(function($match) use ($user) {
             $match->compatibility_score = $this->calculateCompatibility($user, $match);
             $match->distance = $match->distanceFrom($user->latitude, $user->longitude);
+            $match->profile_completeness = $match->profile_completeness;
             return $match;
         })->sortBy(function($match) {
             // Sort by distance first (if available), then by compatibility

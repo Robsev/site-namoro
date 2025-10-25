@@ -250,6 +250,142 @@ class User extends Authenticatable
     }
 
     /**
+     * Calculate profile completeness percentage
+     */
+    public function getProfileCompletenessAttribute()
+    {
+        $totalPoints = 0;
+        $earnedPoints = 0;
+
+        // Basic Information (30 points)
+        $basicInfo = [
+            'first_name' => 5,
+            'last_name' => 5,
+            'birth_date' => 5,
+            'gender' => 5,
+            'location' => 5,
+            'profile_photo' => 5
+        ];
+
+        foreach ($basicInfo as $field => $points) {
+            $totalPoints += $points;
+            if (!empty($this->$field)) {
+                $earnedPoints += $points;
+            }
+        }
+
+        // Profile Details (25 points)
+        if ($this->profile) {
+            $profileDetails = [
+                'bio' => 10,
+                'relationship_goal' => 5,
+                'education_level' => 5,
+                'exercise_frequency' => 5
+            ];
+
+            foreach ($profileDetails as $field => $points) {
+                $totalPoints += $points;
+                if (!empty($this->profile->$field)) {
+                    $earnedPoints += $points;
+                }
+            }
+        } else {
+            $totalPoints += 25; // Add points even if profile doesn't exist
+        }
+
+        // Photos (20 points)
+        $photoCount = $this->photos()->where('is_approved', true)->count();
+        $totalPoints += 20;
+        if ($photoCount >= 1) $earnedPoints += 10;
+        if ($photoCount >= 2) $earnedPoints += 5;
+        if ($photoCount >= 3) $earnedPoints += 5;
+
+        // Interests (15 points)
+        $interestCount = $this->interests()->count();
+        $totalPoints += 15;
+        if ($interestCount >= 3) $earnedPoints += 10;
+        if ($interestCount >= 5) $earnedPoints += 5;
+
+        // Psychological Profile (10 points)
+        $totalPoints += 10;
+        if ($this->psychologicalProfile) {
+            $earnedPoints += 10;
+        }
+
+        return $totalPoints > 0 ? round(($earnedPoints / $totalPoints) * 100) : 0;
+    }
+
+    /**
+     * Get missing profile fields
+     */
+    public function getMissingProfileFieldsAttribute()
+    {
+        $missing = [];
+
+        // Basic Information
+        if (empty($this->first_name)) $missing[] = 'Nome';
+        if (empty($this->last_name)) $missing[] = 'Sobrenome';
+        if (empty($this->birth_date)) $missing[] = 'Data de nascimento';
+        if (empty($this->gender)) $missing[] = 'Gênero';
+        if (empty($this->location)) $missing[] = 'Localização';
+        if (empty($this->profile_photo)) $missing[] = 'Foto de perfil';
+
+        // Profile Details
+        if ($this->profile) {
+            if (empty($this->profile->bio)) $missing[] = 'Biografia';
+            if (empty($this->profile->relationship_goal)) $missing[] = 'Objetivo de relacionamento';
+            if (empty($this->profile->education_level)) $missing[] = 'Nível de educação';
+            if (empty($this->profile->exercise_frequency)) $missing[] = 'Frequência de exercícios';
+        } else {
+            $missing[] = 'Informações do perfil';
+        }
+
+        // Photos
+        $photoCount = $this->photos()->where('is_approved', true)->count();
+        if ($photoCount == 0) $missing[] = 'Fotos do perfil';
+        if ($photoCount < 2) $missing[] = 'Mais fotos (recomendado: 2-3)';
+
+        // Interests
+        $interestCount = $this->interests()->count();
+        if ($interestCount < 3) $missing[] = 'Interesses (mínimo: 3)';
+
+        // Psychological Profile
+        if (!$this->psychologicalProfile) $missing[] = 'Perfil psicológico';
+
+        return $missing;
+    }
+
+    /**
+     * Get profile completeness level
+     */
+    public function getProfileCompletenessLevelAttribute()
+    {
+        $percentage = $this->profile_completeness;
+
+        if ($percentage >= 90) return 'excellent';
+        if ($percentage >= 75) return 'good';
+        if ($percentage >= 50) return 'fair';
+        if ($percentage >= 25) return 'poor';
+        return 'incomplete';
+    }
+
+    /**
+     * Get profile completeness level label
+     */
+    public function getProfileCompletenessLabelAttribute()
+    {
+        $levels = [
+            'excellent' => 'Excelente',
+            'good' => 'Bom',
+            'fair' => 'Regular',
+            'poor' => 'Incompleto',
+            'incomplete' => 'Muito Incompleto'
+        ];
+
+        return $levels[$this->profile_completeness_level] ?? 'Desconhecido';
+    }
+
+    /**
      * Get the user's full name.
      */
     public function getFullNameAttribute()

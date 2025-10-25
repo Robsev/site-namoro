@@ -17,6 +17,11 @@
                 <i class="fas fa-heart text-pink-500 mr-1"></i>{{ round($match->compatibility_score) }}%
             </div>
 
+            <!-- Profile Completeness -->
+            <div class="absolute bottom-4 right-4 bg-white bg-opacity-90 rounded-full px-3 py-1 text-sm font-semibold">
+                <i class="fas fa-chart-pie text-blue-500 mr-1"></i>{{ $match->profile_completeness }}%
+            </div>
+
             <!-- Age Badge -->
             @if($match->age)
                 <div class="absolute bottom-4 left-4 bg-white bg-opacity-90 rounded-full px-3 py-1 text-sm font-semibold">
