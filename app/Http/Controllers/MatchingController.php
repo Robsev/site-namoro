@@ -141,11 +141,21 @@ class MatchingController extends Controller
                     $reverseMatch->update(['status' => 'accepted']);
                     
                     // Create conversation
-                    \App\Models\Conversation::create([
+                    $conversation = \App\Models\Conversation::create([
                         'user1_id' => $user->id,
                         'user2_id' => $targetUser->id,
                         'last_message_at' => now(),
                     ]);
+                    
+                    // Send match notifications to both users
+                    $matchData = [
+                        'compatibility_score' => $existingMatch->compatibility_score,
+                        'match_reason' => $existingMatch->match_reason,
+                        'conversation_id' => $conversation->id,
+                    ];
+                    
+                    $user->notify(new \App\Notifications\NewMatch($targetUser, $matchData));
+                    $targetUser->notify(new \App\Notifications\NewMatch($user, $matchData));
                     
                     return response()->json([
                         'success' => true,
@@ -173,6 +183,9 @@ class MatchingController extends Controller
             'matched_at' => now(),
             'match_reason' => $this->generateMatchReason($user, $targetUser, $compatibilityScore)
         ]);
+
+        // Send notification to the liked user
+        $targetUser->notify(new \App\Notifications\NewLike($user));
 
         return response()->json([
             'success' => true,
@@ -265,6 +278,9 @@ class MatchingController extends Controller
             'is_super_like' => true,
             'match_reason' => 'Super Like!'
         ]);
+
+        // Send notification to the super liked user
+        $targetUser->notify(new \App\Notifications\NewSuperLike($user));
 
         return response()->json([
             'success' => true,
