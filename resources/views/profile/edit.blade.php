@@ -11,16 +11,16 @@
     <div class="bg-white rounded-lg shadow-sm border mb-6">
         <div class="border-b border-gray-200">
             <nav class="-mb-px flex space-x-8 px-6" aria-label="Tabs">
-                <button onclick="showTab('basic')" id="tab-basic" class="tab-button active py-4 px-1 border-b-2 border-pink-500 font-medium text-sm text-pink-600">
+                <button onclick="showTab('basic')" id="tab-basic" class="tab-button {{ session('active_tab', 'basic') == 'basic' ? 'active' : '' }} py-4 px-1 border-b-2 {{ session('active_tab', 'basic') == 'basic' ? 'border-pink-500 font-medium text-sm text-pink-600' : 'border-transparent font-medium text-sm text-gray-500 hover:text-gray-700' }}">
                     <i class="fas fa-user mr-2"></i>Informações Básicas
                 </button>
-                <button onclick="showTab('details')" id="tab-details" class="tab-button py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700">
+                <button onclick="showTab('details')" id="tab-details" class="tab-button {{ session('active_tab', 'basic') == 'details' ? 'active' : '' }} py-4 px-1 border-b-2 {{ session('active_tab', 'basic') == 'details' ? 'border-pink-500 font-medium text-sm text-pink-600' : 'border-transparent font-medium text-sm text-gray-500 hover:text-gray-700' }}">
                     <i class="fas fa-info-circle mr-2"></i>Detalhes do Perfil
                 </button>
-                <button onclick="showTab('photos')" id="tab-photos" class="tab-button py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700">
+                <button onclick="showTab('photos')" id="tab-photos" class="tab-button {{ session('active_tab', 'basic') == 'photos' ? 'active' : '' }} py-4 px-1 border-b-2 {{ session('active_tab', 'basic') == 'photos' ? 'border-pink-500 font-medium text-sm text-pink-600' : 'border-transparent font-medium text-sm text-gray-500 hover:text-gray-700' }}">
                     <i class="fas fa-images mr-2"></i>Fotos
                 </button>
-                <button onclick="showTab('privacy')" id="tab-privacy" class="tab-button py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700">
+                <button onclick="showTab('privacy')" id="tab-privacy" class="tab-button {{ session('active_tab', 'basic') == 'privacy' ? 'active' : '' }} py-4 px-1 border-b-2 {{ session('active_tab', 'basic') == 'privacy' ? 'border-pink-500 font-medium text-sm text-pink-600' : 'border-transparent font-medium text-sm text-gray-500 hover:text-gray-700' }}">
                     <i class="fas fa-shield-alt mr-2"></i>Privacidade
                 </button>
             </nav>
@@ -426,5 +426,11 @@ function showTab(tabName) {
     activeButton.classList.add('active', 'border-pink-500', 'text-pink-600');
     activeButton.classList.remove('border-transparent', 'text-gray-500');
 }
+
+// Show the correct tab on page load based on session
+document.addEventListener('DOMContentLoaded', function() {
+    const activeTab = '{{ session("active_tab", "basic") }}';
+    showTab(activeTab);
+});
 </script>
 @endsection
