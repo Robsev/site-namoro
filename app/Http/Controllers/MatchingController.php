@@ -333,8 +333,8 @@ class MatchingController extends Controller
             });
         }
 
-        // Apply distance filter using geolocation
-        if ($userPreferences->max_distance && $user->hasGeolocation()) {
+        // Apply distance filter using geolocation (only if geographic matching is enabled)
+        if ($userPreferences->enable_geographic_matching && $userPreferences->max_distance && $user->hasGeolocation()) {
             $maxDistance = $userPreferences->max_distance;
             
             // Use Haversine formula to filter by distance

@@ -39,27 +39,45 @@
                 </div>
             </div>
 
-            <!-- Distance -->
+            <!-- Geographic Matching -->
             <div class="space-y-4">
                 <h2 class="text-lg font-semibold text-gray-900">
-                    <i class="fas fa-map-marker-alt text-green-500 mr-2"></i>Distância Máxima
+                    <i class="fas fa-map-marker-alt text-green-500 mr-2"></i>Matching Geográfico
                 </h2>
-                <div>
-                    <label for="max_distance" class="block text-sm font-medium text-gray-700 mb-2">
-                        Distância em quilômetros: <span id="distance_value">{{ old('max_distance', $preferences?->max_distance ?? 50) }}</span> km
-                    </label>
-                    <input type="range" id="max_distance" name="max_distance" min="1" max="200" 
-                           value="{{ old('max_distance', $preferences?->max_distance ?? 50) }}" 
-                           class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider" required>
-                    <div class="flex justify-between text-xs text-gray-500 mt-1">
-                        <span>1 km</span>
-                        <span>50 km</span>
-                        <span>100 km</span>
-                        <span>200 km</span>
+                
+                <!-- Enable Geographic Matching Toggle -->
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-900">Ativar matching geográfico</h3>
+                        <p class="text-sm text-gray-500">Limitar busca por proximidade geográfica</p>
                     </div>
-                    @error('max_distance')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" name="enable_geographic_matching" value="1" 
+                               {{ old('enable_geographic_matching', $preferences?->enable_geographic_matching ?? true) ? 'checked' : '' }}
+                               class="sr-only peer" id="enable_geographic_matching">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-600"></div>
+                    </label>
+                </div>
+                
+                <!-- Distance Settings (only shown when geographic matching is enabled) -->
+                <div id="distance_settings" class="space-y-4 {{ old('enable_geographic_matching', $preferences?->enable_geographic_matching ?? true) ? '' : 'hidden' }}">
+                    <div>
+                        <label for="max_distance" class="block text-sm font-medium text-gray-700 mb-2">
+                            Distância máxima: <span id="distance_value">{{ old('max_distance', $preferences?->max_distance ?? 50) }}</span> km
+                        </label>
+                        <input type="range" id="max_distance" name="max_distance" min="1" max="1000" 
+                               value="{{ old('max_distance', $preferences?->max_distance ?? 50) }}" 
+                               class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>1 km</span>
+                            <span>100 km</span>
+                            <span>500 km</span>
+                            <span>1000 km</span>
+                        </div>
+                        @error('max_distance')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
                 
                 @if(!auth()->user()->hasGeolocation())
@@ -255,6 +273,19 @@
 document.addEventListener('DOMContentLoaded', function() {
     const distanceSlider = document.getElementById('max_distance');
     const distanceValue = document.getElementById('distance_value');
+    const enableGeographicMatching = document.getElementById('enable_geographic_matching');
+    const distanceSettings = document.getElementById('distance_settings');
+    
+    // Toggle distance settings visibility
+    enableGeographicMatching.addEventListener('change', function() {
+        if (this.checked) {
+            distanceSettings.classList.remove('hidden');
+            distanceSlider.required = true;
+        } else {
+            distanceSettings.classList.add('hidden');
+            distanceSlider.required = false;
+        }
+    });
     
     // Update distance value display
     distanceSlider.addEventListener('input', function() {
