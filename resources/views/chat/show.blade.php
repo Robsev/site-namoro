@@ -98,14 +98,24 @@
 
     <!-- Message Input -->
     <div class="bg-white border-t border-gray-200 p-4">
-        <form id="message-form" class="flex items-center space-x-2">
+        <form id="message-form" class="flex items-center space-x-2" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="message_type" value="text">
             
-            <!-- Attachment Button -->
-            <button type="button" onclick="toggleAttachmentOptions()" class="text-gray-500 hover:text-pink-500">
-                <i class="fas fa-paperclip"></i>
-            </button>
+            <!-- Image Upload Button -->
+            <div class="relative">
+                <input type="file" 
+                       id="image-input" 
+                       name="image" 
+                       accept="image/*" 
+                       class="hidden">
+                <button type="button" 
+                        id="image-button"
+                        class="text-gray-500 hover:text-pink-500"
+                        title="Enviar imagem">
+                    <i class="fas fa-image"></i>
+                </button>
+            </div>
             
             <!-- Message Input -->
             <input type="text" 
@@ -113,24 +123,28 @@
                    id="message-input" 
                    placeholder="Digite sua mensagem..." 
                    class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-pink-500"
-                   maxlength="1000"
-                   required>
+                   maxlength="1000">
             
             <!-- Send Button -->
-            <button type="submit" class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-200">
+            <button type="submit" 
+                    class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-200 disabled:opacity-50"
+                    id="send-button">
                 <i class="fas fa-paper-plane"></i>
             </button>
         </form>
         
-        <!-- Attachment Options (Hidden by default) -->
-        <div id="attachment-options" class="hidden mt-2 p-2 bg-gray-100 rounded-lg">
-            <input type="file" id="file-input" name="attachment" accept="image/*,.pdf,.doc,.docx" class="hidden">
-            <button type="button" onclick="document.getElementById('file-input').click()" class="text-sm text-gray-600 hover:text-pink-500">
-                <i class="fas fa-image mr-1"></i>Imagem
-            </button>
-            <button type="button" onclick="document.getElementById('file-input').click()" class="text-sm text-gray-600 hover:text-pink-500 ml-4">
-                <i class="fas fa-file mr-1"></i>Arquivo
-            </button>
+        <!-- Image Preview -->
+        <div id="image-preview" class="mt-3 hidden">
+            <div class="flex items-center space-x-3 bg-gray-100 p-3 rounded-lg">
+                <img id="preview-img" src="" alt="Preview" class="w-16 h-16 object-cover rounded">
+                <div class="flex-1">
+                    <p class="text-sm text-gray-600" id="preview-text">Imagem selecionada</p>
+                    <p class="text-xs text-gray-500" id="preview-size"></p>
+                </div>
+                <button type="button" id="remove-image" class="text-red-500 hover:text-red-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -146,22 +160,75 @@ function scrollToBottom() {
     container.scrollTop = container.scrollHeight;
 }
 
+// Image upload handling
+document.getElementById('image-button').addEventListener('click', function() {
+    document.getElementById('image-input').click();
+});
+
+document.getElementById('image-input').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            alert('Por favor, selecione apenas imagens.');
+            return;
+        }
+        
+        // Validate file size (5MB max)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('A imagem deve ter no máximo 5MB.');
+            return;
+        }
+
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('preview-img').src = e.target.result;
+            document.getElementById('preview-text').textContent = file.name;
+            document.getElementById('preview-size').textContent = formatFileSize(file.size);
+            document.getElementById('image-preview').classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Remove image
+document.getElementById('remove-image').addEventListener('click', function() {
+    document.getElementById('image-input').value = '';
+    document.getElementById('image-preview').classList.add('hidden');
+});
+
 // Send message
 document.getElementById('message-form').addEventListener('submit', function(e) {
     e.preventDefault();
     
     const messageInput = document.getElementById('message-input');
     const message = messageInput.value.trim();
+    const hasImage = document.getElementById('image-input').files.length > 0;
     
-    if (!message) return;
+    if (!message && !hasImage) return;
     
-    const formData = new FormData(this);
+    // Disable form
+    const sendButton = document.getElementById('send-button');
+    sendButton.disabled = true;
+    sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    
+    const formData = new FormData();
+    formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+    formData.append('message', message);
+    
+    if (hasImage) {
+        formData.append('image', document.getElementById('image-input').files[0]);
+        formData.append('message_type', 'image');
+    } else {
+        formData.append('message_type', 'text');
+    }
     
     fetch(`/chat/send/{{ $user->id }}`, {
         method: 'POST',
         body: formData,
         headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            'X-Requested-With': 'XMLHttpRequest',
         }
     })
     .then(response => response.json())
@@ -169,6 +236,8 @@ document.getElementById('message-form').addEventListener('submit', function(e) {
         if (data.success) {
             addMessageToChat(data.message);
             messageInput.value = '';
+            document.getElementById('image-input').value = '';
+            document.getElementById('image-preview').classList.add('hidden');
             lastMessageId = data.message.id;
         } else {
             alert(data.error || 'Erro ao enviar mensagem');
@@ -177,6 +246,10 @@ document.getElementById('message-form').addEventListener('submit', function(e) {
     .catch(error => {
         console.error('Error:', error);
         alert('Erro ao enviar mensagem');
+    })
+    .finally(() => {
+        sendButton.disabled = false;
+        sendButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
     });
 });
 
@@ -187,6 +260,28 @@ function addMessageToChat(message) {
     
     const isOwnMessage = message.sender_id === {{ Auth::id() }};
     const messageClass = isOwnMessage ? 'justify-end' : 'justify-start';
+    
+    let messageContent = '';
+    
+    if (message.message_type === 'image' && message.attachment_path) {
+        // Image message
+        messageContent = `
+            <div class="px-4 py-2 rounded-lg ${isOwnMessage ? 'bg-pink-500 text-white' : 'bg-white text-gray-800'} shadow-sm">
+                <img src="/storage/${message.attachment_path}" 
+                     alt="Imagem enviada" 
+                     class="max-w-full h-auto rounded cursor-pointer"
+                     onclick="openImageModal('/storage/${message.attachment_path}')">
+                ${message.message ? `<p class="mt-2">${message.message}</p>` : ''}
+            </div>
+        `;
+    } else {
+        // Text message
+        messageContent = `
+            <div class="px-4 py-2 rounded-lg ${isOwnMessage ? 'bg-pink-500 text-white' : 'bg-white text-gray-800'} shadow-sm">
+                ${message.message}
+            </div>
+        `;
+    }
     
     messageDiv.className = `flex ${messageClass}`;
     messageDiv.innerHTML = `
@@ -201,9 +296,7 @@ function addMessageToChat(message) {
             ` : ''}
             
             <div class="relative">
-                <div class="px-4 py-2 rounded-lg ${isOwnMessage ? 'bg-pink-500 text-white' : 'bg-white text-gray-800'} shadow-sm">
-                    ${message.message}
-                </div>
+                ${messageContent}
                 <div class="text-xs text-gray-500 mt-1 ${isOwnMessage ? 'text-right' : 'text-left'}">
                     ${new Date(message.created_at).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'})}
                     ${isOwnMessage ? '<i class="fas fa-check text-gray-400 ml-1"></i>' : ''}
@@ -273,6 +366,36 @@ document.getElementById('file-input').addEventListener('change', function(e) {
 function toggleChatOptions() {
     // Implement chat options menu
     alert('Opções do chat em desenvolvimento');
+}
+
+// Format file size
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+// Open image in modal
+function openImageModal(imageSrc) {
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50';
+    modal.innerHTML = `
+        <div class="max-w-4xl max-h-full p-4">
+            <img src="${imageSrc}" alt="Imagem" class="max-w-full max-h-full object-contain rounded">
+            <button onclick="this.parentElement.parentElement.remove()" 
+                    class="absolute top-4 right-4 text-white text-2xl hover:text-gray-300">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
 }
 
 // Scroll to bottom on page load

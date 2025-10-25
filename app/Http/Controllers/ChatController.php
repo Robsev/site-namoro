@@ -72,27 +72,54 @@ class ChatController extends Controller
         }
 
         $request->validate([
-            'message' => 'required|string|max:1000',
-            'message_type' => 'in:text,image,file',
-            'attachment' => 'nullable|file|max:10240' // 10MB max
+            'message' => 'nullable|string|max:1000',
+            'message_type' => 'nullable|in:text,image,file',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // 5MB max
+        ], [
+            'image.image' => 'O arquivo deve ser uma imagem válida.',
+            'image.mimes' => 'A imagem deve ser do tipo: jpeg, png, jpg, gif ou webp.',
+            'image.max' => 'A imagem deve ter no máximo 5MB.',
         ]);
+
+        $messageType = $request->message_type ?? 'text';
+        $messageContent = $request->message;
+        $attachmentPath = null;
+
+        // Handle image upload
+        if ($request->hasFile('image') && $messageType === 'image') {
+            \Log::info('Starting image upload process in chat', [
+                'sender_id' => $currentUser->id,
+                'receiver_id' => $user->id,
+                'has_file' => $request->hasFile('image'),
+                'message_type' => $messageType
+            ]);
+            
+            $image = $request->file('image');
+            
+            // Generate unique filename
+            $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            
+            // Store image in storage/app/public/chat-images
+            $path = $image->storeAs('chat-images', $filename, 'public');
+            $attachmentPath = $path;
+            
+            \Log::info('Image stored successfully in chat', [
+                'path' => $path,
+                'attachment_path' => $attachmentPath,
+                'file_exists' => \Storage::disk('public')->exists($path)
+            ]);
+            
+            // Update message content to show image info
+            $messageContent = $messageContent ?: '📷 Imagem enviada';
+        }
 
         $messageData = [
             'sender_id' => $currentUser->id,
             'receiver_id' => $user->id,
-            'message' => $request->message,
-            'message_type' => $request->message_type ?? 'text',
+            'message' => $messageContent,
+            'message_type' => $messageType,
+            'attachment_path' => $attachmentPath,
         ];
-
-        // Handle file uploads
-        if ($request->hasFile('attachment')) {
-            $file = $request->file('attachment');
-            $path = $file->store('chat-attachments', 'public');
-            $messageData['attachment_path'] = $path;
-            $messageData['message_type'] = $file->getMimeType() === 'image/jpeg' || 
-                                         $file->getMimeType() === 'image/png' || 
-                                         $file->getMimeType() === 'image/gif' ? 'image' : 'file';
-        }
 
         $message = Message::create($messageData);
         $message->load(['sender', 'receiver']);
