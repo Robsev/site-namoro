@@ -223,7 +223,7 @@
                 <div class="bg-gray-50 p-6 rounded-lg">
                     <p class="text-gray-700">
                         <strong>{{ __('messages.legal.cookies.contact.email') }}:</strong> 
-                        <a href="mailto:suporte@amigosparasempre.com" class="text-pink-600 hover:text-pink-500">
+                        <a href="{{ route('contact') }}" class="text-pink-600 hover:text-pink-500">
                             suporte@amigosparasempre.com
                         </a>
                     </p>
@@ -266,7 +266,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="mailto:suporte@amigosparasempre.com" class="text-gray-300 hover:text-pink-400 transition duration-200">
+                            <a href="{{ route('contact') }}" class="text-gray-300 hover:text-pink-400 transition duration-200">
                                 <i class="fas fa-envelope mr-1"></i>{{ __('messages.footer.contact') }}
                             </a>
                         </li>
