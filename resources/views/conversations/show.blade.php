@@ -127,11 +127,24 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         
         const message = messageInput.value.trim();
-        if (!message) return;
+        
+        console.log('Form submitted', {
+            message: message,
+            messageLength: message.length,
+            conversationId: {{ $conversation->id }},
+            currentUserId: {{ auth()->id() }}
+        });
+        
+        if (!message) {
+            console.log('Message is empty, returning');
+            return;
+        }
 
         // Disable button and input
         sendButton.disabled = true;
         messageInput.disabled = true;
+
+        console.log('Sending message via AJAX...');
 
         // Send message via AJAX
         fetch(`{{ route('conversations.send-message', $conversation) }}`, {
@@ -146,17 +159,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 message_type: 'text'
             })
         })
-        .then(response => response.json())
+        .then(response => {
+            console.log('Response received:', {
+                status: response.status,
+                statusText: response.statusText,
+                ok: response.ok
+            });
+            return response.json();
+        })
         .then(data => {
+            console.log('Response data:', data);
             if (data.success) {
                 // Add message to UI
                 addMessageToUI(data.message);
                 messageInput.value = '';
                 scrollToBottom();
+            } else {
+                console.error('Server returned success: false', data);
+                alert('Erro ao enviar mensagem: ' + (data.message || 'Erro desconhecido'));
             }
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error('Fetch error:', error);
             alert('Erro ao enviar mensagem. Tente novamente.');
         })
         .finally(() => {
