@@ -539,10 +539,7 @@ class MatchingController extends Controller
             $score += 5;
         }
 
-        // Exercise compatibility
-        if ($user1->profile->exercise_frequency === $user2->profile->exercise_frequency) {
-            $score += 5;
-        }
+        // Exercise compatibility (removed - not essential for matching)
 
         // Education level compatibility
         if ($user1->profile->education_level === $user2->profile->education_level) {

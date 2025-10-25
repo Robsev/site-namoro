@@ -280,7 +280,8 @@ class User extends Authenticatable
                 'bio' => 10,
                 'relationship_goal' => 5,
                 'education_level' => 5,
-                'exercise_frequency' => 5
+                'smoking' => 2.5,
+                'drinking' => 2.5
             ];
 
             foreach ($profileDetails as $field => $points) {
@@ -335,7 +336,8 @@ class User extends Authenticatable
             if (empty($this->profile->bio)) $missing[] = 'Biografia';
             if (empty($this->profile->relationship_goal)) $missing[] = 'Objetivo de relacionamento';
             if (empty($this->profile->education_level)) $missing[] = 'Nível de educação';
-            if (empty($this->profile->exercise_frequency)) $missing[] = 'Frequência de exercícios';
+            if (empty($this->profile->smoking)) $missing[] = 'Hábito de fumar';
+            if (empty($this->profile->drinking)) $missing[] = 'Hábito de beber';
         } else {
             $missing[] = 'Informações do perfil';
         }
