@@ -122,18 +122,26 @@ class ConversationController extends Controller
      */
     public function sendMessage(Request $request, Conversation $conversation)
     {
-        $user = Auth::user();
-        
-        // Check if user is part of this conversation
-        if (!$conversation->hasUser($user->id)) {
-            abort(403, 'Você não tem acesso a esta conversa.');
-        }
+        try {
+            $user = Auth::user();
+            
+            // Check if user is part of this conversation
+            if (!$conversation->hasUser($user->id)) {
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response()->json(['success' => false, 'message' => 'Você não tem acesso a esta conversa.'], 403);
+                }
+                abort(403, 'Você não tem acesso a esta conversa.');
+            }
 
-        $request->validate([
-            'message' => 'nullable|string|max:1000',
-            'message_type' => 'nullable|in:text,image,file',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // 5MB max
-        ]);
+            $request->validate([
+                'message' => 'nullable|string|max:1000',
+                'message_type' => 'nullable|in:text,image,file',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // 5MB max
+            ], [
+                'image.image' => 'O arquivo deve ser uma imagem válida.',
+                'image.mimes' => 'A imagem deve ser do tipo: jpeg, png, jpg, gif ou webp.',
+                'image.max' => 'A imagem deve ter no máximo 5MB.',
+            ]);
 
         $otherUser = $conversation->getOtherUser($user->id);
         $messageType = $request->message_type ?? 'text';
@@ -195,15 +203,50 @@ class ConversationController extends Controller
         // Send notification to receiver
         $otherUser->notify(new \App\Notifications\NewMessage($message));
 
-        // Always return JSON for AJAX requests
-        if ($request->ajax() || $request->wantsJson()) {
-            return response()->json([
-                'success' => true,
-                'message' => $message->load('sender'),
-            ]);
-        }
+            // Always return JSON for AJAX requests
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => $message->load('sender'),
+                ]);
+            }
 
-        return redirect()->back()->with('success', 'Mensagem enviada com sucesso!');
+            return redirect()->back()->with('success', 'Mensagem enviada com sucesso!');
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Validation error in sendMessage', [
+                'errors' => $e->errors(),
+                'user_id' => Auth::id(),
+                'conversation_id' => $conversation->id
+            ]);
+            
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erro de validação: ' . implode(', ', array_flatten($e->errors())),
+                    'errors' => $e->errors()
+                ], 422);
+            }
+            
+            return redirect()->back()->withErrors($e->errors());
+            
+        } catch (\Exception $e) {
+            \Log::error('Error in sendMessage', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => Auth::id(),
+                'conversation_id' => $conversation->id
+            ]);
+            
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erro interno: ' . $e->getMessage()
+                ], 500);
+            }
+            
+            return redirect()->back()->with('error', 'Erro ao enviar mensagem: ' . $e->getMessage());
+        }
     }
 
     /**

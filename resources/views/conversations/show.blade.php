@@ -249,6 +249,14 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => {
             console.log('📡 Response status:', response.status);
+            console.log('📡 Response headers:', response.headers);
+            
+            // Check if response is JSON
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Resposta não é JSON. Status: ' + response.status);
+            }
+            
             return response.json();
         })
         .then(data => {
@@ -262,12 +270,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 imagePreview.classList.add('hidden');
                 scrollToBottom();
             } else {
+                console.error('❌ Server error:', data);
                 alert('Erro: ' + (data.message || 'Erro desconhecido'));
             }
         })
         .catch(error => {
-            console.error('❌ Erro:', error);
-            alert('Erro ao enviar mensagem. Tente novamente.');
+            console.error('❌ Fetch error:', error);
+            console.error('❌ Error message:', error.message);
+            alert('Erro ao enviar mensagem: ' + error.message);
         })
         .finally(() => {
             // Re-enable form
