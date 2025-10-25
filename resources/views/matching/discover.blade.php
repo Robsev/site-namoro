@@ -7,92 +7,8 @@
     </h2>
 
     @if($potentialMatches->count() > 0)
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach($potentialMatches as $match)
-                <div class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition duration-200">
-                    <!-- Profile Photo -->
-                    <div class="relative">
-                        @if($match->profile_photo)
-                            <img src="{{ Storage::url($match->profile_photo) }}" 
-                                 alt="{{ $match->full_name }}" 
-                                 class="w-full h-64 object-cover rounded-t-lg">
-                        @else
-                            <div class="w-full h-64 bg-gradient-to-br from-pink-100 to-purple-100 rounded-t-lg flex items-center justify-center">
-                                <i class="fas fa-user text-6xl text-gray-400"></i>
-                            </div>
-                        @endif
-                        
-                        <!-- Compatibility Score -->
-                        <div class="absolute top-4 right-4 bg-white bg-opacity-90 rounded-full px-3 py-1 text-sm font-semibold">
-                            <i class="fas fa-heart text-pink-500 mr-1"></i>{{ round($match->compatibility_score) }}%
-                        </div>
-
-                        <!-- Age Badge -->
-                        @if($match->age)
-                            <div class="absolute bottom-4 left-4 bg-white bg-opacity-90 rounded-full px-3 py-1 text-sm font-semibold">
-                                {{ $match->age }} anos
-                            </div>
-                        @endif
-
-                        <!-- Distance Badge -->
-                        @if($match->distance !== null)
-                            <div class="absolute top-4 left-4 bg-white bg-opacity-90 rounded-full px-3 py-1 text-sm font-semibold">
-                                <i class="fas fa-map-marker-alt text-green-500 mr-1"></i>{{ round($match->distance, 1) }} km
-                            </div>
-                        @endif
-                    </div>
-
-                    <!-- Profile Info -->
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">
-                            {{ $match->full_name }}
-                            @if($match->is_verified)
-                                <i class="fas fa-check-circle text-blue-500 ml-1" title="Verificado"></i>
-                            @endif
-                        </h3>
-                        
-                        <p class="text-gray-600 text-sm mb-2">
-                            <i class="fas fa-map-marker-alt mr-1"></i>{{ $match->location ?? 'Localização não informada' }}
-                        </p>
-
-                        @if($match->profile && $match->profile->bio)
-                            <p class="text-gray-700 text-sm mb-3 line-clamp-2">{{ Str::limit($match->profile->bio, 100) }}</p>
-                        @endif
-
-                        <!-- Interests -->
-                        @if($match->profile && $match->profile->interests)
-                            <div class="flex flex-wrap gap-1 mb-3">
-                                @foreach(array_slice($match->profile->interests, 0, 3) as $interest)
-                                    <span class="bg-pink-100 text-pink-700 text-xs px-2 py-1 rounded-full">{{ $interest }}</span>
-                                @endforeach
-                                @if(count($match->profile->interests) > 3)
-                                    <span class="text-gray-500 text-xs">+{{ count($match->profile->interests) - 3 }} mais</span>
-                                @endif
-                            </div>
-                        @endif
-
-                        <!-- Action Buttons -->
-                        <div class="flex space-x-2">
-                            <button onclick="passUser({{ $match->id }})" 
-                                    class="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 transition duration-200">
-                                <i class="fas fa-times mr-1"></i>Passar
-                            </button>
-                            
-                            <button onclick="likeUser({{ $match->id }})" 
-                                    class="flex-1 bg-pink-500 text-white py-2 px-4 rounded-lg hover:bg-pink-600 transition duration-200"
-                                    data-user-id="{{ $match->id }}">
-                                <i class="fas fa-heart mr-1"></i>Curtir
-                            </button>
-                            
-                            <button onclick="superLikeUser({{ $match->id }})" 
-                                    class="bg-blue-500 text-white py-2 px-3 rounded-lg hover:bg-blue-600 transition duration-200"
-                                    title="Super Like">
-                                <i class="fas fa-star"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
+        <div id="matches-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @include('matching.partials.match-cards', ['potentialMatches' => $potentialMatches])
         </div>
 
         <!-- Load More Button -->
@@ -137,7 +53,11 @@ function likeUser(userId) {
         if (data.success) {
             showNotification('Curtida enviada!', 'success');
             // Remove the card from the view
-            document.querySelector(`[data-user-id="${userId}"]`)?.remove();
+            const card = document.querySelector(`[data-user-id="${userId}"]`)?.closest('.bg-white.border');
+            if (card) {
+                card.remove();
+                currentOffset--; // Decrease offset since we removed a card
+            }
         } else {
             showNotification(data.error || 'Erro ao curtir', 'error');
         }
@@ -200,9 +120,65 @@ function superLikeUser(userId) {
     });
 }
 
+let currentOffset = {{ $potentialMatches->count() }};
+let isLoading = false;
+let hasMore = true;
+
 function loadMoreMatches() {
-    // This would implement pagination or load more functionality
-    showNotification('Funcionalidade em desenvolvimento', 'info');
+    if (isLoading || !hasMore) {
+        return;
+    }
+    
+    isLoading = true;
+    const button = document.querySelector('button[onclick="loadMoreMatches()"]');
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Carregando...';
+    button.disabled = true;
+    
+    fetch(`{{ route('matching.load-more') }}?offset=${currentOffset}&limit=20`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Append new matches to the container
+            const container = document.getElementById('matches-container');
+            container.insertAdjacentHTML('beforeend', data.html);
+            
+            currentOffset += data.count;
+            hasMore = data.hasMore;
+            
+            if (!hasMore) {
+                button.innerHTML = '<i class="fas fa-check mr-2"></i>Todos carregados';
+                button.disabled = true;
+                button.classList.add('bg-gray-400', 'cursor-not-allowed');
+                button.classList.remove('bg-pink-500', 'hover:bg-pink-600');
+            } else {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
+            
+            showNotification(`${data.count} novas pessoas carregadas!`, 'success');
+        } else {
+            button.innerHTML = originalText;
+            button.disabled = false;
+            showNotification(data.message || 'Erro ao carregar mais pessoas', 'error');
+            hasMore = false;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        button.innerHTML = originalText;
+        button.disabled = false;
+        showNotification('Erro ao carregar mais pessoas', 'error');
+    })
+    .finally(() => {
+        isLoading = false;
+    });
 }
 
 function showNotification(message, type) {

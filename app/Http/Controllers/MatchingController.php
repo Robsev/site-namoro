@@ -32,6 +32,39 @@ class MatchingController extends Controller
     }
 
     /**
+     * Load more potential matches via AJAX
+     */
+    public function loadMore(Request $request)
+    {
+        $user = Auth::user();
+        $user->load(['profile', 'matchingPreferences', 'photos']);
+        
+        $offset = $request->get('offset', 0);
+        $limit = $request->get('limit', 20);
+        
+        // Get potential matches with offset
+        $potentialMatches = $this->getPotentialMatches($user, $offset, $limit);
+        
+        if ($potentialMatches->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Não há mais pessoas para mostrar',
+                'hasMore' => false
+            ]);
+        }
+        
+        // Render the matches as HTML
+        $html = view('matching.partials.match-cards', compact('potentialMatches'))->render();
+        
+        return response()->json([
+            'success' => true,
+            'html' => $html,
+            'hasMore' => $potentialMatches->count() >= $limit,
+            'count' => $potentialMatches->count()
+        ]);
+    }
+
+    /**
      * Show all matches for the current user
      */
     public function matches()
@@ -292,7 +325,7 @@ class MatchingController extends Controller
     /**
      * Get potential matches for a user
      */
-    private function getPotentialMatches(User $user)
+    private function getPotentialMatches(User $user, $offset = 0, $limit = 20)
     {
         $userPreferences = $user->matchingPreferences;
         
@@ -356,7 +389,13 @@ class MatchingController extends Controller
             $query->where('last_seen', '>=', now()->subHours(24));
         }
 
-        return $query->limit(20)->get()->map(function($match) use ($user) {
+        if ($userPreferences->photos_only) {
+            $query->whereHas('photos', function($q) {
+                $q->where('is_approved', true);
+            });
+        }
+
+        return $query->offset($offset)->limit($limit)->get()->map(function($match) use ($user) {
             $match->compatibility_score = $this->calculateCompatibility($user, $match);
             $match->distance = $match->distanceFrom($user->latitude, $user->longitude);
             return $match;

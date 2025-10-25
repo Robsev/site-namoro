@@ -50,6 +50,7 @@ class PreferencesController extends Controller
             'drinking_ok' => ['boolean'],
             'online_only' => ['boolean'],
             'verified_only' => ['boolean'],
+            'photos_only' => ['boolean'],
         ]);
 
         $preferences = $user->matchingPreferences ?? new MatchingPreference(['user_id' => $user->id]);
@@ -68,6 +69,7 @@ class PreferencesController extends Controller
             'drinking_ok' => $request->boolean('drinking_ok'),
             'online_only' => $request->boolean('online_only'),
             'verified_only' => $request->boolean('verified_only'),
+            'photos_only' => $request->boolean('photos_only'),
         ]);
 
         return redirect()->route('preferences.edit')->with('success', 'Preferências de matching atualizadas com sucesso!');

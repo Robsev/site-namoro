@@ -24,6 +24,7 @@ class MatchingPreference extends Model
         'drinking_ok',
         'online_only',
         'verified_only',
+        'photos_only',
     ];
 
     protected function casts(): array
@@ -39,6 +40,7 @@ class MatchingPreference extends Model
             'drinking_ok' => 'boolean',
             'online_only' => 'boolean',
             'verified_only' => 'boolean',
+            'photos_only' => 'boolean',
         ];
     }
 

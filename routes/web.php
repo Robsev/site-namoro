@@ -65,6 +65,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/matching/undo-like/{user}', [MatchingController::class, 'undoLike'])->name('matching.undo-like');
     Route::post('/matching/pass/{user}', [MatchingController::class, 'pass'])->name('matching.pass');
     Route::post('/matching/super-like/{user}', [MatchingController::class, 'superLike'])->name('matching.super-like');
+    Route::get('/matching/load-more', [MatchingController::class, 'loadMore'])->name('matching.load-more');
 
     // Chat routes
     Route::get('/chat', [ChatController::class, 'conversations'])->name('chat.conversations');
