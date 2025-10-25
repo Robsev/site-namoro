@@ -122,8 +122,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Scroll to bottom on load
     scrollToBottom();
 
+    // Teste simples primeiro
+    console.log('JavaScript carregado!');
+    console.log('Form element:', messageForm);
+    console.log('Input element:', messageInput);
+    console.log('Button element:', sendButton);
+    
     // Handle form submission
     messageForm.addEventListener('submit', function(e) {
+        console.log('EVENTO SUBMIT DISPARADO!');
         e.preventDefault();
         
         const message = messageInput.value.trim();
@@ -189,6 +196,13 @@ document.addEventListener('DOMContentLoaded', function() {
             messageInput.disabled = false;
             messageInput.focus();
         });
+    });
+    
+    // Teste adicional - clique no botão
+    sendButton.addEventListener('click', function(e) {
+        console.log('BOTÃO CLICADO!');
+        e.preventDefault();
+        messageForm.dispatchEvent(new Event('submit'));
     });
 
     // Add message to UI
