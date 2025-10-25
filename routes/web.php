@@ -19,6 +19,12 @@ Route::get('/privacy-policy', function () {
     return view('legal.privacy-policy');
 })->name('privacy-policy');
 
+// Email Preferences
+Route::middleware(['auth'])->group(function () {
+    Route::get('/email-preferences', [App\Http\Controllers\EmailPreferencesController::class, 'edit'])->name('email-preferences.edit');
+    Route::post('/email-preferences', [App\Http\Controllers\EmailPreferencesController::class, 'update'])->name('email-preferences.update');
+});
+
 // Authentication Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);

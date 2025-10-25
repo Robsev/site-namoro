@@ -88,6 +88,9 @@
                                     <a href="{{ route('preferences.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         <i class="fas fa-cog mr-2"></i>Preferências
                                     </a>
+                                    <a href="{{ route('email-preferences.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-envelope mr-2"></i>E-mail
+                                    </a>
                                     <a href="{{ route('matching.likes-received') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         <i class="fas fa-heart-broken mr-2"></i>Likes Recebidos
                                     </a>
@@ -143,6 +146,9 @@
                         </a>
                         <a href="{{ route('preferences.edit') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-pink-600 hover:bg-gray-50 rounded-md">
                             <i class="fas fa-cog mr-2"></i>Preferências
+                        </a>
+                        <a href="{{ route('email-preferences.edit') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-pink-600 hover:bg-gray-50 rounded-md">
+                            <i class="fas fa-envelope mr-2"></i>E-mail
                         </a>
                         <div class="border-t border-gray-200 pt-2">
                             <form method="POST" action="{{ route('logout') }}">

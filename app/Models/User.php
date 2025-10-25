@@ -40,6 +40,12 @@ class User extends Authenticatable
         'state',
         'country',
         'neighborhood',
+        'email_notifications_enabled',
+        'email_new_matches',
+        'email_new_likes',
+        'email_new_messages',
+        'email_photo_approvals',
+        'email_marketing',
     ];
 
     /**
@@ -70,6 +76,12 @@ class User extends Authenticatable
             'is_admin' => 'boolean',
             'latitude' => 'decimal:8',
             'longitude' => 'decimal:8',
+            'email_notifications_enabled' => 'boolean',
+            'email_new_matches' => 'boolean',
+            'email_new_likes' => 'boolean',
+            'email_new_messages' => 'boolean',
+            'email_photo_approvals' => 'boolean',
+            'email_marketing' => 'boolean',
         ];
     }
 
