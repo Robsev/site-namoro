@@ -329,7 +329,12 @@ class User extends Authenticatable
         if (empty($this->birth_date)) $missing[] = 'Data de nascimento';
         if (empty($this->gender)) $missing[] = 'Gênero';
         if (empty($this->location)) $missing[] = 'Localização';
-        if (empty($this->profile_photo)) $missing[] = 'Foto de perfil';
+        
+        // Check if user has any photos before asking for profile photo
+        $photoCount = $this->photos()->where('is_approved', true)->count();
+        if (empty($this->profile_photo) && $photoCount == 0) {
+            $missing[] = 'Foto de perfil';
+        }
 
         // Profile Details
         if ($this->profile) {
@@ -342,10 +347,12 @@ class User extends Authenticatable
             $missing[] = 'Informações do perfil';
         }
 
-        // Photos
-        $photoCount = $this->photos()->where('is_approved', true)->count();
-        if ($photoCount == 0) $missing[] = 'Fotos do perfil';
-        if ($photoCount < 2) $missing[] = 'Mais fotos (recomendado: 2-3)';
+        // Photos (only if no profile photo and no gallery photos)
+        if ($photoCount == 0) {
+            $missing[] = 'Fotos do perfil';
+        } elseif ($photoCount < 2) {
+            $missing[] = 'Mais fotos (recomendado: 2-3)';
+        }
 
         // Interests
         $interestCount = $this->interests()->count();
