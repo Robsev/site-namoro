@@ -295,7 +295,7 @@ class User extends Authenticatable
         }
 
         // Photos (20 points)
-        $photoCount = $this->photos()->where('is_approved', true)->count();
+        $photoCount = $this->photos()->where('moderation_status', 'approved')->count();
         $totalPoints += 20;
         if ($photoCount >= 1) $earnedPoints += 10;
         if ($photoCount >= 2) $earnedPoints += 5;
