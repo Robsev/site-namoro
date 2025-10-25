@@ -52,7 +52,7 @@
         <div class="bg-white h-96 overflow-y-auto" id="messagesContainer">
             <div class="p-6 space-y-4">
                 @forelse($messages as $message)
-                    <div class="flex {{ $message->sender_id === auth()->id() ? 'justify-end' : 'justify-start' }}">
+                    <div class="flex {{ $message->sender_id === auth()->id() ? 'justify-end' : 'justify-start' }}" data-message-id="{{ $message->id }}">
                         <div class="max-w-xs lg:max-w-md">
                             <!-- Message Bubble -->
                             <div class="px-4 py-2 rounded-lg {{ $message->sender_id === auth()->id() 
@@ -291,9 +291,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add message to UI
     function addMessageToUI(message) {
+        // Check if message already exists to prevent duplicates
+        if (document.querySelector(`[data-message-id="${message.id}"]`)) {
+            console.log('Message already exists, skipping:', message.id);
+            return;
+        }
+        
         const currentUserId = {{ auth()->id() }};
         const messageDiv = document.createElement('div');
         messageDiv.className = `flex ${message.sender_id === currentUserId ? 'justify-end' : 'justify-start'}`;
+        messageDiv.setAttribute('data-message-id', message.id);
         
         const now = new Date();
         const timeString = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
@@ -335,7 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         
         messagesContainer.querySelector('.space-y-4').appendChild(messageDiv);
-        console.log('✅ Mensagem adicionada à UI:', message);
+        console.log('✅ Mensagem adicionada à UI:', message.id);
     }
 
     // Format file size

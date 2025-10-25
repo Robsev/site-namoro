@@ -39,7 +39,7 @@
     <!-- Messages Container -->
     <div id="messages-container" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
         @foreach($messages as $message)
-            <div class="flex {{ $message->sender_id === Auth::id() ? 'justify-end' : 'justify-start' }}">
+            <div class="flex {{ $message->sender_id === Auth::id() ? 'justify-end' : 'justify-start' }}" data-message-id="{{ $message->id }}">
                 <div class="max-w-xs lg:max-w-md">
                     @if($message->sender_id !== Auth::id())
                         <div class="flex items-center mb-1">
@@ -61,7 +61,7 @@
                             </div>
                         @elseif($message->message_type === 'image')
                             <div class="px-4 py-2 rounded-lg {{ $message->sender_id === Auth::id() ? 'bg-pink-500 text-white' : 'bg-white text-gray-800' }} shadow-sm">
-                                <img src="{{ Storage::url($message->attachment_path) }}" alt="Imagem" class="max-w-full h-auto rounded">
+                                <img src="{{ Storage::url($message->attachment_path) }}" alt="Imagem" class="max-w-full h-auto rounded cursor-pointer" onclick="openImageModal('{{ Storage::url($message->attachment_path) }}')">
                                 @if($message->message)
                                     <p class="mt-2">{{ $message->message }}</p>
                                 @endif
@@ -255,6 +255,12 @@ document.getElementById('message-form').addEventListener('submit', function(e) {
 
 // Add message to chat
 function addMessageToChat(message) {
+    // Check if message already exists to prevent duplicates
+    if (document.querySelector(`[data-message-id="${message.id}"]`)) {
+        console.log('Message already exists, skipping:', message.id);
+        return;
+    }
+    
     const container = document.getElementById('messages-container');
     const messageDiv = document.createElement('div');
     
@@ -284,6 +290,7 @@ function addMessageToChat(message) {
     }
     
     messageDiv.className = `flex ${messageClass}`;
+    messageDiv.setAttribute('data-message-id', message.id);
     messageDiv.innerHTML = `
         <div class="max-w-xs lg:max-w-md">
             ${!isOwnMessage ? `
@@ -307,6 +314,8 @@ function addMessageToChat(message) {
     
     container.appendChild(messageDiv);
     scrollToBottom();
+    
+    console.log('Message added to chat:', message.id);
 }
 
 // Check for new messages periodically
