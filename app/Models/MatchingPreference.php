@@ -42,6 +42,7 @@ class MatchingPreference extends Model
             'online_only' => 'boolean',
             'verified_only' => 'boolean',
             'photos_only' => 'boolean',
+            'complete_profiles_only' => 'boolean',
         ];
     }
 
