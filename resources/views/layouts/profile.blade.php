@@ -177,6 +177,51 @@
         </main>
     </div>
 
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">
+                        <i class="fas fa-heart text-pink-400 mr-2"></i>Amigos Para Sempre
+                    </h3>
+                    <p class="text-gray-300 text-sm">
+                        Conectando pessoas especiais através de relacionamentos autênticos e significativos.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-md font-semibold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li>
+                            <a href="{{ route('privacy-policy') }}" class="text-gray-300 hover:text-pink-400 transition duration-200">
+                                <i class="fas fa-shield-alt mr-1"></i>Política de Privacidade
+                            </a>
+                        </li>
+                        <li>
+                            <a href="mailto:suporte@amigosparasempre.com" class="text-gray-300 hover:text-pink-400 transition duration-200">
+                                <i class="fas fa-envelope mr-1"></i>Contato
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-md font-semibold mb-4">Suporte</h4>
+                    <div class="text-sm text-gray-300">
+                        <p class="mb-2">
+                            <i class="fas fa-envelope mr-2"></i>suporte@amigosparasempre.com
+                        </p>
+                        <p class="text-xs text-gray-400">
+                            Respondemos em até 24 horas
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-400">
+                <p>&copy; {{ date('Y') }} Amigos Para Sempre. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
     <!-- JavaScript -->
     <script>
         // Auto-hide alerts
