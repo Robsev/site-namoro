@@ -173,12 +173,10 @@
                 <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ __('messages.legal.terms.privacy.title') }}</h2>
                 <p class="text-gray-700 leading-relaxed mb-4">
                     {{ __('messages.legal.terms.privacy.content') }}
-                </p>
-                <p class="text-gray-700 leading-relaxed">
-                    {{ __('messages.legal.terms.privacy.policy_link') }}
                     <a href="{{ route('privacy-policy') }}" class="text-pink-600 hover:text-pink-500">
-                        {{ __('messages.footer.privacy_policy') }}
-                    </a>.
+                        {{ __('messages.legal.terms.privacy.policy_link') }}
+                    </a>
+                    {{ __('messages.legal.terms.privacy.policy_suffix') }}
                 </p>
             </section>
 
