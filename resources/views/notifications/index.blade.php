@@ -102,12 +102,15 @@
         </div>
 
         <!-- Load More Button -->
-        <div class="text-center mt-6">
+        @if($hasMore ?? false)
+        <div class="text-center mt-6" id="load-more-container">
             <button onclick="loadMoreNotifications()" 
+                    id="load-more-btn"
                     class="bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition duration-200">
                 <i class="fas fa-plus mr-2"></i>Carregar Mais Notificações
             </button>
         </div>
+        @endif
     @else
         <div class="text-center py-12">
             <i class="fas fa-bell-slash text-6xl text-gray-300 mb-4"></i>
@@ -194,9 +197,156 @@ function refreshNotifications() {
     location.reload();
 }
 
+let currentPage = {{ $page ?? 1 }};
+let isLoading = false;
+
 function loadMoreNotifications() {
-    // This would implement pagination
-    alert('Funcionalidade de paginação em desenvolvimento');
+    if (isLoading) return;
+    
+    isLoading = true;
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    const originalText = loadMoreBtn.innerHTML;
+    
+    // Show loading state
+    loadMoreBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Carregando...';
+    loadMoreBtn.disabled = true;
+    
+    fetch(`/notifications?page=${currentPage + 1}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Append new notifications to the list
+            const notificationsList = document.getElementById('notifications-list');
+            
+            data.notifications.forEach(notification => {
+                const notificationHtml = createNotificationHtml(notification);
+                notificationsList.insertAdjacentHTML('beforeend', notificationHtml);
+            });
+            
+            currentPage++;
+            
+            // Hide load more button if no more notifications
+            if (!data.hasMore) {
+                document.getElementById('load-more-container').style.display = 'none';
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error loading notifications:', error);
+        alert('Erro ao carregar notificações. Tente novamente.');
+    })
+    .finally(() => {
+        isLoading = false;
+        loadMoreBtn.innerHTML = originalText;
+        loadMoreBtn.disabled = false;
+    });
+}
+
+function createNotificationHtml(notification) {
+    const icon = getNotificationIcon(notification.type);
+    const color = getNotificationColor(notification.type);
+    const isRead = notification.is_read;
+    const readClass = isRead ? 'bg-white' : 'bg-pink-50 border-pink-200';
+    const boldClass = isRead ? '' : 'font-bold';
+    
+    return `
+        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition duration-200 ${readClass}" 
+             data-notification-id="${notification.id}">
+            <div class="flex items-start">
+                <!-- Notification Icon -->
+                <div class="flex-shrink-0 mr-4">
+                    <div class="w-10 h-10 rounded-full ${color} bg-opacity-20 flex items-center justify-center">
+                        <i class="${icon} ${color}"></i>
+                    </div>
+                </div>
+
+                <!-- Notification Content -->
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-800 ${boldClass}">
+                            ${notification.title}
+                        </h3>
+                        <div class="flex items-center space-x-2">
+                            ${!isRead ? '<span class="w-2 h-2 bg-pink-500 rounded-full"></span>' : ''}
+                            <span class="text-sm text-gray-500">
+                                ${notification.created_at}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-700 mt-1">${notification.message}</p>
+                    
+                    <!-- Notification Actions -->
+                    <div class="flex items-center space-x-2 mt-3">
+                        ${!isRead ? `
+                            <button onclick="markAsRead(${notification.id})" 
+                                    class="text-pink-500 hover:text-pink-700 text-sm">
+                                <i class="fas fa-check mr-1"></i>Marcar como Lida
+                            </button>
+                        ` : ''}
+                        
+                        ${notification.type === 'match' && notification.data && notification.data.match_user_id ? `
+                            <a href="/profile/${notification.data.match_user_id}" 
+                               class="text-blue-500 hover:text-blue-700 text-sm">
+                                <i class="fas fa-user mr-1"></i>Ver Perfil
+                            </a>
+                        ` : ''}
+                        
+                        ${notification.type === 'message' && notification.data && notification.data.sender_user_id ? `
+                            <a href="/chat/${notification.data.sender_user_id}" 
+                               class="text-green-500 hover:text-green-700 text-sm">
+                                <i class="fas fa-comment mr-1"></i>Responder
+                            </a>
+                        ` : ''}
+                        
+                        <button onclick="deleteNotification(${notification.id})" 
+                                class="text-red-500 hover:text-red-700 text-sm">
+                            <i class="fas fa-trash mr-1"></i>Excluir
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function getNotificationIcon(type) {
+    const icons = {
+        'new_match': 'fas fa-heart',
+        'new_message': 'fas fa-comment',
+        'new_like': 'fas fa-thumbs-up',
+        'new_super_like': 'fas fa-star',
+        'photo_moderation': 'fas fa-camera',
+        'match': 'fas fa-heart',
+        'message': 'fas fa-comment',
+        'like': 'fas fa-thumbs-up',
+        'super_like': 'fas fa-star',
+        'profile_view': 'fas fa-eye'
+    };
+    return icons[type] || 'fas fa-bell';
+}
+
+function getNotificationColor(type) {
+    const colors = {
+        'new_match': 'text-red-500',
+        'new_message': 'text-blue-500',
+        'new_like': 'text-green-500',
+        'new_super_like': 'text-yellow-500',
+        'photo_moderation': 'text-purple-500',
+        'match': 'text-red-500',
+        'message': 'text-blue-500',
+        'like': 'text-green-500',
+        'super_like': 'text-yellow-500',
+        'profile_view': 'text-purple-500'
+    };
+    return colors[type] || 'text-gray-500';
 }
 </script>
 @endsection

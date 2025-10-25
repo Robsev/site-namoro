@@ -16,12 +16,17 @@ class NotificationController extends Controller
     /**
      * Get all notifications for the current user
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        $page = $request->get('page', 1);
+        $perPage = 10;
+        $offset = ($page - 1) * $perPage;
         
         $notifications = $user->notifications()
-            ->recent(50)
+            ->orderBy('created_at', 'desc')
+            ->offset($offset)
+            ->limit($perPage)
             ->get()
             ->map(function($notification) {
                 // Extract title and message from data field for Laravel notifications
@@ -32,7 +37,21 @@ class NotificationController extends Controller
                 return $notification;
             });
 
-        return view('notifications.index', compact('notifications'));
+        $totalNotifications = $user->notifications()->count();
+        $hasMore = ($offset + $perPage) < $totalNotifications;
+
+        // If AJAX request, return JSON
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'notifications' => $notifications,
+                'hasMore' => $hasMore,
+                'currentPage' => $page,
+                'total' => $totalNotifications
+            ]);
+        }
+
+        return view('notifications.index', compact('notifications', 'hasMore', 'page'));
     }
 
     /**
