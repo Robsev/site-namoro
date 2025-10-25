@@ -271,8 +271,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             // Atualizar mapa com endereço completo
                             updateMapWithLocation(lat, lng, data.location.address || 'Localização detectada');
                             
-                            // Auto-submit form
-                            manualForm.submit();
+                            // Mostrar mensagem de sucesso
+                            showNotification('Localização detectada! Salvando automaticamente...', 'success');
+                            
+                            // Auto-submit form após um pequeno delay para mostrar a mensagem
+                            setTimeout(() => {
+                                manualForm.submit();
+                            }, 1500);
                         }
                     })
                     .catch(error => {
@@ -502,6 +507,24 @@ function updateMapWithLocation(lat, lng, address = '') {
     currentLng = lng;
     addMarker(lat, lng, 'Nova localização detectada');
     updateMapInfo(lat, lng, address);
+}
+
+// Função para mostrar notificações
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 ${
+        type === 'success' ? 'bg-green-500 text-white' :
+        type === 'error' ? 'bg-red-500 text-white' :
+        type === 'info' ? 'bg-blue-500 text-white' :
+        'bg-gray-500 text-white'
+    }`;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
 }
 </script>
 @endsection
