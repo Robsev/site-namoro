@@ -109,6 +109,8 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Chat JavaScript carregado!');
+    
     const messageForm = document.getElementById('messageForm');
     const messageInput = document.getElementById('messageInput');
     const messagesContainer = document.getElementById('messagesContainer');
@@ -122,100 +124,62 @@ document.addEventListener('DOMContentLoaded', function() {
     // Scroll to bottom on load
     scrollToBottom();
 
-    // Teste simples primeiro
-    console.log('JavaScript carregado!');
-    console.log('User ID:', {{ auth()->id() }});
-    console.log('Conversation ID:', {{ $conversation->id }});
-    console.log('Form element:', messageForm);
-    console.log('Input element:', messageInput);
-    console.log('Button element:', sendButton);
-    
-    // Verificar se os elementos existem
-    if (!messageForm) {
-        console.error('ERRO: messageForm não encontrado!');
-    }
-    if (!messageInput) {
-        console.error('ERRO: messageInput não encontrado!');
-    }
-    if (!sendButton) {
-        console.error('ERRO: sendButton não encontrado!');
-    }
-    
-    // Handle form submission
+    // Handle form submission - SIMPLIFIED APPROACH
     messageForm.addEventListener('submit', function(e) {
-        console.log('EVENTO SUBMIT DISPARADO!');
         e.preventDefault();
         
         const message = messageInput.value.trim();
         
-        console.log('Form submitted', {
-            message: message,
-            messageLength: message.length,
-            conversationId: {{ $conversation->id }},
-            currentUserId: {{ auth()->id() }}
-        });
-        
         if (!message) {
-            console.log('Message is empty, returning');
             return;
         }
 
-        // Disable button and input
+        // Disable form
         sendButton.disabled = true;
         messageInput.disabled = true;
+        sendButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Enviando...';
 
-        console.log('Sending message via AJAX...');
+        // Create FormData for traditional form submission
+        const formData = new FormData();
+        formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+        formData.append('message', message);
+        formData.append('message_type', 'text');
 
-        // Send message via AJAX
+        // Send message via fetch with FormData
         fetch(`{{ route('conversations.send-message', $conversation) }}`, {
             method: 'POST',
+            body: formData,
             headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
-            },
-            body: JSON.stringify({
-                message: message,
-                message_type: 'text'
-            })
+            }
         })
         .then(response => {
-            console.log('Response received:', {
-                status: response.status,
-                statusText: response.statusText,
-                ok: response.ok
-            });
+            console.log('📡 Response status:', response.status);
             return response.json();
         })
         .then(data => {
-            console.log('Response data:', data);
+            console.log('📨 Response data:', data);
+            
             if (data.success) {
-                // Add message to UI
+                // Add message to UI immediately
                 addMessageToUI(data.message);
                 messageInput.value = '';
                 scrollToBottom();
             } else {
-                console.error('Server returned success: false', data);
-                alert('Erro ao enviar mensagem: ' + (data.message || 'Erro desconhecido'));
+                alert('Erro: ' + (data.message || 'Erro desconhecido'));
             }
         })
         .catch(error => {
-            console.error('Fetch error:', error);
+            console.error('❌ Erro:', error);
             alert('Erro ao enviar mensagem. Tente novamente.');
         })
         .finally(() => {
-            // Re-enable button and input
+            // Re-enable form
             sendButton.disabled = false;
             messageInput.disabled = false;
+            sendButton.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Enviar';
             messageInput.focus();
         });
-    });
-    
-    // Teste adicional - clique no botão
-    sendButton.addEventListener('click', function(e) {
-        console.log('BOTÃO CLICADO!');
-        e.preventDefault();
-        messageForm.dispatchEvent(new Event('submit'));
     });
 
     // Add message to UI
@@ -242,18 +206,13 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         
         messagesContainer.querySelector('.space-y-4').appendChild(messageDiv);
-        
-        // Debug log
-        console.log('Adding message to UI:', {
-            message_id: message.id,
-            sender_id: message.sender_id,
-            current_user_id: currentUserId,
-            is_from_current_user: message.sender_id === currentUserId
-        });
+        console.log('✅ Mensagem adicionada à UI:', message);
     }
 
     // Focus input on load
     messageInput.focus();
+    
+    console.log('✅ Chat inicializado com sucesso!');
 });
 
 function archiveConversation(conversationId) {

@@ -153,7 +153,9 @@ class ConversationController extends Controller
             'receiver_id' => $otherUser->id,
             'message' => $request->message,
             'user_name' => $user->name,
-            'other_user_name' => $otherUser->name
+            'other_user_name' => $otherUser->name,
+            'is_ajax' => $request->ajax(),
+            'request_headers' => $request->headers->all()
         ]);
 
         // Update conversation last message time
@@ -164,7 +166,8 @@ class ConversationController extends Controller
         // Send notification to receiver
         $otherUser->notify(new \App\Notifications\NewMessage($message));
 
-        if ($request->ajax()) {
+        // Always return JSON for AJAX requests
+        if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
                 'success' => true,
                 'message' => $message->load('sender'),
