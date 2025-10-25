@@ -60,7 +60,7 @@
             <div class="mb-8">
                 <img src="{{ asset('images/logo/logo.png') }}" 
                      alt="{{ config('app.name') }}" 
-                     class="mx-auto h-32 w-auto sm:h-40 md:h-48"
+                     class="mx-auto h-64 w-auto sm:h-80 md:h-96"
                      onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                 <div style="display: none;" class="text-center">
                     <i class="fas fa-heart text-8xl text-pink-500 mb-4"></i>
