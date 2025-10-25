@@ -31,7 +31,14 @@ class PhotoModerationResult extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        $channels = ['database'];
+        
+        // Adicionar e-mail se o usuário tiver habilitado
+        if ($notifiable->email_notifications_enabled && $notifiable->email_photo_approvals) {
+            $channels[] = 'mail';
+        }
+        
+        return $channels;
     }
 
     /**

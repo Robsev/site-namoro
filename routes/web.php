@@ -87,6 +87,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/chat/message/{message}', [ChatController::class, 'deleteMessage'])->name('chat.delete');
     Route::get('/chat/unread-count', [ChatController::class, 'unreadCount'])->name('chat.unread-count');
     
+    // Chat advanced options
+    Route::post('/chat/clear/{user}', [ChatController::class, 'clearChat'])->name('chat.clear');
+    Route::post('/chat/block/{user}', [ChatController::class, 'blockUser'])->name('chat.block');
+    Route::post('/chat/report/{user}', [ChatController::class, 'reportUser'])->name('chat.report');
+    Route::post('/chat/archive/{user}', [ChatController::class, 'archiveChat'])->name('chat.archive');
+    
     // API routes for real-time updates
     Route::post('/api/update-last-seen', function() {
         $user = Auth::user();

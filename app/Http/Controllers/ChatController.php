@@ -246,4 +246,89 @@ class ChatController extends Controller
 
         return response()->json(['unread_count' => $unreadCount]);
     }
+
+    /**
+     * Clear chat history with a user
+     */
+    public function clearChat(User $user)
+    {
+        $currentUser = Auth::user();
+        
+        // Delete all messages between current user and target user
+        Message::where(function($query) use ($currentUser, $user) {
+            $query->where('sender_id', $currentUser->id)
+                  ->where('receiver_id', $user->id);
+        })->orWhere(function($query) use ($currentUser, $user) {
+            $query->where('sender_id', $user->id)
+                  ->where('receiver_id', $currentUser->id);
+        })->delete();
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Block a user
+     */
+    public function blockUser(User $user)
+    {
+        $currentUser = Auth::user();
+        
+        // Create or update block record
+        $currentUser->blockedUsers()->syncWithoutDetaching([$user->id]);
+        
+        // Delete all messages between users
+        Message::where(function($query) use ($currentUser, $user) {
+            $query->where('sender_id', $currentUser->id)
+                  ->where('receiver_id', $user->id);
+        })->orWhere(function($query) use ($currentUser, $user) {
+            $query->where('sender_id', $user->id)
+                  ->where('receiver_id', $currentUser->id);
+        })->delete();
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Report a user
+     */
+    public function reportUser(Request $request, User $user)
+    {
+        $currentUser = Auth::user();
+        
+        $request->validate([
+            'reason' => 'required|string|max:1000'
+        ]);
+
+        // Create report record
+        $currentUser->reports()->create([
+            'reported_user_id' => $user->id,
+            'reason' => $request->reason,
+            'status' => 'pending'
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Archive a chat
+     */
+    public function archiveChat(User $user)
+    {
+        $currentUser = Auth::user();
+        
+        // Mark conversation as archived
+        $conversation = Conversation::where(function($query) use ($currentUser, $user) {
+            $query->where('user1_id', $currentUser->id)
+                  ->where('user2_id', $user->id);
+        })->orWhere(function($query) use ($currentUser, $user) {
+            $query->where('user1_id', $user->id)
+                  ->where('user2_id', $currentUser->id);
+        })->first();
+
+        if ($conversation) {
+            $conversation->update(['is_archived' => true]);
+        }
+
+        return response()->json(['success' => true]);
+    }
 }

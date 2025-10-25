@@ -30,10 +30,35 @@
             <a href="{{ route('profile.show', $user->id) }}" class="text-white hover:text-pink-200" title="Ver Perfil">
                 <i class="fas fa-user"></i>
             </a>
-            <button onclick="toggleChatOptions()" class="text-white hover:text-pink-200" title="Opções">
+            <button id="chat-options-button" onclick="toggleChatOptions()" class="text-white hover:text-pink-200" title="Opções">
                 <i class="fas fa-ellipsis-v"></i>
             </button>
         </div>
+    </div>
+
+    <!-- Chat Options Menu -->
+    <div id="chat-options-menu" class="hidden absolute top-16 right-4 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 min-w-48">
+        <button onclick="searchMessages()" class="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 flex items-center">
+            <i class="fas fa-search mr-3 text-gray-500"></i>
+            Buscar nas mensagens
+        </button>
+        <button onclick="clearChat()" class="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 flex items-center">
+            <i class="fas fa-trash mr-3 text-red-500"></i>
+            Limpar histórico
+        </button>
+        <button onclick="archiveChat()" class="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 flex items-center">
+            <i class="fas fa-archive mr-3 text-blue-500"></i>
+            Arquivar conversa
+        </button>
+        <hr class="my-2">
+        <button onclick="reportUser()" class="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 flex items-center">
+            <i class="fas fa-flag mr-3 text-yellow-500"></i>
+            Denunciar usuário
+        </button>
+        <button onclick="blockUser()" class="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 flex items-center">
+            <i class="fas fa-ban mr-3 text-red-500"></i>
+            Bloquear usuário
+        </button>
     </div>
 
     <!-- Messages Container -->
@@ -373,8 +398,162 @@ document.getElementById('file-input').addEventListener('change', function(e) {
 
 // Toggle chat options
 function toggleChatOptions() {
-    // Implement chat options menu
-    alert('Opções do chat em desenvolvimento');
+    const optionsMenu = document.getElementById('chat-options-menu');
+    if (optionsMenu) {
+        optionsMenu.classList.toggle('hidden');
+    }
+}
+
+// Close options menu when clicking outside
+document.addEventListener('click', function(event) {
+    const optionsMenu = document.getElementById('chat-options-menu');
+    const optionsButton = document.getElementById('chat-options-button');
+    
+    if (optionsMenu && !optionsMenu.contains(event.target) && !optionsButton.contains(event.target)) {
+        optionsMenu.classList.add('hidden');
+    }
+});
+
+// Chat options functions
+function clearChat() {
+    if (confirm('Tem certeza que deseja limpar o histórico desta conversa? Esta ação não pode ser desfeita.')) {
+        // Implement clear chat functionality
+        fetch(`/chat/clear/{{ $otherUser->id }}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Clear messages from UI
+                const messagesContainer = document.getElementById('messages');
+                if (messagesContainer) {
+                    messagesContainer.innerHTML = '';
+                }
+                showNotification('Histórico da conversa limpo com sucesso!', 'success');
+            } else {
+                showNotification('Erro ao limpar o histórico da conversa.', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Erro ao limpar o histórico da conversa.', 'error');
+        });
+    }
+}
+
+function blockUser() {
+    if (confirm('Tem certeza que deseja bloquear este usuário? Vocês não poderão mais se comunicar.')) {
+        // Implement block user functionality
+        fetch(`/chat/block/{{ $otherUser->id }}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('Usuário bloqueado com sucesso!', 'success');
+                // Redirect to conversations list
+                setTimeout(() => {
+                    window.location.href = '/chat';
+                }, 1500);
+            } else {
+                showNotification('Erro ao bloquear usuário.', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Erro ao bloquear usuário.', 'error');
+        });
+    }
+}
+
+function reportUser() {
+    const reason = prompt('Por favor, descreva o motivo da denúncia:');
+    if (reason && reason.trim()) {
+        // Implement report user functionality
+        fetch(`/chat/report/{{ $otherUser->id }}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ reason: reason.trim() })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('Denúncia enviada com sucesso! Nossa equipe analisará o caso.', 'success');
+            } else {
+                showNotification('Erro ao enviar denúncia.', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Erro ao enviar denúncia.', 'error');
+        });
+    }
+}
+
+function archiveChat() {
+    // Implement archive chat functionality
+    fetch(`/chat/archive/{{ $otherUser->id }}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification('Conversa arquivada com sucesso!', 'success');
+            // Redirect to conversations list
+            setTimeout(() => {
+                window.location.href = '/chat';
+            }, 1500);
+        } else {
+            showNotification('Erro ao arquivar conversa.', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Erro ao arquivar conversa.', 'error');
+    });
+}
+
+function searchMessages() {
+    const searchTerm = prompt('Digite o termo para buscar nas mensagens:');
+    if (searchTerm && searchTerm.trim()) {
+        // Implement search functionality
+        const messages = document.querySelectorAll('.message');
+        let foundCount = 0;
+        
+        messages.forEach(message => {
+            const messageText = message.textContent.toLowerCase();
+            const searchLower = searchTerm.toLowerCase();
+            
+            if (messageText.includes(searchLower)) {
+                message.style.backgroundColor = '#fef3c7';
+                message.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                foundCount++;
+            } else {
+                message.style.backgroundColor = '';
+            }
+        });
+        
+        if (foundCount > 0) {
+            showNotification(`${foundCount} mensagem(ns) encontrada(s)!`, 'success');
+        } else {
+            showNotification('Nenhuma mensagem encontrada.', 'info');
+        }
+    }
 }
 
 // Format file size

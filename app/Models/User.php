@@ -223,6 +223,40 @@ class User extends Authenticatable
     }
 
     /**
+     * Users blocked by this user
+     */
+    public function blockedUsers()
+    {
+        return $this->belongsToMany(User::class, 'user_blocks', 'user_id', 'blocked_user_id')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Users who blocked this user
+     */
+    public function blockedBy()
+    {
+        return $this->belongsToMany(User::class, 'user_blocks', 'blocked_user_id', 'user_id')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Reports made by this user
+     */
+    public function reports()
+    {
+        return $this->hasMany(UserReport::class, 'reporter_id');
+    }
+
+    /**
+     * Reports made against this user
+     */
+    public function reportedBy()
+    {
+        return $this->hasMany(UserReport::class, 'reported_user_id');
+    }
+
+    /**
      * Get formatted location string
      */
     public function getFormattedLocationAttribute()
