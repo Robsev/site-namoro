@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro - Amigos Para Sempre</title>
+    <title>{{ __('messages.auth.register') }} - {{ config('app.name') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gradient-to-br from-pink-100 to-purple-100 min-h-screen flex items-center justify-center py-8">
     <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl">
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Criar Conta</h1>
-            <p class="text-gray-600">Junte-se ao Amigos Para Sempre</p>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ __('messages.register.title') }}</h1>
+            <p class="text-gray-600">{{ __('messages.auth.register_subtitle') }}</p>
         </div>
 
         @if ($errors->any())

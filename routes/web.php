@@ -19,6 +19,13 @@ Route::get('/privacy-policy', function () {
     return view('legal.privacy-policy');
 })->name('privacy-policy');
 
+// Language routes (public)
+Route::get('/language', [LanguageController::class, 'index'])->name('language.index');
+Route::post('/language/change', [LanguageController::class, 'change'])->name('language.change');
+Route::get('/language/current', [LanguageController::class, 'current'])->name('language.current');
+Route::get('/language/available', [LanguageController::class, 'available'])->name('language.available');
+Route::get('/language/detect', [LanguageController::class, 'detect'])->name('language.detect');
+
 // Email Preferences
 Route::middleware(['auth'])->group(function () {
     Route::get('/email-preferences', [App\Http\Controllers\EmailPreferencesController::class, 'edit'])->name('email-preferences.edit');
@@ -121,12 +128,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/subscriptions/{subscription}/payment-method', [SubscriptionController::class, 'updatePaymentMethod'])->name('subscriptions.update-payment');
     Route::get('/subscriptions/usage', [SubscriptionController::class, 'usage'])->name('subscriptions.usage');
 
-        // Language routes
-        Route::get('/language', [LanguageController::class, 'index'])->name('language.index');
-        Route::post('/language/change', [LanguageController::class, 'change'])->name('language.change');
-        Route::get('/language/current', [LanguageController::class, 'current'])->name('language.current');
-        Route::get('/language/available', [LanguageController::class, 'available'])->name('language.available');
-        Route::get('/language/detect', [LanguageController::class, 'detect'])->name('language.detect');
 
     // Geolocation routes
     Route::get('/location', [App\Http\Controllers\GeolocationController::class, 'index'])->name('location.index');

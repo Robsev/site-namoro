@@ -23,6 +23,12 @@ return [
     'auth.forgot_password' => '¿Olvidaste tu contraseña?',
     'auth.login_with_google' => 'Continuar con Google',
     'auth.login_with_microsoft' => 'Continuar con Microsoft',
+    'auth.login_subtitle' => 'Conéctate para encontrar tus amigos',
+    'auth.register_subtitle' => 'Crea tu cuenta y comienza tu viaje',
+    'auth.already_have_account' => '¿Ya tienes una cuenta?',
+    'auth.dont_have_account' => '¿No tienes una cuenta?',
+    'auth.create_account' => 'Crear cuenta',
+    'auth.login_here' => 'Entrar aquí',
 
     // Registration
     'register.title' => 'Crear Cuenta',

@@ -24,6 +24,12 @@ return [
     'auth.forgot_password' => 'Esqueceu a senha?',
     'auth.login_with_google' => 'Continuar com Google',
     'auth.login_with_microsoft' => 'Continuar com Microsoft',
+    'auth.login_subtitle' => 'Conecte-se para encontrar seus amigos',
+    'auth.register_subtitle' => 'Crie sua conta e comece sua jornada',
+    'auth.already_have_account' => 'Já tem uma conta?',
+    'auth.dont_have_account' => 'Não tem uma conta?',
+    'auth.create_account' => 'Criar conta',
+    'auth.login_here' => 'Entrar aqui',
 
     // Registration
     'register.title' => 'Criar Conta',

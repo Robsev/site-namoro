@@ -23,6 +23,12 @@ return [
     'auth.forgot_password' => 'Forgot password?',
     'auth.login_with_google' => 'Continue with Google',
     'auth.login_with_microsoft' => 'Continue with Microsoft',
+    'auth.login_subtitle' => 'Connect to find your friends',
+    'auth.register_subtitle' => 'Create your account and start your journey',
+    'auth.already_have_account' => 'Already have an account?',
+    'auth.dont_have_account' => 'Don\'t have an account?',
+    'auth.create_account' => 'Create account',
+    'auth.login_here' => 'Login here',
 
     // Registration
     'register.title' => 'Create Account',
