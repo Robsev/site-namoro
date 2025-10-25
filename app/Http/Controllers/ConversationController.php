@@ -150,28 +150,49 @@ class ConversationController extends Controller
 
         // Handle image upload
         if ($request->hasFile('image') && $messageType === 'image') {
+            \Log::info('Starting image upload process', [
+                'conversation_id' => $conversation->id,
+                'sender_id' => $user->id,
+                'has_file' => $request->hasFile('image'),
+                'message_type' => $messageType
+            ]);
+            
             $image = $request->file('image');
             
             // Generate unique filename
             $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
             
+            \Log::info('Image file details', [
+                'original_name' => $image->getClientOriginalName(),
+                'size' => $image->getSize(),
+                'mime_type' => $image->getMimeType(),
+                'extension' => $image->getClientOriginalExtension()
+            ]);
+            
             // Store image in storage/app/public/chat-images
             $path = $image->storeAs('chat-images', $filename, 'public');
             $attachmentPath = $path;
             
+            \Log::info('Image stored successfully', [
+                'path' => $path,
+                'attachment_path' => $attachmentPath,
+                'file_exists' => \Storage::disk('public')->exists($path)
+            ]);
+            
             // Update message content to show image info
             $messageContent = $messageContent ?: '📷 Imagem enviada';
-            
-            \Log::info('Image uploaded for chat', [
-                'conversation_id' => $conversation->id,
-                'sender_id' => $user->id,
-                'filename' => $filename,
-                'path' => $path,
-                'size' => $image->getSize()
-            ]);
         }
 
         // Create message
+        \Log::info('Creating message with data', [
+            'conversation_id' => $conversation->id,
+            'sender_id' => $user->id,
+            'receiver_id' => $otherUser->id,
+            'message' => $messageContent,
+            'message_type' => $messageType,
+            'attachment_path' => $attachmentPath,
+        ]);
+        
         $message = Message::create([
             'conversation_id' => $conversation->id,
             'sender_id' => $user->id,
@@ -180,6 +201,12 @@ class ConversationController extends Controller
             'message_type' => $messageType,
             'attachment_path' => $attachmentPath,
             'is_read' => false,
+        ]);
+        
+        \Log::info('Message created successfully', [
+            'message_id' => $message->id,
+            'message_type' => $message->message_type,
+            'attachment_path' => $message->attachment_path,
         ]);
 
         // Debug log
