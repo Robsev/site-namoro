@@ -1400,4 +1400,22 @@ return [
     'interests.option.sustentabilidade' => 'Sustentabilidade',
     'interests.option.energia_renovável' => 'Energia Renovável',
     'interests.option.carros_elétricos' => 'Carros Elétricos',
+
+    // Navigation - Menu Items
+    'nav.location' => 'Localização',
+    'nav.interests' => 'Interesses',
+    'nav.psychological_profile' => 'Perfil Psicológico',
+    'nav.email' => 'E-mail',
+    'nav.my_profile' => 'Meu Perfil',
+    'nav.likes_received' => 'Likes Recebidos',
+    'nav.photo_moderation' => 'Moderação de Fotos',
+
+    // Footer
+    'footer.connecting_people' => 'Conectando pessoas especiais através de relacionamentos autênticos e significativos.',
+    'footer.legal_section' => 'Legal',
+    'footer.contact_email' => 'Contato',
+    'footer.support_section' => 'Suporte',
+    'footer.support_email' => 'suporte@amigosparasempre.com',
+    'footer.response_time' => 'Respondemos em até 24 horas',
+    'footer.copyright' => '© :year Amigos Para Sempre. Todos os direitos reservados.',
 ];
