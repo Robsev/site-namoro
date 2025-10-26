@@ -3,7 +3,7 @@
 @section('content')
 <div class="bg-white rounded-lg shadow-md p-6">
     <h2 class="text-2xl font-bold text-gray-800 mb-6">
-        <i class="fas fa-crown text-yellow-500 mr-2"></i>Minha Assinatura
+        <i class="fas fa-crown text-yellow-500 mr-2"></i>{{ __('messages.subscriptions.my_subscription') }}
     </h2>
 
     @if($currentSubscription)
@@ -12,14 +12,14 @@
             <div class="flex items-center justify-between">
                 <div>
                     <h3 class="text-xl font-bold mb-2">
-                        {{ $currentSubscription->plan === 'premium_monthly' ? 'Premium Mensal' : 'Premium Anual' }}
+                        {{ $currentSubscription->plan === 'premium_monthly' ? __('messages.subscriptions.premium_monthly') : __('messages.subscriptions.premium_yearly') }}
                     </h3>
                     <p class="text-pink-100">
                         R$ {{ number_format($currentSubscription->amount, 2, ',', '.') }} 
-                        /{{ $currentSubscription->plan === 'premium_monthly' ? 'mês' : 'ano' }}
+                        {{ $currentSubscription->plan === 'premium_monthly' ? __('messages.subscriptions.per_month') : __('messages.subscriptions.per_year') }}
                     </p>
                     <p class="text-sm text-pink-200 mt-2">
-                        Expira em {{ $currentSubscription->ends_at->format('d/m/Y') }}
+                        {{ __('messages.subscriptions.expires') }} {{ $currentSubscription->ends_at->format('d/m/Y') }}
                     </p>
                 </div>
                 <div class="text-right">
@@ -34,36 +34,36 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <a href="{{ route('subscriptions.usage') }}" 
                class="bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 transition duration-200 text-center">
-                <i class="fas fa-chart-bar mr-2"></i>Ver Uso da Assinatura
+                <i class="fas fa-chart-bar mr-2"></i>{{ __('messages.subscriptions.see_usage') }}
             </a>
             
             @if($currentSubscription->status === 'active')
                 <button onclick="cancelSubscription({{ $currentSubscription->id }})" 
                         class="bg-red-500 text-white py-3 px-4 rounded-lg hover:bg-red-600 transition duration-200">
-                    <i class="fas fa-times mr-2"></i>Cancelar Assinatura
+                    <i class="fas fa-times mr-2"></i>{{ __('messages.subscriptions.cancel_subscription') }}
                 </button>
             @elseif($currentSubscription->status === 'canceled')
                 <button onclick="resumeSubscription({{ $currentSubscription->id }})" 
                         class="bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 transition duration-200">
-                    <i class="fas fa-play mr-2"></i>Reativar Assinatura
+                    <i class="fas fa-play mr-2"></i>{{ __('messages.subscriptions.resume_subscription') }}
                 </button>
             @endif
         </div>
 
         <!-- Subscription History -->
         <div class="mb-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Histórico de Assinaturas</h3>
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">{{ __('messages.subscriptions.subscription_history') }}</h3>
             <div class="space-y-3">
                 @foreach($subscriptions as $subscription)
                     <div class="border border-gray-200 rounded-lg p-4 {{ $subscription->id === $currentSubscription->id ? 'bg-green-50 border-green-200' : '' }}">
                         <div class="flex items-center justify-between">
                             <div>
                                 <h4 class="font-semibold text-gray-800">
-                                    {{ $subscription->plan === 'premium_monthly' ? 'Premium Mensal' : 'Premium Anual' }}
+                                    {{ $subscription->plan === 'premium_monthly' ? __('messages.subscriptions.premium_monthly') : __('messages.subscriptions.premium_yearly') }}
                                 </h4>
                                 <p class="text-sm text-gray-600">
                                     R$ {{ number_format($subscription->amount, 2, ',', '.') }} 
-                                    /{{ $subscription->plan === 'premium_monthly' ? 'mês' : 'ano' }}
+                                    {{ $subscription->plan === 'premium_monthly' ? __('messages.subscriptions.per_month') : __('messages.subscriptions.per_year') }}
                                 </p>
                                 <p class="text-xs text-gray-500">
                                     {{ $subscription->created_at->format('d/m/Y H:i') }}
@@ -91,11 +91,11 @@
         <!-- No Active Subscription -->
         <div class="text-center py-12">
             <i class="fas fa-crown text-6xl text-gray-300 mb-4"></i>
-            <h3 class="text-xl font-semibold text-gray-600 mb-2">Nenhuma assinatura ativa</h3>
-            <p class="text-gray-500 mb-6">Você está usando o plano gratuito. Faça upgrade para desbloquear recursos premium!</p>
+            <h3 class="text-xl font-semibold text-gray-600 mb-2">{{ __('messages.subscriptions.no_active_subscription') }}</h3>
+            <p class="text-gray-500 mb-6">{{ __('messages.subscriptions.using_free_plan') }}</p>
             <a href="{{ route('subscriptions.plans') }}" 
                class="bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition duration-200">
-                <i class="fas fa-arrow-up mr-2"></i>Fazer Upgrade
+                <i class="fas fa-arrow-up mr-2"></i>{{ __('messages.subscriptions.make_upgrade') }}
             </a>
         </div>
     @endif
@@ -104,7 +104,7 @@
 <!-- JavaScript for subscription actions -->
 <script>
 function cancelSubscription(subscriptionId) {
-    if (!confirm('Tem certeza que deseja cancelar sua assinatura? Você perderá acesso aos recursos premium no final do período pago.')) {
+    if (!confirm('{{ __('messages.subscriptions.confirm_cancel') }}')) {
         return;
     }
 
@@ -120,17 +120,17 @@ function cancelSubscription(subscriptionId) {
         if (data.success) {
             location.reload();
         } else {
-            alert(data.error || 'Erro ao cancelar assinatura');
+            alert(data.error || '{{ __('messages.subscriptions.error_cancel') }}');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Erro ao cancelar assinatura');
+        alert('{{ __('messages.subscriptions.error_cancel') }}');
     });
 }
 
 function resumeSubscription(subscriptionId) {
-    if (!confirm('Tem certeza que deseja reativar sua assinatura?')) {
+    if (!confirm('{{ __('messages.subscriptions.confirm_resume') }}')) {
         return;
     }
 
@@ -146,12 +146,12 @@ function resumeSubscription(subscriptionId) {
         if (data.success) {
             location.reload();
         } else {
-            alert(data.error || 'Erro ao reativar assinatura');
+            alert(data.error || '{{ __('messages.subscriptions.error_resume') }}');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Erro ao reativar assinatura');
+        alert('{{ __('messages.subscriptions.error_resume') }}');
     });
 }
 </script>
