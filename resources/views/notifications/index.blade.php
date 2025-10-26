@@ -4,16 +4,16 @@
 <div class="bg-white rounded-lg shadow-md p-6">
     <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold text-gray-800">
-            <i class="fas fa-bell text-pink-500 mr-2"></i>Notificações
+            <i class="fas fa-bell text-pink-500 mr-2"></i>{{ __('messages.notifications.title') }}
         </h2>
         <div class="flex items-center space-x-2">
             <button onclick="markAllAsRead()" 
                     class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-200 text-sm">
-                <i class="fas fa-check-double mr-1"></i>Marcar Todas como Lidas
+                <i class="fas fa-check-double mr-1"></i>{{ __('messages.notifications.mark_all_read') }}
             </button>
             <button onclick="refreshNotifications()" 
                     class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition duration-200 text-sm">
-                <i class="fas fa-sync-alt mr-1"></i>Atualizar
+                <i class="fas fa-sync-alt mr-1"></i>{{ __('messages.notifications.refresh') }}
             </button>
         </div>
     </div>
@@ -72,27 +72,27 @@
                                 @if(!$notification->is_read)
                                     <button onclick="markAsRead({{ $notification->id }})" 
                                             class="text-pink-500 hover:text-pink-700 text-sm">
-                                        <i class="fas fa-check mr-1"></i>Marcar como Lida
+                                        <i class="fas fa-check mr-1"></i>{{ __('messages.notifications.mark_as_read') }}
                                     </button>
                                 @endif
                                 
                                 @if($notification->type === 'match' && isset($notification->data['match_user_id']))
                                     <a href="{{ route('profile.show', $notification->data['match_user_id']) }}" 
                                        class="text-blue-500 hover:text-blue-700 text-sm">
-                                        <i class="fas fa-user mr-1"></i>Ver Perfil
+                                        <i class="fas fa-user mr-1"></i>{{ __('messages.notifications.view_profile') }}
                                     </a>
                                 @endif
                                 
                                 @if($notification->type === 'message' && isset($notification->data['sender_user_id']))
                                     <a href="{{ route('chat.show', $notification->data['sender_user_id']) }}" 
                                        class="text-green-500 hover:text-green-700 text-sm">
-                                        <i class="fas fa-comment mr-1"></i>Responder
+                                        <i class="fas fa-comment mr-1"></i>{{ __('messages.notifications.reply') }}
                                     </a>
                                 @endif
                                 
                                 <button onclick="deleteNotification({{ $notification->id }})" 
                                         class="text-red-500 hover:text-red-700 text-sm">
-                                    <i class="fas fa-trash mr-1"></i>Excluir
+                                    <i class="fas fa-trash mr-1"></i>{{ __('messages.notifications.delete') }}
                                 </button>
                             </div>
                         </div>
@@ -107,21 +107,32 @@
             <button onclick="loadMoreNotifications()" 
                     id="load-more-btn"
                     class="bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition duration-200">
-                <i class="fas fa-plus mr-2"></i>Carregar Mais Notificações
+                <i class="fas fa-plus mr-2"></i>{{ __('messages.notifications.load_more') }}
             </button>
         </div>
         @endif
     @else
         <div class="text-center py-12">
             <i class="fas fa-bell-slash text-6xl text-gray-300 mb-4"></i>
-            <h3 class="text-xl font-semibold text-gray-600 mb-2">Nenhuma notificação</h3>
-            <p class="text-gray-500">Você não tem notificações no momento.</p>
+            <h3 class="text-xl font-semibold text-gray-600 mb-2">{{ __('messages.notifications.no_notifications') }}</h3>
+            <p class="text-gray-500">{{ __('messages.notifications.no_notifications_message') }}</p>
         </div>
     @endif
 </div>
 
 <!-- JavaScript for notification actions -->
 <script>
+const notificationTranslations = {
+    confirmDelete: '{{ __('messages.notifications.confirm_delete') }}',
+    markAsRead: '{{ __('messages.notifications.mark_as_read') }}',
+    viewProfile: '{{ __('messages.notifications.view_profile') }}',
+    reply: '{{ __('messages.notifications.reply') }}',
+    delete: '{{ __('messages.notifications.delete') }}',
+    loading: '{{ __('messages.notifications.loading') }}',
+    loadMore: '{{ __('messages.notifications.load_more') }}',
+    errorLoading: '{{ __('messages.notifications.error_loading') }}'
+};
+
 function markAsRead(notificationId) {
     fetch(`/notifications/${notificationId}/read`, {
         method: 'POST',
@@ -172,7 +183,7 @@ function markAllAsRead() {
 }
 
 function deleteNotification(notificationId) {
-    if (!confirm('Tem certeza que deseja excluir esta notificação?')) {
+    if (!confirm(notificationTranslations.confirmDelete)) {
         return;
     }
 
@@ -208,7 +219,7 @@ function loadMoreNotifications() {
     const originalText = loadMoreBtn.innerHTML;
     
     // Show loading state
-    loadMoreBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Carregando...';
+    loadMoreBtn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i>${notificationTranslations.loading}`;
     loadMoreBtn.disabled = true;
     
     fetch(`/notifications?page=${currentPage + 1}`, {
@@ -240,7 +251,7 @@ function loadMoreNotifications() {
     })
     .catch(error => {
         console.error('Error loading notifications:', error);
-        alert('Erro ao carregar notificações. Tente novamente.');
+        alert(notificationTranslations.errorLoading);
     })
     .finally(() => {
         isLoading = false;
@@ -288,27 +299,27 @@ function createNotificationHtml(notification) {
                         ${!isRead ? `
                             <button onclick="markAsRead(${notification.id})" 
                                     class="text-pink-500 hover:text-pink-700 text-sm">
-                                <i class="fas fa-check mr-1"></i>Marcar como Lida
+                                <i class="fas fa-check mr-1"></i>${notificationTranslations.markAsRead}
                             </button>
                         ` : ''}
                         
                         ${notification.type === 'match' && notification.data && notification.data.match_user_id ? `
                             <a href="/profile/${notification.data.match_user_id}" 
                                class="text-blue-500 hover:text-blue-700 text-sm">
-                                <i class="fas fa-user mr-1"></i>Ver Perfil
+                                <i class="fas fa-user mr-1"></i>${notificationTranslations.viewProfile}
                             </a>
                         ` : ''}
                         
                         ${notification.type === 'message' && notification.data && notification.data.sender_user_id ? `
                             <a href="/chat/${notification.data.sender_user_id}" 
                                class="text-green-500 hover:text-green-700 text-sm">
-                                <i class="fas fa-comment mr-1"></i>Responder
+                                <i class="fas fa-comment mr-1"></i>${notificationTranslations.reply}
                             </a>
                         ` : ''}
                         
                         <button onclick="deleteNotification(${notification.id})" 
                                 class="text-red-500 hover:text-red-700 text-sm">
-                            <i class="fas fa-trash mr-1"></i>Excluir
+                            <i class="fas fa-trash mr-1"></i>${notificationTranslations.delete}
                         </button>
                     </div>
                 </div>

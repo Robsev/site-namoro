@@ -218,6 +218,14 @@ return [
     'notifications.someone_liked_you' => 'Alguém te curtiu!',
     'notifications.super_like' => 'Super Like!',
     'notifications.profile_viewed' => 'Seu perfil foi visualizado',
+    'notifications.no_notifications' => 'Nenhuma notificação',
+    'notifications.no_notifications_message' => 'Você não tem notificações no momento.',
+    'notifications.load_more' => 'Carregar Mais Notificações',
+    'notifications.loading' => 'Carregando...',
+    'notifications.error_loading' => 'Erro ao carregar notificações. Tente novamente.',
+    'notifications.confirm_delete' => 'Tem certeza que deseja excluir esta notificação?',
+    'notifications.view_profile' => 'Ver Perfil',
+    'notifications.reply' => 'Responder',
 
     // Subscriptions
     'subscriptions.title' => 'Assinaturas',
