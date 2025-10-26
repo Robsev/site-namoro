@@ -68,7 +68,7 @@
 
             <!-- Action Buttons -->
             <div class="flex flex-wrap gap-2">
-                @if(auth()->user()->isPremium())
+                @if(auth()->user()->hasActivePremiumSubscription())
                     <a href="{{ route('profile.view', $match->id) }}" 
                        class="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-200 text-center">
                         <i class="fas fa-user mr-1"></i>{{ __('messages.matching.view_profile') }}
