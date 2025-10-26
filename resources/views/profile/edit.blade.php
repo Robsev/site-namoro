@@ -121,8 +121,61 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="birth_date" class="block text-sm font-medium text-gray-700 mb-2">Data de Nascimento *</label>
-                            <input type="date" id="birth_date" name="birth_date" value="{{ old('birth_date', $user->birth_date?->format('Y-m-d')) }}" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent" required>
+                            
+                            @php
+                                $birthDate = old('birth_date', $user->birth_date?->format('Y-m-d'));
+                                $day = $birthDate ? date('d', strtotime($birthDate)) : '';
+                                $month = $birthDate ? date('m', strtotime($birthDate)) : '';
+                                $year = $birthDate ? date('Y', strtotime($birthDate)) : '';
+                            @endphp
+                            
+                            <div id="birth_date_dropdown" class="grid grid-cols-3 gap-2">
+                                <div>
+                                    <label for="birth_day" class="sr-only">Dia</label>
+                                    <select id="birth_day" 
+                                            name="birth_day"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm">
+                                        <option value="">Dia</option>
+                                        @for($d = 1; $d <= 31; $d++)
+                                            <option value="{{ str_pad($d, 2, '0', STR_PAD_LEFT) }}" {{ old('birth_day', $day) == $d ? 'selected' : '' }}>{{ $d }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="birth_month" class="sr-only">Mês</label>
+                                    <select id="birth_month" 
+                                            name="birth_month"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm">
+                                        <option value="">Mês</option>
+                                        @for($m = 1; $m <= 12; $m++)
+                                            <option value="{{ str_pad($m, 2, '0', STR_PAD_LEFT) }}" {{ old('birth_month', $month) == $m ? 'selected' : '' }}>{{ $m }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="birth_year" class="sr-only">Ano</label>
+                                    <select id="birth_year" 
+                                            name="birth_year"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm">
+                                        <option value="">Ano</option>
+                                        @for($y = date('Y') - 18; $y >= 1920; $y--)
+                                            <option value="{{ $y }}" {{ old('birth_year', $year) == $y ? 'selected' : '' }}>{{ $y }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <input type="hidden" 
+                                   id="birth_date" 
+                                   name="birth_date" 
+                                   value="{{ $birthDate }}"
+                                   required>
+                            
+                            <p class="mt-1 text-xs text-gray-500">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Você deve ter pelo menos 18 anos
+                            </p>
+                            
                             @error('birth_date')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -431,6 +484,38 @@ function showTab(tabName) {
 document.addEventListener('DOMContentLoaded', function() {
     const activeTab = '{{ session("active_tab", "basic") }}';
     showTab(activeTab);
+    
+    // Birth date dropdowns functionality
+    const birthDay = document.getElementById('birth_day');
+    const birthMonth = document.getElementById('birth_month');
+    const birthYear = document.getElementById('birth_year');
+    const birthDate = document.getElementById('birth_date');
+
+    if (birthDay && birthMonth && birthYear && birthDate) {
+        function updateBirthDate() {
+            const day = birthDay.value;
+            const month = birthMonth.value;
+            const year = birthYear.value;
+
+            if (day && month && year) {
+                // Validate the date
+                const date = new Date(year, month - 1, day);
+                if (date.getDate() == day && date.getMonth() == month - 1 && date.getFullYear() == year) {
+                    birthDate.value = `${year}-${month}-${day}`;
+                    birthDate.setCustomValidity('');
+                } else {
+                    birthDate.setCustomValidity('Data inválida');
+                }
+            } else {
+                birthDate.value = '';
+                birthDate.setCustomValidity('');
+            }
+        }
+
+        birthDay.addEventListener('change', updateBirthDate);
+        birthMonth.addEventListener('change', updateBirthDate);
+        birthYear.addEventListener('change', updateBirthDate);
+    }
 });
 </script>
 @endsection
