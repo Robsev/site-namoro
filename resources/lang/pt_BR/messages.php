@@ -199,6 +199,13 @@ return [
     'chat.attachment' => 'Anexo',
     'chat.image' => 'Imagem',
     'chat.file' => 'Arquivo',
+    'chat.verified' => 'Verificado',
+    'chat.no_conversations' => 'Nenhuma conversa ainda',
+    'chat.start_conversing' => 'Comece a conversar com seus matches!',
+    'chat.view_matches' => 'Ver Meus Matches',
+    'chat.offline' => 'Offline',
+    'chat.file_message' => 'Arquivo',
+    'chat.no_message_yet' => 'Nenhuma mensagem ainda',
 
     // Notifications
     'notifications.title' => 'Notificações',
