@@ -142,7 +142,7 @@
                             name="gender"
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                             required>
-                        <option value="">{{ __('messages.common.select') }}</option>
+                        <option value="" disabled {{ !old('gender') ? 'selected' : '' }}>{{ __('messages.common.select') }}</option>
                         <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>{{ __('messages.register.gender_male') }}</option>
                         <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>{{ __('messages.register.gender_female') }}</option>
                         <option value="other" {{ old('gender') == 'other' ? 'selected' : '' }}>{{ __('messages.register.gender_other') }}</option>
