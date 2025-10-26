@@ -25,7 +25,7 @@
             <!-- Age Badge -->
             @if($match->age)
                 <div class="absolute bottom-4 left-4 bg-white bg-opacity-90 rounded-full px-3 py-1 text-sm font-semibold">
-                    {{ $match->age }} anos
+                    {{ $match->age }} {{ __('messages.common.years') }}
                 </div>
             @endif
 
@@ -42,12 +42,12 @@
             <h3 class="text-lg font-semibold text-gray-800 mb-2">
                 {{ $match->full_name }}
                 @if($match->is_verified)
-                    <i class="fas fa-check-circle text-blue-500 ml-1" title="Verificado"></i>
+                    <i class="fas fa-check-circle text-blue-500 ml-1" title="{{ __('messages.profile.verified') }}"></i>
                 @endif
             </h3>
             
             <p class="text-gray-600 text-sm mb-2">
-                <i class="fas fa-map-marker-alt mr-1"></i>{{ $match->location ?? 'Localização não informada' }}
+                <i class="fas fa-map-marker-alt mr-1"></i>{{ $match->location ?? __('messages.matching.location_not_informed') }}
             </p>
 
             @if($match->profile && $match->profile->bio)
@@ -61,7 +61,7 @@
                         <span class="bg-pink-100 text-pink-700 text-xs px-2 py-1 rounded-full">{{ $interest }}</span>
                     @endforeach
                     @if(count($match->profile->interests) > 3)
-                        <span class="text-gray-500 text-xs">+{{ count($match->profile->interests) - 3 }} mais</span>
+                        <span class="text-gray-500 text-xs">+{{ count($match->profile->interests) - 3 }} {{ __('messages.common.more') }}</span>
                     @endif
                 </div>
             @endif

@@ -202,6 +202,7 @@ return [
     'profile.show_online_status_description' => 'Allow other users to see when you are online',
     'profile.save_settings' => 'Save Settings',
     'profile.invalid_date' => 'Invalid date',
+    'profile.verified' => 'Verified',
 
     // Matching
     'matching.discover' => 'Discover People',
@@ -394,6 +395,7 @@ return [
     'common.select' => 'Select...',
     'common.and' => 'and',
     'common.years' => 'years',
+    'common.more' => 'more',
 
     // Validation
     'validation.required' => 'This field is required.',

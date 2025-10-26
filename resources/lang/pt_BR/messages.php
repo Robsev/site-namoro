@@ -204,6 +204,7 @@ return [
     'profile.show_online_status_description' => 'Permitir que outros usuários vejam quando você está online',
     'profile.save_settings' => 'Salvar Configurações',
     'profile.invalid_date' => 'Data inválida',
+    'profile.verified' => 'Verificado',
 
     // Matching
     'matching.discover' => 'Descobrir Pessoas',
@@ -396,6 +397,7 @@ return [
     'common.select' => 'Selecione...',
     'common.and' => 'e',
     'common.years' => 'anos',
+    'common.more' => 'mais',
 
     // Validation
     'validation.required' => 'Este campo é obrigatório.',
