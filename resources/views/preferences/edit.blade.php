@@ -63,7 +63,7 @@
                 <div id="distance_settings" class="space-y-4 {{ old('enable_geographic_matching', $preferences?->enable_geographic_matching ?? true) ? '' : 'hidden' }}">
                     <div>
                         <label for="max_distance" class="block text-sm font-medium text-gray-700 mb-2">
-                            Distância máxima: <span id="distance_value">{{ old('max_distance', $preferences?->max_distance ?? 50) }}</span> km
+                            {{ __('messages.preferences.max_distance') }}: <span id="distance_value">{{ old('max_distance', $preferences?->max_distance ?? 50) }}</span> km
                         </label>
                         <input type="range" id="max_distance" name="max_distance" min="1" max="1000" 
                                value="{{ old('max_distance', $preferences?->max_distance ?? 50) }}" 
@@ -85,10 +85,10 @@
                         <div class="flex">
                             <i class="fas fa-exclamation-triangle text-yellow-500 mt-1 mr-3"></i>
                             <div>
-                                <h3 class="text-sm font-medium text-yellow-800">Localização não configurada</h3>
+                                <h3 class="text-sm font-medium text-yellow-800">{{ __('messages.preferences.location_not_configured') }}</h3>
                                 <p class="text-sm text-yellow-700 mt-1">
-                                    Para usar filtros de distância, configure sua localização primeiro.
-                                    <a href="{{ route('location.index') }}" class="underline hover:text-yellow-800">Configurar localização</a>
+                                    {{ __('messages.preferences.location_not_configured_desc') }}
+                                    <a href="{{ route('location.index') }}" class="underline hover:text-yellow-800">{{ __('messages.preferences.configure_location') }}</a>
                                 </p>
                             </div>
                         </div>
@@ -98,117 +98,117 @@
 
             <!-- Preferred Genders -->
             <div class="space-y-4">
-                <h2 class="text-lg font-semibold text-gray-900">Gêneros de Interesse</h2>
+                <h2 class="text-lg font-semibold text-gray-900">{{ __('messages.preferences.preferred_genders') }}</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <label class="flex items-center">
                         <input type="checkbox" name="preferred_genders[]" value="male" 
                                {{ in_array('male', old('preferred_genders', $preferences?->preferred_genders ?? [])) ? 'checked' : '' }}
                                class="rounded border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
-                        <span class="ml-2 text-sm text-gray-700">Masculino</span>
+                        <span class="ml-2 text-sm text-gray-700">{{ __('messages.preferences.male') }}</span>
                     </label>
                     <label class="flex items-center">
                         <input type="checkbox" name="preferred_genders[]" value="female" 
                                {{ in_array('female', old('preferred_genders', $preferences?->preferred_genders ?? [])) ? 'checked' : '' }}
                                class="rounded border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
-                        <span class="ml-2 text-sm text-gray-700">Feminino</span>
+                        <span class="ml-2 text-sm text-gray-700">{{ __('messages.preferences.female') }}</span>
                     </label>
                     <label class="flex items-center">
                         <input type="checkbox" name="preferred_genders[]" value="other" 
                                {{ in_array('other', old('preferred_genders', $preferences?->preferred_genders ?? [])) ? 'checked' : '' }}
                                class="rounded border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
-                        <span class="ml-2 text-sm text-gray-700">Outro</span>
+                        <span class="ml-2 text-sm text-gray-700">{{ __('messages.preferences.other') }}</span>
                     </label>
                     <label class="flex items-center">
                         <input type="checkbox" name="preferred_genders[]" value="prefer_not_to_say" 
                                {{ in_array('prefer_not_to_say', old('preferred_genders', $preferences?->preferred_genders ?? [])) ? 'checked' : '' }}
                                class="rounded border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
-                        <span class="ml-2 text-sm text-gray-700">Prefiro não dizer</span>
+                        <span class="ml-2 text-sm text-gray-700">{{ __('messages.preferences.prefer_not_to_say') }}</span>
                     </label>
                 </div>
             </div>
 
             <!-- Relationship Goals -->
             <div class="space-y-4">
-                <h2 class="text-lg font-semibold text-gray-900">Objetivos de Relacionamento</h2>
+                <h2 class="text-lg font-semibold text-gray-900">{{ __('messages.preferences.relationship_goals') }}</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <label class="flex items-center">
                         <input type="checkbox" name="preferred_relationship_goals[]" value="friendship" 
                                {{ in_array('friendship', old('preferred_relationship_goals', $preferences?->preferred_relationship_goals ?? [])) ? 'checked' : '' }}
                                class="rounded border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
-                        <span class="ml-2 text-sm text-gray-700">Amizade</span>
+                        <span class="ml-2 text-sm text-gray-700">{{ __('messages.preferences.friendship') }}</span>
                     </label>
                     <label class="flex items-center">
                         <input type="checkbox" name="preferred_relationship_goals[]" value="romance" 
                                {{ in_array('romance', old('preferred_relationship_goals', $preferences?->preferred_relationship_goals ?? [])) ? 'checked' : '' }}
                                class="rounded border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
-                        <span class="ml-2 text-sm text-gray-700">Romance</span>
+                        <span class="ml-2 text-sm text-gray-700">{{ __('messages.preferences.romance') }}</span>
                     </label>
                     <label class="flex items-center">
                         <input type="checkbox" name="preferred_relationship_goals[]" value="casual" 
                                {{ in_array('casual', old('preferred_relationship_goals', $preferences?->preferred_relationship_goals ?? [])) ? 'checked' : '' }}
                                class="rounded border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
-                        <span class="ml-2 text-sm text-gray-700">Casual</span>
+                        <span class="ml-2 text-sm text-gray-700">{{ __('messages.preferences.casual') }}</span>
                     </label>
                     <label class="flex items-center">
                         <input type="checkbox" name="preferred_relationship_goals[]" value="serious" 
                                {{ in_array('serious', old('preferred_relationship_goals', $preferences?->preferred_relationship_goals ?? [])) ? 'checked' : '' }}
                                class="rounded border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
-                        <span class="ml-2 text-sm text-gray-700">Relacionamento Sério</span>
+                        <span class="ml-2 text-sm text-gray-700">{{ __('messages.preferences.serious') }}</span>
                     </label>
                     <label class="flex items-center">
                         <input type="checkbox" name="preferred_relationship_goals[]" value="marriage" 
                                {{ in_array('marriage', old('preferred_relationship_goals', $preferences?->preferred_relationship_goals ?? [])) ? 'checked' : '' }}
                                class="rounded border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
-                        <span class="ml-2 text-sm text-gray-700">Casamento</span>
+                        <span class="ml-2 text-sm text-gray-700">{{ __('messages.preferences.marriage') }}</span>
                     </label>
                 </div>
             </div>
 
             <!-- Education Levels -->
             <div class="space-y-4">
-                <h2 class="text-lg font-semibold text-gray-900">Níveis de Educação</h2>
+                <h2 class="text-lg font-semibold text-gray-900">{{ __('messages.preferences.education_levels') }}</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <label class="flex items-center">
                         <input type="checkbox" name="preferred_education_levels[]" value="high_school" 
                                {{ in_array('high_school', old('preferred_education_levels', $preferences?->preferred_education_levels ?? [])) ? 'checked' : '' }}
                                class="rounded border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
-                        <span class="ml-2 text-sm text-gray-700">Ensino Médio</span>
+                        <span class="ml-2 text-sm text-gray-700">{{ __('messages.preferences.high_school') }}</span>
                     </label>
                     <label class="flex items-center">
                         <input type="checkbox" name="preferred_education_levels[]" value="bachelor" 
                                {{ in_array('bachelor', old('preferred_education_levels', $preferences?->preferred_education_levels ?? [])) ? 'checked' : '' }}
                                class="rounded border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
-                        <span class="ml-2 text-sm text-gray-700">Graduação</span>
+                        <span class="ml-2 text-sm text-gray-700">{{ __('messages.preferences.bachelor') }}</span>
                     </label>
                     <label class="flex items-center">
                         <input type="checkbox" name="preferred_education_levels[]" value="master" 
                                {{ in_array('master', old('preferred_education_levels', $preferences?->preferred_education_levels ?? [])) ? 'checked' : '' }}
                                class="rounded border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
-                        <span class="ml-2 text-sm text-gray-700">Mestrado</span>
+                        <span class="ml-2 text-sm text-gray-700">{{ __('messages.preferences.master') }}</span>
                     </label>
                     <label class="flex items-center">
                         <input type="checkbox" name="preferred_education_levels[]" value="phd" 
                                {{ in_array('phd', old('preferred_education_levels', $preferences?->preferred_education_levels ?? [])) ? 'checked' : '' }}
                                class="rounded border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
-                        <span class="ml-2 text-sm text-gray-700">Doutorado</span>
+                        <span class="ml-2 text-sm text-gray-700">{{ __('messages.preferences.phd') }}</span>
                     </label>
                     <label class="flex items-center">
                         <input type="checkbox" name="preferred_education_levels[]" value="other" 
                                {{ in_array('other', old('preferred_education_levels', $preferences?->preferred_education_levels ?? [])) ? 'checked' : '' }}
                                class="rounded border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
-                        <span class="ml-2 text-sm text-gray-700">Outro</span>
+                        <span class="ml-2 text-sm text-gray-700">{{ __('messages.preferences.other_education') }}</span>
                     </label>
                 </div>
             </div>
 
             <!-- Lifestyle Preferences -->
             <div class="space-y-4">
-                <h2 class="text-lg font-semibold text-gray-900">Preferências de Estilo de Vida</h2>
+                <h2 class="text-lg font-semibold text-gray-900">{{ __('messages.preferences.lifestyle') }}</h2>
                 <div class="space-y-4">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h3 class="text-sm font-medium text-gray-900">Aceita fumantes</h3>
-                            <p class="text-sm text-gray-500">Incluir pessoas que fumam nos resultados</p>
+                            <h3 class="text-sm font-medium text-gray-900">{{ __('messages.preferences.smoking_ok') }}</h3>
+                            <p class="text-sm text-gray-500">{{ __('messages.preferences.smoking_ok_desc') }}</p>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" name="smoking_ok" value="1" 
@@ -220,8 +220,8 @@
 
                     <div class="flex items-center justify-between">
                         <div>
-                            <h3 class="text-sm font-medium text-gray-900">Aceita quem bebe</h3>
-                            <p class="text-sm text-gray-500">Incluir pessoas que bebem nos resultados</p>
+                            <h3 class="text-sm font-medium text-gray-900">{{ __('messages.preferences.drinking_ok') }}</h3>
+                            <p class="text-sm text-gray-500">{{ __('messages.preferences.drinking_ok_desc') }}</p>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" name="drinking_ok" value="1" 
@@ -233,8 +233,8 @@
 
                     <div class="flex items-center justify-between">
                         <div>
-                            <h3 class="text-sm font-medium text-gray-900">Apenas online</h3>
-                            <p class="text-sm text-gray-500">Mostrar apenas pessoas que estão online agora</p>
+                            <h3 class="text-sm font-medium text-gray-900">{{ __('messages.preferences.online_only') }}</h3>
+                            <p class="text-sm text-gray-500">{{ __('messages.preferences.online_only_desc') }}</p>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" name="online_only" value="1" 
@@ -246,8 +246,8 @@
 
                     <div class="flex items-center justify-between">
                         <div>
-                            <h3 class="text-sm font-medium text-gray-900">Apenas verificados</h3>
-                            <p class="text-sm text-gray-500">Mostrar apenas perfis verificados</p>
+                            <h3 class="text-sm font-medium text-gray-900">{{ __('messages.preferences.verified_only') }}</h3>
+                            <p class="text-sm text-gray-500">{{ __('messages.preferences.verified_only_desc') }}</p>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" name="verified_only" value="1" 
@@ -259,8 +259,8 @@
 
                     <div class="flex items-center justify-between">
                         <div>
-                            <h3 class="text-sm font-medium text-gray-900">Somente perfis com fotos</h3>
-                            <p class="text-sm text-gray-500">Mostrar apenas pessoas que têm fotos no perfil</p>
+                            <h3 class="text-sm font-medium text-gray-900">{{ __('messages.preferences.photos_only') }}</h3>
+                            <p class="text-sm text-gray-500">{{ __('messages.preferences.photos_only_desc') }}</p>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" name="photos_only" value="1" 
@@ -272,8 +272,8 @@
                     
                     <div class="flex items-center justify-between">
                         <div>
-                            <h3 class="text-sm font-medium text-gray-900">Somente perfis completos</h3>
-                            <p class="text-sm text-gray-500">Mostrar apenas pessoas com perfis 100% completos</p>
+                            <h3 class="text-sm font-medium text-gray-900">{{ __('messages.preferences.complete_profiles_only') }}</h3>
+                            <p class="text-sm text-gray-500">{{ __('messages.preferences.complete_profiles_only_desc') }}</p>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" name="complete_profiles_only" value="1" 
@@ -288,7 +288,7 @@
             <!-- Submit Button -->
             <div class="flex justify-end pt-6 border-t border-gray-200">
                 <button type="submit" class="bg-pink-600 text-white px-8 py-3 rounded-lg hover:bg-pink-700 transition duration-200 font-medium">
-                    <i class="fas fa-save mr-2"></i>Salvar Preferências
+                    <i class="fas fa-save mr-2"></i>{{ __('messages.preferences.save') }}
                 </button>
             </div>
         </form>
