@@ -300,6 +300,100 @@
                         </div>
                     </div>
 
+                    <!-- Children -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="has_children" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.profile.has_children') }}</label>
+                            <select id="has_children" name="has_children" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                                <option value="">{{ __('messages.profile.select_option') }}</option>
+                                <option value="yes" {{ old('has_children', $user->profile?->has_children) == 'yes' ? 'selected' : '' }}>{{ __('messages.profile.yes') }}</option>
+                                <option value="no" {{ old('has_children', $user->profile?->has_children) == 'no' ? 'selected' : '' }}>{{ __('messages.profile.no') }}</option>
+                                <option value="prefer_not_to_say" {{ old('has_children', $user->profile?->has_children) == 'prefer_not_to_say' ? 'selected' : '' }}>{{ __('messages.profile.prefer_not_to_say') }}</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="wants_children" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.profile.wants_children') }}</label>
+                            <select id="wants_children" name="wants_children" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                                <option value="">{{ __('messages.profile.select_option') }}</option>
+                                <option value="yes" {{ old('wants_children', $user->profile?->wants_children) == 'yes' ? 'selected' : '' }}>{{ __('messages.profile.yes') }}</option>
+                                <option value="no" {{ old('wants_children', $user->profile?->wants_children) == 'no' ? 'selected' : '' }}>{{ __('messages.profile.no') }}</option>
+                                <option value="maybe" {{ old('wants_children', $user->profile?->wants_children) == 'maybe' ? 'selected' : '' }}>{{ __('messages.profile.maybe') }}</option>
+                                <option value="prefer_not_to_say" {{ old('wants_children', $user->profile?->wants_children) == 'prefer_not_to_say' ? 'selected' : '' }}>{{ __('messages.profile.prefer_not_to_say') }}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Physical Characteristics -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="body_type" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.profile.body_type') }}</label>
+                            <select id="body_type" name="body_type" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                                <option value="">{{ __('messages.profile.select_option') }}</option>
+                                <option value="slim" {{ old('body_type', $user->profile?->body_type) == 'slim' ? 'selected' : '' }}>{{ __('messages.profile.body_type_slim') }}</option>
+                                <option value="athletic" {{ old('body_type', $user->profile?->body_type) == 'athletic' ? 'selected' : '' }}>{{ __('messages.profile.body_type_athletic') }}</option>
+                                <option value="average" {{ old('body_type', $user->profile?->body_type) == 'average' ? 'selected' : '' }}>{{ __('messages.profile.body_type_average') }}</option>
+                                <option value="curvy" {{ old('body_type', $user->profile?->body_type) == 'curvy' ? 'selected' : '' }}>{{ __('messages.profile.body_type_curvy') }}</option>
+                                <option value="plus_size" {{ old('body_type', $user->profile?->body_type) == 'plus_size' ? 'selected' : '' }}>{{ __('messages.profile.body_type_plus_size') }}</option>
+                                <option value="muscular" {{ old('body_type', $user->profile?->body_type) == 'muscular' ? 'selected' : '' }}>{{ __('messages.profile.body_type_muscular') }}</option>
+                                <option value="prefer_not_to_say" {{ old('body_type', $user->profile?->body_type) == 'prefer_not_to_say' ? 'selected' : '' }}>{{ __('messages.profile.prefer_not_to_say') }}</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="height" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.profile.height') }}</label>
+                            <input type="number" id="height" name="height" value="{{ old('height', $user->profile?->height) }}" 
+                                   placeholder="{{ __('messages.profile.height_placeholder') }}" 
+                                   min="100" max="250"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                        </div>
+
+                        <div>
+                            <label for="weight" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.profile.weight') }}</label>
+                            <input type="number" id="weight" name="weight" value="{{ old('weight', $user->profile?->weight) }}" 
+                                   placeholder="{{ __('messages.profile.weight_placeholder') }}" 
+                                   min="30" max="200"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                        </div>
+                    </div>
+
+                    <!-- Lifestyle -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="diet_type" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.profile.diet_type') }}</label>
+                            <select id="diet_type" name="diet_type" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                                <option value="">{{ __('messages.profile.select_option') }}</option>
+                                <option value="omnivore" {{ old('diet_type', $user->profile?->diet_type) == 'omnivore' ? 'selected' : '' }}>{{ __('messages.profile.diet_omnivore') }}</option>
+                                <option value="vegetarian" {{ old('diet_type', $user->profile?->diet_type) == 'vegetarian' ? 'selected' : '' }}>{{ __('messages.profile.diet_vegetarian') }}</option>
+                                <option value="vegan" {{ old('diet_type', $user->profile?->diet_type) == 'vegan' ? 'selected' : '' }}>{{ __('messages.profile.diet_vegan') }}</option>
+                                <option value="pescatarian" {{ old('diet_type', $user->profile?->diet_type) == 'pescatarian' ? 'selected' : '' }}>{{ __('messages.profile.diet_pescatarian') }}</option>
+                                <option value="keto" {{ old('diet_type', $user->profile?->diet_type) == 'keto' ? 'selected' : '' }}>{{ __('messages.profile.diet_keto') }}</option>
+                                <option value="paleo" {{ old('diet_type', $user->profile?->diet_type) == 'paleo' ? 'selected' : '' }}>{{ __('messages.profile.diet_paleo') }}</option>
+                                <option value="other" {{ old('diet_type', $user->profile?->diet_type) == 'other' ? 'selected' : '' }}>{{ __('messages.profile.other') }}</option>
+                                <option value="prefer_not_to_say" {{ old('diet_type', $user->profile?->diet_type) == 'prefer_not_to_say' ? 'selected' : '' }}>{{ __('messages.profile.prefer_not_to_say') }}</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="exercise_frequency" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.profile.exercise_frequency') }}</label>
+                            <select id="exercise_frequency" name="exercise_frequency" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                                <option value="">{{ __('messages.profile.select_option') }}</option>
+                                <option value="daily" {{ old('exercise_frequency', $user->profile?->exercise_frequency) == 'daily' ? 'selected' : '' }}>{{ __('messages.profile.exercise_daily') }}</option>
+                                <option value="several_times_week" {{ old('exercise_frequency', $user->profile?->exercise_frequency) == 'several_times_week' ? 'selected' : '' }}>{{ __('messages.profile.exercise_several_times') }}</option>
+                                <option value="weekly" {{ old('exercise_frequency', $user->profile?->exercise_frequency) == 'weekly' ? 'selected' : '' }}>{{ __('messages.profile.exercise_weekly') }}</option>
+                                <option value="monthly" {{ old('exercise_frequency', $user->profile?->exercise_frequency) == 'monthly' ? 'selected' : '' }}>{{ __('messages.profile.exercise_monthly') }}</option>
+                                <option value="rarely" {{ old('exercise_frequency', $user->profile?->exercise_frequency) == 'rarely' ? 'selected' : '' }}>{{ __('messages.profile.exercise_rarely') }}</option>
+                                <option value="never" {{ old('exercise_frequency', $user->profile?->exercise_frequency) == 'never' ? 'selected' : '' }}>{{ __('messages.profile.exercise_never') }}</option>
+                                <option value="prefer_not_to_say" {{ old('exercise_frequency', $user->profile?->exercise_frequency) == 'prefer_not_to_say' ? 'selected' : '' }}>{{ __('messages.profile.prefer_not_to_say') }}</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div>
                         <label for="looking_for" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.profile.looking_for') }}</label>
                         <textarea id="looking_for" name="looking_for" rows="3" 
