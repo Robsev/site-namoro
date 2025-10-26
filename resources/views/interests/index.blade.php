@@ -26,9 +26,9 @@
             <div class="mb-4">
                 <h2 class="text-xl font-semibold text-gray-900 flex items-center">
                     <i class="fas fa-{{ $category->slug === 'music' ? 'music' : ($category->slug === 'sports' ? 'dumbbell' : ($category->slug === 'literature' ? 'book' : ($category->slug === 'cinema_tv' ? 'tv' : ($category->slug === 'hobbies' ? 'puzzle-piece' : ($category->slug === 'travel' ? 'plane' : ($category->slug === 'food' ? 'utensils' : 'laptop')))))) }} text-pink-500 mr-3"></i>
-                    {{ $category->name }}
+                    {{ __('messages.interests.category.' . $category->slug) }}
                 </h2>
-                <p class="text-gray-600 text-sm">{{ $category->description }}</p>
+                <p class="text-gray-600 text-sm">{{ __('messages.interests.description.' . $category->slug) }}</p>
                 <p class="text-gray-500 text-xs mt-1">
                     Selecione até {{ $category->max_selections }} opções
                 </p>
@@ -36,6 +36,13 @@
 
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                 @foreach($category->options as $option)
+                @php
+                    // Normalizar a chave para a tradução
+                    $optionKey = strtolower(str_replace([' ', '/', '-', '&', 'ç'], ['_', '_', '_', 'e', 'c'], $option));
+                    // Tentar traduzir, se não encontrar, usar o valor original
+                    $translated = __('messages.interests.option.' . $optionKey);
+                    $display = ($translated === 'messages.interests.option.' . $optionKey) ? $option : $translated;
+                @endphp
                 <label class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition duration-200 {{ in_array($option, $userInterests[$category->id] ?? []) ? 'bg-pink-50 border-pink-300' : '' }}">
                     <input type="checkbox" 
                            name="interests[{{ $category->id }}][]" 
@@ -45,7 +52,7 @@
                            data-max="{{ $category->max_selections }}"
                            {{ in_array($option, $userInterests[$category->id] ?? []) ? 'checked' : '' }}>
                     <div class="flex-1 text-sm font-medium text-gray-700 text-center">
-                        {{ $option }}
+                        {{ $display }}
                     </div>
                 </label>
                 @endforeach

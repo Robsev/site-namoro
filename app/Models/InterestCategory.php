@@ -45,4 +45,36 @@ class InterestCategory extends Model
     {
         return $query->orderBy('sort_order')->orderBy('name');
     }
+
+    /**
+     * Get the translated name of the category
+     */
+    public function getTranslatedNameAttribute(): string
+    {
+        return __('messages.interests.category.' . $this->slug);
+    }
+
+    /**
+     * Get the translated description of the category
+     */
+    public function getTranslatedDescriptionAttribute(): string
+    {
+        return __('messages.interests.description.' . $this->slug);
+    }
+
+    /**
+     * Get translated options
+     */
+    public function getTranslatedOptionsAttribute(): array
+    {
+        $translated = [];
+        foreach ($this->options as $option) {
+            $key = strtolower(str_replace([' ', '/', '-', '&'], '_', $option));
+            $translated[] = [
+                'value' => $option,
+                'label' => __('messages.interests.option.' . $key, [], $option)
+            ];
+        }
+        return $translated;
+    }
 }
