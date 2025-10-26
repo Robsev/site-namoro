@@ -85,12 +85,55 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label for="birth_date" class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.register.birth_date') }} *</label>
-                    <input type="date" 
+                    
+                    <!-- Alternative: Dropdowns for better UX -->
+                    <div id="birth_date_dropdown" class="grid grid-cols-3 gap-2">
+                        <div>
+                            <label for="birth_day" class="sr-only">{{ __('messages.register.birth_day') }}</label>
+                            <select id="birth_day" 
+                                    name="birth_day"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm">
+                                <option value="">{{ __('messages.register.day') }}</option>
+                                @for($day = 1; $day <= 31; $day++)
+                                    <option value="{{ str_pad($day, 2, '0', STR_PAD_LEFT) }}" {{ old('birth_day') == $day ? 'selected' : '' }}>{{ $day }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div>
+                            <label for="birth_month" class="sr-only">{{ __('messages.register.birth_month') }}</label>
+                            <select id="birth_month" 
+                                    name="birth_month"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm">
+                                <option value="">{{ __('messages.register.month') }}</option>
+                                @for($month = 1; $month <= 12; $month++)
+                                    <option value="{{ str_pad($month, 2, '0', STR_PAD_LEFT) }}" {{ old('birth_month') == $month ? 'selected' : '' }}>{{ $month }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div>
+                            <label for="birth_year" class="sr-only">{{ __('messages.register.birth_year') }}</label>
+                            <select id="birth_year" 
+                                    name="birth_year"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm">
+                                <option value="">{{ __('messages.register.year') }}</option>
+                                @for($year = date('Y') - 18; $year >= 1920; $year--)
+                                    <option value="{{ $year }}" {{ old('birth_year') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Hidden input for the actual birth_date value -->
+                    <input type="hidden" 
                            id="birth_date" 
                            name="birth_date" 
                            value="{{ old('birth_date') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                            required>
+                    
+                    <p class="mt-1 text-xs text-gray-500">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        {{ __('messages.register.birth_date_hint') }}
+                    </p>
                 </div>
 
                 <div>
@@ -187,6 +230,40 @@
             </div>
         </div>
     </div>
+
+    <!-- JavaScript for birth date dropdowns -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const birthDay = document.getElementById('birth_day');
+            const birthMonth = document.getElementById('birth_month');
+            const birthYear = document.getElementById('birth_year');
+            const birthDate = document.getElementById('birth_date');
+
+            function updateBirthDate() {
+                const day = birthDay.value;
+                const month = birthMonth.value;
+                const year = birthYear.value;
+
+                if (day && month && year) {
+                    // Validate the date
+                    const date = new Date(year, month - 1, day);
+                    if (date.getDate() == day && date.getMonth() == month - 1 && date.getFullYear() == year) {
+                        birthDate.value = `${year}-${month}-${day}`;
+                        birthDate.setCustomValidity('');
+                    } else {
+                        birthDate.setCustomValidity('{{ __('messages.validation.date_invalid') }}');
+                    }
+                } else {
+                    birthDate.value = '';
+                    birthDate.setCustomValidity('');
+                }
+            }
+
+            birthDay.addEventListener('change', updateBirthDate);
+            birthMonth.addEventListener('change', updateBirthDate);
+            birthYear.addEventListener('change', updateBirthDate);
+        });
+    </script>
 </body>
 </html>
 
