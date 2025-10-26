@@ -1,6 +1,6 @@
 @extends('layouts.profile')
 
-@section('title', 'Editar Perfil')
+@section('title', __('messages.profile.edit'))
 
 @section('content')
 <div class="max-w-4xl mx-auto">
@@ -12,16 +12,16 @@
         <div class="border-b border-gray-200">
             <nav class="-mb-px flex space-x-8 px-6" aria-label="Tabs">
                 <button onclick="showTab('basic')" id="tab-basic" class="tab-button {{ session('active_tab', 'basic') == 'basic' ? 'active' : '' }} py-4 px-1 border-b-2 {{ session('active_tab', 'basic') == 'basic' ? 'border-pink-500 font-medium text-sm text-pink-600' : 'border-transparent font-medium text-sm text-gray-500 hover:text-gray-700' }}">
-                    <i class="fas fa-user mr-2"></i>Informações Básicas
+                    <i class="fas fa-user mr-2"></i>{{ __('messages.profile.basic_info') }}
                 </button>
                 <button onclick="showTab('details')" id="tab-details" class="tab-button {{ session('active_tab', 'basic') == 'details' ? 'active' : '' }} py-4 px-1 border-b-2 {{ session('active_tab', 'basic') == 'details' ? 'border-pink-500 font-medium text-sm text-pink-600' : 'border-transparent font-medium text-sm text-gray-500 hover:text-gray-700' }}">
-                    <i class="fas fa-info-circle mr-2"></i>Detalhes do Perfil
+                    <i class="fas fa-info-circle mr-2"></i>{{ __('messages.profile.details') }}
                 </button>
                 <button onclick="showTab('photos')" id="tab-photos" class="tab-button {{ session('active_tab', 'basic') == 'photos' ? 'active' : '' }} py-4 px-1 border-b-2 {{ session('active_tab', 'basic') == 'photos' ? 'border-pink-500 font-medium text-sm text-pink-600' : 'border-transparent font-medium text-sm text-gray-500 hover:text-gray-700' }}">
-                    <i class="fas fa-images mr-2"></i>Fotos
+                    <i class="fas fa-images mr-2"></i>{{ __('messages.profile.photos') }}
                 </button>
                 <button onclick="showTab('privacy')" id="tab-privacy" class="tab-button {{ session('active_tab', 'basic') == 'privacy' ? 'active' : '' }} py-4 px-1 border-b-2 {{ session('active_tab', 'basic') == 'privacy' ? 'border-pink-500 font-medium text-sm text-pink-600' : 'border-transparent font-medium text-sm text-gray-500 hover:text-gray-700' }}">
-                    <i class="fas fa-shield-alt mr-2"></i>Privacidade
+                    <i class="fas fa-shield-alt mr-2"></i>{{ __('messages.profile.privacy') }}
                 </button>
             </nav>
         </div>
@@ -32,11 +32,11 @@
         <!-- Basic Information Tab -->
         <div id="content-basic" class="tab-content">
             <div class="bg-white rounded-lg shadow-sm border p-6">
-                <h2 class="text-xl font-semibold text-gray-900 mb-6">Informações Básicas</h2>
+                <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ __('messages.profile.basic_info') }}</h2>
                 
                 <!-- Foto de Perfil -->
                 <div class="mb-8">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">Foto de Perfil</h3>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('messages.profile.profile_photo') }}</h3>
                     <div class="flex items-center space-x-6">
                         <!-- Foto atual -->
                         <div class="flex-shrink-0">
@@ -57,14 +57,14 @@
                                 @csrf
                                 <div>
                                     <label for="profile_photo" class="block text-sm font-medium text-gray-700 mb-2">
-                                        Alterar Foto de Perfil
+                                        {{ __('messages.profile.change_profile_photo') }}
                                     </label>
                                     <input type="file" 
                                            id="profile_photo" 
                                            name="profile_photo" 
                                            accept="image/*"
                                            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100">
-                                    <p class="mt-1 text-xs text-gray-500">PNG, JPG, GIF até 2MB. Recomendado: 400x400px</p>
+                                    <p class="mt-1 text-xs text-gray-500">{{ __('messages.profile.photo_recommendation') }}</p>
                                     @error('profile_photo')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -72,14 +72,14 @@
                                 
                                 <div class="flex space-x-3">
                                     <button type="submit" class="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition duration-200 text-sm">
-                                        <i class="fas fa-upload mr-2"></i>Atualizar Foto
+                                        <i class="fas fa-upload mr-2"></i>{{ __('messages.profile.update_photo') }}
                                     </button>
                                     
                                     @if($user->profile_photo)
                                     <button type="button" 
-                                            onclick="if(confirm('Tem certeza que deseja remover a foto de perfil?')) { document.getElementById('remove-photo-form').submit(); }"
+                                            onclick="if(confirm('{{ __('messages.profile.confirm_remove_photo') }}')) { document.getElementById('remove-photo-form').submit(); }"
                                             class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 text-sm">
-                                        <i class="fas fa-trash mr-2"></i>Remover
+                                        <i class="fas fa-trash mr-2"></i>{{ __('messages.profile.remove') }}
                                     </button>
                                     @endif
                                 </div>
@@ -100,7 +100,7 @@
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">Nome *</label>
+                            <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.profile.first_name') }} *</label>
                             <input type="text" id="first_name" name="first_name" value="{{ old('first_name', $user->first_name) }}" 
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent" required>
                             @error('first_name')
@@ -109,7 +109,7 @@
                         </div>
 
                         <div>
-                            <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Sobrenome *</label>
+                            <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.profile.last_name') }} *</label>
                             <input type="text" id="last_name" name="last_name" value="{{ old('last_name', $user->last_name) }}" 
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent" required>
                             @error('last_name')
@@ -120,7 +120,7 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label for="birth_date" class="block text-sm font-medium text-gray-700 mb-2">Data de Nascimento *</label>
+                            <label for="birth_date" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.profile.birth_date') }} *</label>
                             
                             @php
                                 $birthDate = old('birth_date', $user->birth_date?->format('Y-m-d'));
@@ -131,33 +131,33 @@
                             
                             <div id="birth_date_dropdown" class="grid grid-cols-3 gap-2">
                                 <div>
-                                    <label for="birth_day" class="sr-only">Dia</label>
+                                    <label for="birth_day" class="sr-only">{{ __('messages.profile.day') }}</label>
                                     <select id="birth_day" 
                                             name="birth_day"
                                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm">
-                                        <option value="">Dia</option>
+                                        <option value="">{{ __('messages.profile.day') }}</option>
                                         @for($d = 1; $d <= 31; $d++)
                                             <option value="{{ str_pad($d, 2, '0', STR_PAD_LEFT) }}" {{ old('birth_day', $day) == $d ? 'selected' : '' }}>{{ $d }}</option>
                                         @endfor
                                     </select>
                                 </div>
                                 <div>
-                                    <label for="birth_month" class="sr-only">Mês</label>
+                                    <label for="birth_month" class="sr-only">{{ __('messages.profile.month') }}</label>
                                     <select id="birth_month" 
                                             name="birth_month"
                                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm">
-                                        <option value="">Mês</option>
+                                        <option value="">{{ __('messages.profile.month') }}</option>
                                         @for($m = 1; $m <= 12; $m++)
                                             <option value="{{ str_pad($m, 2, '0', STR_PAD_LEFT) }}" {{ old('birth_month', $month) == $m ? 'selected' : '' }}>{{ $m }}</option>
                                         @endfor
                                     </select>
                                 </div>
                                 <div>
-                                    <label for="birth_year" class="sr-only">Ano</label>
+                                    <label for="birth_year" class="sr-only">{{ __('messages.profile.year') }}</label>
                                     <select id="birth_year" 
                                             name="birth_year"
                                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm">
-                                        <option value="">Ano</option>
+                                        <option value="">{{ __('messages.profile.year') }}</option>
                                         @for($y = date('Y') - 18; $y >= 1920; $y--)
                                             <option value="{{ $y }}" {{ old('birth_year', $year) == $y ? 'selected' : '' }}>{{ $y }}</option>
                                         @endfor
@@ -173,7 +173,7 @@
                             
                             <p class="mt-1 text-xs text-gray-500">
                                 <i class="fas fa-info-circle mr-1"></i>
-                                Você deve ter pelo menos 18 anos
+                                {{ __('messages.profile.age_requirement') }}
                             </p>
                             
                             @error('birth_date')
@@ -182,14 +182,14 @@
                         </div>
 
                         <div>
-                            <label for="gender" class="block text-sm font-medium text-gray-700 mb-2">Gênero *</label>
+                            <label for="gender" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.profile.gender') }} *</label>
                             <select id="gender" name="gender" 
                                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent" required>
-                                <option value="">Selecione...</option>
-                                <option value="male" {{ old('gender', $user->gender) == 'male' ? 'selected' : '' }}>Masculino</option>
-                                <option value="female" {{ old('gender', $user->gender) == 'female' ? 'selected' : '' }}>Feminino</option>
-                                <option value="other" {{ old('gender', $user->gender) == 'other' ? 'selected' : '' }}>Outro</option>
-                                <option value="prefer_not_to_say" {{ old('gender', $user->gender) == 'prefer_not_to_say' ? 'selected' : '' }}>Prefiro não dizer</option>
+                                <option value="">{{ __('messages.profile.select_option') }}</option>
+                                <option value="male" {{ old('gender', $user->gender) == 'male' ? 'selected' : '' }}>{{ __('messages.profile.male') }}</option>
+                                <option value="female" {{ old('gender', $user->gender) == 'female' ? 'selected' : '' }}>{{ __('messages.profile.female') }}</option>
+                                <option value="other" {{ old('gender', $user->gender) == 'other' ? 'selected' : '' }}>{{ __('messages.profile.other') }}</option>
+                                <option value="prefer_not_to_say" {{ old('gender', $user->gender) == 'prefer_not_to_say' ? 'selected' : '' }}>{{ __('messages.profile.prefer_not_to_say') }}</option>
                             </select>
                             @error('gender')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -200,7 +200,7 @@
 
                     <div class="flex justify-end">
                         <button type="submit" class="bg-pink-600 text-white px-6 py-2 rounded-lg hover:bg-pink-700 transition duration-200">
-                            <i class="fas fa-save mr-2"></i>Salvar Informações Básicas
+                            <i class="fas fa-save mr-2"></i>{{ __('messages.profile.save_basic_info') }}
                         </button>
                     </div>
                 </form>
@@ -210,15 +210,15 @@
         <!-- Profile Details Tab -->
         <div id="content-details" class="tab-content hidden">
             <div class="bg-white rounded-lg shadow-sm border p-6">
-                <h2 class="text-xl font-semibold text-gray-900 mb-6">Detalhes do Perfil</h2>
+                <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ __('messages.profile.details') }}</h2>
                 
                 <form method="POST" action="{{ route('profile.update.details') }}" class="space-y-6">
                     @csrf
                     
                     <div>
-                        <label for="bio" class="block text-sm font-medium text-gray-700 mb-2">Biografia</label>
+                        <label for="bio" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.profile.bio') }}</label>
                         <textarea id="bio" name="bio" rows="4" 
-                                  placeholder="Conte um pouco sobre você..." 
+                                  placeholder="{{ __('messages.profile.tell_about_yourself') }}" 
                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">{{ old('bio', $user->profile?->bio) }}</textarea>
                         @error('bio')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -227,7 +227,7 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label for="occupation" class="block text-sm font-medium text-gray-700 mb-2">Profissão</label>
+                            <label for="occupation" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.profile.occupation') }}</label>
                             <input type="text" id="occupation" name="occupation" value="{{ old('occupation', $user->profile?->occupation) }}" 
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
                             @error('occupation')
@@ -236,15 +236,15 @@
                         </div>
 
                         <div>
-                            <label for="education_level" class="block text-sm font-medium text-gray-700 mb-2">Nível de Educação</label>
+                            <label for="education_level" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.profile.education_level') }}</label>
                             <select id="education_level" name="education_level" 
                                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
-                                <option value="">Selecione...</option>
-                                <option value="high_school" {{ old('education_level', $user->profile?->education_level) == 'high_school' ? 'selected' : '' }}>Ensino Médio</option>
-                                <option value="bachelor" {{ old('education_level', $user->profile?->education_level) == 'bachelor' ? 'selected' : '' }}>Graduação</option>
-                                <option value="master" {{ old('education_level', $user->profile?->education_level) == 'master' ? 'selected' : '' }}>Mestrado</option>
-                                <option value="phd" {{ old('education_level', $user->profile?->education_level) == 'phd' ? 'selected' : '' }}>Doutorado</option>
-                                <option value="other" {{ old('education_level', $user->profile?->education_level) == 'other' ? 'selected' : '' }}>Outro</option>
+                                <option value="">{{ __('messages.profile.select_option') }}</option>
+                                <option value="high_school" {{ old('education_level', $user->profile?->education_level) == 'high_school' ? 'selected' : '' }}>{{ __('messages.profile.high_school') }}</option>
+                                <option value="bachelor" {{ old('education_level', $user->profile?->education_level) == 'bachelor' ? 'selected' : '' }}>{{ __('messages.profile.bachelor') }}</option>
+                                <option value="master" {{ old('education_level', $user->profile?->education_level) == 'master' ? 'selected' : '' }}>{{ __('messages.profile.master') }}</option>
+                                <option value="phd" {{ old('education_level', $user->profile?->education_level) == 'phd' ? 'selected' : '' }}>{{ __('messages.profile.phd') }}</option>
+                                <option value="other" {{ old('education_level', $user->profile?->education_level) == 'other' ? 'selected' : '' }}>{{ __('messages.profile.other') }}</option>
                             </select>
                             @error('education_level')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -253,15 +253,15 @@
                     </div>
 
                     <div>
-                        <label for="relationship_goal" class="block text-sm font-medium text-gray-700 mb-2">Objetivo de Relacionamento</label>
+                        <label for="relationship_goal" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.profile.relationship_goal') }}</label>
                         <select id="relationship_goal" name="relationship_goal" 
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
-                            <option value="">Selecione...</option>
-                            <option value="friendship" {{ old('relationship_goal', $user->profile?->relationship_goal) == 'friendship' ? 'selected' : '' }}>Amizade</option>
-                            <option value="romance" {{ old('relationship_goal', $user->profile?->relationship_goal) == 'romance' ? 'selected' : '' }}>Romance</option>
-                            <option value="casual" {{ old('relationship_goal', $user->profile?->relationship_goal) == 'casual' ? 'selected' : '' }}>Casual</option>
-                            <option value="serious" {{ old('relationship_goal', $user->profile?->relationship_goal) == 'serious' ? 'selected' : '' }}>Relacionamento Sério</option>
-                            <option value="marriage" {{ old('relationship_goal', $user->profile?->relationship_goal) == 'marriage' ? 'selected' : '' }}>Casamento</option>
+                            <option value="">{{ __('messages.profile.select_option') }}</option>
+                            <option value="friendship" {{ old('relationship_goal', $user->profile?->relationship_goal) == 'friendship' ? 'selected' : '' }}>{{ __('messages.profile.friendship') }}</option>
+                            <option value="romance" {{ old('relationship_goal', $user->profile?->relationship_goal) == 'romance' ? 'selected' : '' }}>{{ __('messages.profile.romance') }}</option>
+                            <option value="casual" {{ old('relationship_goal', $user->profile?->relationship_goal) == 'casual' ? 'selected' : '' }}>{{ __('messages.profile.casual') }}</option>
+                            <option value="serious" {{ old('relationship_goal', $user->profile?->relationship_goal) == 'serious' ? 'selected' : '' }}>{{ __('messages.profile.serious_relationship') }}</option>
+                            <option value="marriage" {{ old('relationship_goal', $user->profile?->relationship_goal) == 'marriage' ? 'selected' : '' }}>{{ __('messages.profile.marriage') }}</option>
                         </select>
                         @error('relationship_goal')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -270,14 +270,14 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label for="smoking" class="block text-sm font-medium text-gray-700 mb-2">Fuma?</label>
+                            <label for="smoking" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.profile.smoking') }}</label>
                             <select id="smoking" name="smoking" 
                                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
-                                <option value="">Selecione...</option>
-                                <option value="never" {{ old('smoking', $user->profile?->smoking) == 'never' ? 'selected' : '' }}>Nunca</option>
-                                <option value="occasionally" {{ old('smoking', $user->profile?->smoking) == 'occasionally' ? 'selected' : '' }}>Ocasionalmente</option>
-                                <option value="regularly" {{ old('smoking', $user->profile?->smoking) == 'regularly' ? 'selected' : '' }}>Regularmente</option>
-                                <option value="prefer_not_to_say" {{ old('smoking', $user->profile?->smoking) == 'prefer_not_to_say' ? 'selected' : '' }}>Prefiro não dizer</option>
+                                <option value="">{{ __('messages.profile.select_option') }}</option>
+                                <option value="never" {{ old('smoking', $user->profile?->smoking) == 'never' ? 'selected' : '' }}>{{ __('messages.profile.never') }}</option>
+                                <option value="occasionally" {{ old('smoking', $user->profile?->smoking) == 'occasionally' ? 'selected' : '' }}>{{ __('messages.profile.occasionally') }}</option>
+                                <option value="regularly" {{ old('smoking', $user->profile?->smoking) == 'regularly' ? 'selected' : '' }}>{{ __('messages.profile.regularly') }}</option>
+                                <option value="prefer_not_to_say" {{ old('smoking', $user->profile?->smoking) == 'prefer_not_to_say' ? 'selected' : '' }}>{{ __('messages.profile.prefer_not_to_say') }}</option>
                             </select>
                             @error('smoking')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -285,14 +285,14 @@
                         </div>
 
                         <div>
-                            <label for="drinking" class="block text-sm font-medium text-gray-700 mb-2">Bebe?</label>
+                            <label for="drinking" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.profile.drinking') }}</label>
                             <select id="drinking" name="drinking" 
                                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
-                                <option value="">Selecione...</option>
-                                <option value="never" {{ old('drinking', $user->profile?->drinking) == 'never' ? 'selected' : '' }}>Nunca</option>
-                                <option value="occasionally" {{ old('drinking', $user->profile?->drinking) == 'occasionally' ? 'selected' : '' }}>Ocasionalmente</option>
-                                <option value="regularly" {{ old('drinking', $user->profile?->drinking) == 'regularly' ? 'selected' : '' }}>Regularmente</option>
-                                <option value="prefer_not_to_say" {{ old('drinking', $user->profile?->drinking) == 'prefer_not_to_say' ? 'selected' : '' }}>Prefiro não dizer</option>
+                                <option value="">{{ __('messages.profile.select_option') }}</option>
+                                <option value="never" {{ old('drinking', $user->profile?->drinking) == 'never' ? 'selected' : '' }}>{{ __('messages.profile.never') }}</option>
+                                <option value="occasionally" {{ old('drinking', $user->profile?->drinking) == 'occasionally' ? 'selected' : '' }}>{{ __('messages.profile.occasionally') }}</option>
+                                <option value="regularly" {{ old('drinking', $user->profile?->drinking) == 'regularly' ? 'selected' : '' }}>{{ __('messages.profile.regularly') }}</option>
+                                <option value="prefer_not_to_say" {{ old('drinking', $user->profile?->drinking) == 'prefer_not_to_say' ? 'selected' : '' }}>{{ __('messages.profile.prefer_not_to_say') }}</option>
                             </select>
                             @error('drinking')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -301,9 +301,9 @@
                     </div>
 
                     <div>
-                        <label for="looking_for" class="block text-sm font-medium text-gray-700 mb-2">O que você procura?</label>
+                        <label for="looking_for" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.profile.looking_for') }}</label>
                         <textarea id="looking_for" name="looking_for" rows="3" 
-                                  placeholder="Descreva o que você está procurando em um relacionamento..." 
+                                  placeholder="{{ __('messages.profile.describe_what_you_are_looking_for') }}" 
                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">{{ old('looking_for', $user->profile?->looking_for) }}</textarea>
                         @error('looking_for')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -312,7 +312,7 @@
 
                     <div class="flex justify-end">
                         <button type="submit" class="bg-pink-600 text-white px-6 py-2 rounded-lg hover:bg-pink-700 transition duration-200">
-                            <i class="fas fa-save mr-2"></i>Salvar Detalhes
+                            <i class="fas fa-save mr-2"></i>{{ __('messages.profile.save_details') }}
                         </button>
                     </div>
                 </form>
@@ -322,7 +322,7 @@
         <!-- Photos Tab -->
         <div id="content-photos" class="tab-content hidden">
             <div class="bg-white rounded-lg shadow-sm border p-6">
-                <h2 class="text-xl font-semibold text-gray-900 mb-6">Gerenciar Fotos</h2>
+                <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ __('messages.profile.manage_photos') }}</h2>
                 
                 <!-- Upload New Photo -->
                 <div class="mb-6 p-4 border-2 border-dashed border-gray-300 rounded-lg">
@@ -333,10 +333,10 @@
                             <div>
                                 <label for="photo" class="cursor-pointer">
                                     <span class="mt-2 block text-sm font-medium text-gray-900">
-                                        Clique para adicionar uma foto
+                                        {{ __('messages.profile.click_to_add_photo') }}
                                     </span>
                                     <span class="mt-1 block text-sm text-gray-500">
-                                        PNG, JPG, GIF até 5MB
+                                        {{ __('messages.profile.photo_recommendation_upload') }}
                                     </span>
                                 </label>
                                 <input type="file" id="photo" name="photo" accept="image/*" class="hidden" onchange="this.form.submit()">
@@ -356,13 +356,13 @@
                         
                         @if($photo->is_primary)
                         <div class="absolute top-2 left-2 bg-pink-600 text-white px-2 py-1 rounded text-xs font-medium">
-                            Principal
+                            {{ __('messages.profile.primary') }}
                         </div>
                         @endif
 
                         @if(!$photo->is_approved)
                         <div class="absolute top-2 right-2 bg-yellow-500 text-white px-2 py-1 rounded text-xs font-medium">
-                            Pendente
+                            {{ __('messages.profile.pending') }}
                         </div>
                         @endif
 
@@ -371,16 +371,16 @@
                                 @if(!$photo->is_primary)
                                 <form method="POST" action="{{ route('photos.primary', $photo) }}" class="inline">
                                     @csrf
-                                    <button type="submit" class="bg-pink-600 text-white p-2 rounded-full hover:bg-pink-700 transition duration-200" title="Definir como principal">
+                                    <button type="submit" class="bg-pink-600 text-white p-2 rounded-full hover:bg-pink-700 transition duration-200" title="{{ __('messages.profile.set_as_primary') }}">
                                         <i class="fas fa-star"></i>
                                     </button>
                                 </form>
                                 @endif
                                 
-                                <form method="POST" action="{{ route('photos.destroy', $photo) }}" class="inline" onsubmit="return confirm('Tem certeza que deseja deletar esta foto?')">
+                                <form method="POST" action="{{ route('photos.destroy', $photo) }}" class="inline" onsubmit="return confirm('{{ __('messages.profile.confirm_delete_photo') }}')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition duration-200" title="Deletar foto">
+                                    <button type="submit" class="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition duration-200" title="{{ __('messages.profile.delete_photo') }}">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
@@ -392,7 +392,7 @@
                 @else
                 <div class="text-center py-8 text-gray-500">
                     <i class="fas fa-images text-4xl mb-4"></i>
-                    <p>Nenhuma foto adicionada ainda.</p>
+                    <p>{{ __('messages.profile.no_photos_added') }}</p>
                 </div>
                 @endif
             </div>
@@ -401,7 +401,7 @@
         <!-- Privacy Tab -->
         <div id="content-privacy" class="tab-content hidden">
             <div class="bg-white rounded-lg shadow-sm border p-6">
-                <h2 class="text-xl font-semibold text-gray-900 mb-6">Configurações de Privacidade</h2>
+                <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ __('messages.profile.privacy_settings') }}</h2>
                 
                 <form method="POST" action="{{ route('profile.update.privacy') }}" class="space-y-6">
                     @csrf
@@ -409,8 +409,8 @@
                     <div class="space-y-4">
                         <div class="flex items-center justify-between">
                             <div>
-                                <h3 class="text-sm font-medium text-gray-900">Mostrar distância</h3>
-                                <p class="text-sm text-gray-500">Permitir que outros usuários vejam a distância entre vocês</p>
+                                <h3 class="text-sm font-medium text-gray-900">{{ __('messages.profile.show_distance') }}</h3>
+                                <p class="text-sm text-gray-500">{{ __('messages.profile.show_distance_description') }}</p>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" name="show_distance" value="1" 
@@ -422,8 +422,8 @@
 
                         <div class="flex items-center justify-between">
                             <div>
-                                <h3 class="text-sm font-medium text-gray-900">Mostrar idade</h3>
-                                <p class="text-sm text-gray-500">Permitir que outros usuários vejam sua idade</p>
+                                <h3 class="text-sm font-medium text-gray-900">{{ __('messages.profile.show_age') }}</h3>
+                                <p class="text-sm text-gray-500">{{ __('messages.profile.show_age_description') }}</p>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" name="show_age" value="1" 
@@ -435,8 +435,8 @@
 
                         <div class="flex items-center justify-between">
                             <div>
-                                <h3 class="text-sm font-medium text-gray-900">Mostrar status online</h3>
-                                <p class="text-sm text-gray-500">Permitir que outros usuários vejam quando você está online</p>
+                                <h3 class="text-sm font-medium text-gray-900">{{ __('messages.profile.show_online_status') }}</h3>
+                                <p class="text-sm text-gray-500">{{ __('messages.profile.show_online_status_description') }}</p>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" name="show_online_status" value="1" 
@@ -449,7 +449,7 @@
 
                     <div class="flex justify-end">
                         <button type="submit" class="bg-pink-600 text-white px-6 py-2 rounded-lg hover:bg-pink-700 transition duration-200">
-                            <i class="fas fa-save mr-2"></i>Salvar Configurações
+                            <i class="fas fa-save mr-2"></i>{{ __('messages.profile.save_settings') }}
                         </button>
                     </div>
                 </form>
@@ -504,7 +504,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     birthDate.value = `${year}-${month}-${day}`;
                     birthDate.setCustomValidity('');
                 } else {
-                    birthDate.setCustomValidity('Data inválida');
+                    birthDate.setCustomValidity('{{ __('messages.profile.invalid_date') }}');
                 }
             } else {
                 birthDate.value = '';
