@@ -124,7 +124,20 @@ class ChatController extends Controller
         
         // Handle audio upload
         if ($request->hasFile('audio') && $messageType === 'audio') {
+            \Log::info('Processing audio upload', [
+                'has_audio_file' => $request->hasFile('audio'),
+                'message_type' => $messageType,
+                'has_file' => $request->hasFile('audio')
+            ]);
+            
             $audio = $request->file('audio');
+            
+            \Log::info('Audio file details', [
+                'original_name' => $audio->getClientOriginalName(),
+                'size' => $audio->getSize(),
+                'mime_type' => $audio->getMimeType(),
+                'extension' => $audio->getClientOriginalExtension()
+            ]);
             
             // Generate unique filename
             $filename = time() . '_' . uniqid() . '.' . $audio->getClientOriginalExtension();
@@ -132,6 +145,12 @@ class ChatController extends Controller
             // Store audio in storage/app/public/chat-audio
             $path = $audio->storeAs('chat-audio', $filename, 'public');
             $attachmentPath = $path;
+            
+            \Log::info('Audio stored successfully', [
+                'path' => $path,
+                'attachment_path' => $attachmentPath,
+                'file_exists' => \Storage::disk('public')->exists($path)
+            ]);
             
             // Update message content to show audio info
             $messageContent = $messageContent ?: '🎤 Áudio enviado';
