@@ -222,18 +222,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Auto-detect location
     detectBtn.addEventListener('click', function() {
-        if (navigator.geolocation) {
-            // Mostrar loading
-            detectBtn.disabled = true;
-            detectBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Detectando...';
-            
-            // Tentar obter localização com melhor precisão
-            let attempts = 0;
-            const maxAttempts = 3;
-            
-            function tryGetLocation() {
-                attempts++;
-                console.log(`Tentativa ${attempts}/${maxAttempts} de obter localização`);
+        if (!navigator.geolocation) {
+            showNotification('Geolocalização não é suportada por este navegador. Use a busca manual.', 'error');
+            return;
+        }
+        
+        // Mostrar loading
+        detectBtn.disabled = true;
+        detectBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Detectando...';
+        
+        // Tentar obter localização com melhor precisão
+        let attempts = 0;
+        const maxAttempts = 3;
+        
+        function tryGetLocation() {
+            attempts++;
+            console.log(`Tentativa ${attempts}/${maxAttempts} de obter localização`);
                 
                 navigator.geolocation.getCurrentPosition(
                 function(position) {
@@ -314,22 +318,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 function(error) {
                     console.error('Geolocation error:', error);
-                    let errorMessage = 'Erro ao acessar localização: ';
+                    let errorMessage = '';
+                    let suggestion = '';
                     switch(error.code) {
                         case error.PERMISSION_DENIED:
-                            errorMessage += 'Permissão negada. Ative a localização no navegador.';
+                            errorMessage = 'Permissão de localização negada.';
+                            suggestion = 'Por favor, permita o acesso à localização nas configurações do navegador e tente novamente.';
                             break;
                         case error.POSITION_UNAVAILABLE:
-                            errorMessage += 'Localização indisponível.';
+                            errorMessage = 'Localização indisponível no momento.';
+                            suggestion = 'Se você estiver em desktop, a detecção automática requer HTTPS. Use a busca manual por cidade como alternativa.';
                             break;
                         case error.TIMEOUT:
-                            errorMessage += 'Tempo esgotado. Tente novamente.';
+                            errorMessage = 'Tempo de espera esgotado.';
+                            suggestion = 'Tente novamente ou use a busca manual por cidade.';
                             break;
                         default:
-                            errorMessage += error.message;
+                            errorMessage = 'Erro ao obter localização.';
+                            suggestion = 'Tente usar a busca manual por cidade ou insira as coordenadas manualmente.';
                             break;
                     }
-                    alert(errorMessage);
+                    
+                    // Mostrar notificação mais informativa
+                    showNotification(errorMessage + ' ' + suggestion, 'error');
                     
                     // Restaurar botão
                     detectBtn.disabled = false;
@@ -346,9 +357,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Iniciar primeira tentativa
             tryGetLocation();
-        } else {
-            alert('Geolocalização não é suportada por este navegador');
-        }
     });
 
     // Search locations
