@@ -3,7 +3,7 @@
         <!-- Profile Photo -->
         <div class="relative">
             @if($match->profile_photo)
-                <img src="{{ Storage::url($match->profile_photo) }}" 
+                <img src="{{ str_starts_with($match->profile_photo, 'http') ? $match->profile_photo : Storage::url($match->profile_photo) }}" 
                      alt="{{ $match->full_name }}" 
                      class="w-full h-64 object-cover rounded-t-lg">
             @else

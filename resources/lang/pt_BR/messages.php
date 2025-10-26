@@ -31,7 +31,7 @@ return [
     'auth.create_account' => 'Criar conta',
     'auth.login_here' => 'Entrar aqui',
     'auth.hello' => 'Olá',
-    'auth.regards' => 'Atenciosamente,<br>Equipe Amigos Para Sempre',
+    'auth.regards' => 'Atenciosamente,' . "\n" . 'Equipe Amigos Para Sempre',
     'auth.verify_email_subject' => 'Confirme seu e-mail - Amigos Para Sempre',
     'auth.verify_email_message' => 'Por favor, clique no botão abaixo para confirmar seu endereço de e-mail.',
     'auth.verify_email_button' => 'Confirmar E-mail',

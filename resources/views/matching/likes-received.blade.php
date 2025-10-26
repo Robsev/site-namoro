@@ -38,7 +38,11 @@
                     <!-- Profile Photo -->
                     <div class="relative">
                         @if($like->user1->photos->isNotEmpty())
-                            <img src="{{ Storage::url($like->user1->photos->first()->photo_path) }}" 
+                            @php
+                                $photoPath = $like->user1->photos->first()->photo_path;
+                                $photoUrl = str_starts_with($photoPath, 'http') ? $photoPath : Storage::url($photoPath);
+                            @endphp
+                            <img src="{{ $photoUrl }}" 
                                  alt="{{ $like->user1->name }}" 
                                  class="w-full h-64 object-cover">
                         @else
@@ -84,7 +88,7 @@
                         <!-- Actions -->
                         <div class="flex space-x-2">
                             <button onclick="viewProfile({{ $like->user1->id }})" 
-                                    class="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 transition duration-200">
+                                    class="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200">
                                 <i class="fas fa-eye mr-1"></i>Ver Perfil
                             </button>
                             

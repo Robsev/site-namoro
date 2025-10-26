@@ -30,7 +30,7 @@ return [
     'auth.create_account' => 'Create account',
     'auth.login_here' => 'Login here',
     'auth.hello' => 'Hello',
-    'auth.regards' => 'Best regards,<br>The Amigos Para Sempre Team',
+    'auth.regards' => 'Best regards,' . "\n" . 'The Amigos Para Sempre Team',
     'auth.verify_email_subject' => 'Confirm your email - Amigos Para Sempre',
     'auth.verify_email_message' => 'Please click the button below to confirm your email address.',
     'auth.verify_email_button' => 'Confirm Email',

@@ -13,7 +13,7 @@
                     <!-- Profile Photo -->
                     <div class="relative">
                         @if($match->other_user->profile_photo)
-                            <img src="{{ Storage::url($match->other_user->profile_photo) }}" 
+                            <img src="{{ str_starts_with($match->other_user->profile_photo, 'http') ? $match->other_user->profile_photo : Storage::url($match->other_user->profile_photo) }}" 
                                  alt="{{ $match->other_user->full_name }}" 
                                  class="w-full h-48 object-cover rounded-t-lg">
                         @else

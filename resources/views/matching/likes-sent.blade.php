@@ -38,7 +38,11 @@
                     <!-- Profile Photo -->
                     <div class="relative">
                         @if($like->user2->photos->isNotEmpty())
-                            <img src="{{ Storage::url($like->user2->photos->first()->photo_path) }}" 
+                            @php
+                                $photoPath = $like->user2->photos->first()->photo_path;
+                                $photoUrl = str_starts_with($photoPath, 'http') ? $photoPath : Storage::url($photoPath);
+                            @endphp
+                            <img src="{{ $photoUrl }}" 
                                  alt="{{ $like->user2->name }}" 
                                  class="w-full h-64 object-cover">
                         @else
