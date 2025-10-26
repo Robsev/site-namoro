@@ -3,16 +3,16 @@
 @section('content')
 <div class="bg-white rounded-lg shadow-md p-6">
     <h2 class="text-2xl font-bold text-gray-800 mb-6">
-        <i class="fas fa-crown text-yellow-500 mr-2"></i>Planos de Assinatura
+        <i class="fas fa-crown text-yellow-500 mr-2"></i>{{ __('messages.subscriptions.subscription_plans') }}
     </h2>
 
     @if($currentSubscription)
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
             <div class="flex items-center">
                 <i class="fas fa-check-circle mr-2"></i>
-                <span class="font-semibold">Assinatura Ativa:</span>
-                <span class="ml-2">{{ $currentSubscription->plan === 'premium_monthly' ? 'Premium Mensal' : 'Premium Anual' }}</span>
-                <span class="ml-4 text-sm">Expira em {{ $currentSubscription->ends_at->format('d/m/Y') }}</span>
+                <span class="font-semibold">{{ __('messages.subscriptions.current') }}:</span>
+                <span class="ml-2">{{ $currentSubscription->plan === 'premium_monthly' ? __('messages.subscriptions.premium_monthly') : __('messages.subscriptions.premium_yearly') }}</span>
+                <span class="ml-4 text-sm">{{ __('messages.subscriptions.expires_on') }} {{ $currentSubscription->ends_at->format('d/m/Y') }}</span>
             </div>
         </div>
     @endif
@@ -23,7 +23,7 @@
                 @if($plan['popular'] ?? false)
                     <div class="text-center mb-4">
                         <span class="bg-pink-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                            Mais Popular
+                            {{ __('messages.subscriptions.most_popular') }}
                         </span>
                     </div>
                 @endif
@@ -31,7 +31,7 @@
                 @if($currentSubscription && $currentSubscription->plan === $planKey)
                     <div class="text-center mb-4">
                         <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                            Plano Atual
+                            {{ __('messages.subscriptions.current_plan') }}
                         </span>
                     </div>
                 @endif
@@ -41,7 +41,7 @@
                 <div class="mb-4">
                     <span class="text-3xl font-bold text-gray-800">R$ {{ number_format($plan['price'], 2, ',', '.') }}</span>
                     @if($plan['interval'] !== 'forever')
-                        <span class="text-gray-600">/{{ $plan['interval'] === 'month' ? 'mês' : 'ano' }}</span>
+                        <span class="text-gray-600">{{ __('messages.subscriptions.per_' . $plan['interval']) }}</span>
                     @endif
                 </div>
 
@@ -62,7 +62,7 @@
 
                 @if(isset($plan['limitations']))
                     <div class="mb-4">
-                        <h4 class="text-sm font-semibold text-gray-600 mb-2">Limitações:</h4>
+                        <h4 class="text-sm font-semibold text-gray-600 mb-2">{{ __('messages.subscriptions.limitations') }}</h4>
                         <ul class="space-y-1">
                             @foreach($plan['limitations'] as $limitation)
                                 <li class="flex items-center text-sm text-gray-500">
@@ -78,11 +78,11 @@
                     @if($currentSubscription && $currentSubscription->plan === $planKey)
                         <a href="{{ route('subscriptions.show') }}" 
                            class="w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 transition duration-200">
-                            <i class="fas fa-eye mr-2"></i>Gerenciar Assinatura
+                            <i class="fas fa-eye mr-2"></i>{{ __('messages.subscriptions.manage') }}
                         </a>
                     @elseif($planKey === 'free')
                         <span class="w-full bg-gray-300 text-gray-600 py-3 px-4 rounded-lg cursor-not-allowed">
-                            <i class="fas fa-check mr-2"></i>Plano Atual
+                            <i class="fas fa-check mr-2"></i>{{ __('messages.subscriptions.current_plan') }}
                         </span>
                     @else
                         <form action="{{ route('subscriptions.create') }}" method="POST" class="inline-block w-full">
@@ -91,7 +91,7 @@
                             <input type="hidden" name="payment_method" value="credit_card">
                             <button type="submit" 
                                     class="w-full bg-pink-500 text-white py-3 px-4 rounded-lg hover:bg-pink-600 transition duration-200">
-                                <i class="fas fa-credit-card mr-2"></i>Assinar Agora
+                                <i class="fas fa-credit-card mr-2"></i>{{ __('messages.subscriptions.subscribe_now') }}
                             </button>
                         </form>
                     @endif
@@ -102,19 +102,19 @@
 
     <!-- FAQ Section -->
     <div class="mt-12">
-        <h3 class="text-xl font-bold text-gray-800 mb-6">Perguntas Frequentes</h3>
+        <h3 class="text-xl font-bold text-gray-800 mb-6">{{ __('messages.subscriptions.faq') }}</h3>
         <div class="space-y-4">
             <div class="bg-gray-50 rounded-lg p-4">
-                <h4 class="font-semibold text-gray-800 mb-2">Posso cancelar minha assinatura a qualquer momento?</h4>
-                <p class="text-gray-600">Sim, você pode cancelar sua assinatura a qualquer momento. Você continuará tendo acesso aos recursos premium até o final do período pago.</p>
+                <h4 class="font-semibold text-gray-800 mb-2">{{ __('messages.subscriptions.faq_cancel') }}</h4>
+                <p class="text-gray-600">{{ __('messages.subscriptions.faq_cancel_answer') }}</p>
             </div>
             <div class="bg-gray-50 rounded-lg p-4">
-                <h4 class="font-semibold text-gray-800 mb-2">Há garantia de reembolso?</h4>
-                <p class="text-gray-600">Oferecemos garantia de 7 dias para novos usuários. Se não estiver satisfeito, entre em contato conosco.</p>
+                <h4 class="font-semibold text-gray-800 mb-2">{{ __('messages.subscriptions.faq_refund') }}</h4>
+                <p class="text-gray-600">{{ __('messages.subscriptions.faq_refund_answer') }}</p>
             </div>
             <div class="bg-gray-50 rounded-lg p-4">
-                <h4 class="font-semibold text-gray-800 mb-2">Quais métodos de pagamento são aceitos?</h4>
-                <p class="text-gray-600">Aceitamos cartões de crédito (Visa, Mastercard, American Express) e PIX.</p>
+                <h4 class="font-semibold text-gray-800 mb-2">{{ __('messages.subscriptions.faq_payment') }}</h4>
+                <p class="text-gray-600">{{ __('messages.subscriptions.faq_payment_answer') }}</p>
             </div>
         </div>
     </div>

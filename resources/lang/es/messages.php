@@ -234,8 +234,12 @@ return [
 
     // Subscriptions
     'subscriptions.title' => 'Suscripciones',
+    'subscriptions.subscription_plans' => 'Planes de Suscripción',
     'subscriptions.plans' => 'Planes',
     'subscriptions.current' => 'Suscripción Activa',
+    'subscriptions.current_plan' => 'Plan Actual',
+    'subscriptions.expires_on' => 'Expira el',
+    'subscriptions.most_popular' => 'Más Popular',
     'subscriptions.history' => 'Historial de Suscripciones',
     'subscriptions.usage' => 'Uso de Suscripción',
     'subscriptions.cancel' => 'Cancelar Suscripción',
@@ -244,6 +248,18 @@ return [
     'subscriptions.free' => 'Gratuito',
     'subscriptions.premium_monthly' => 'Premium Mensual',
     'subscriptions.premium_yearly' => 'Premium Anual',
+    'subscriptions.per_month' => '/mes',
+    'subscriptions.per_year' => '/año',
+    'subscriptions.limitations' => 'Limitaciones:',
+    'subscriptions.manage' => 'Gestionar Suscripción',
+    'subscriptions.subscribe_now' => 'Suscribirse Ahora',
+    'subscriptions.faq' => 'Preguntas Frecuentes',
+    'subscriptions.faq_cancel' => '¿Puedo cancelar mi suscripción en cualquier momento?',
+    'subscriptions.faq_cancel_answer' => 'Sí, puedes cancelar tu suscripción en cualquier momento. Seguirás teniendo acceso a las funciones premium hasta el final del período pagado.',
+    'subscriptions.faq_refund' => '¿Hay garantía de reembolso?',
+    'subscriptions.faq_refund_answer' => 'Ofrecemos una garantía de 7 días para usuarios nuevos. Si no estás satisfecho, contáctanos.',
+    'subscriptions.faq_payment' => '¿Qué métodos de pago se aceptan?',
+    'subscriptions.faq_payment_answer' => 'Aceptamos tarjetas de crédito (Visa, Mastercard, American Express) y PIX.',
 
     // Matching Preferences
     'preferences.title' => 'Preferencias de Coincidencias',
