@@ -75,8 +75,11 @@ class RegisterController extends Controller
             'verified_only' => false,
         ]);
 
+        // Send verification email
+        $user->sendEmailVerificationNotification();
+
         Auth::login($user);
 
-        return redirect()->route('dashboard')->with('success', 'Conta criada com sucesso! Bem-vindo ao Amigos Para Sempre!');
+        return redirect()->route('verification.notice')->with('success', 'Conta criada com sucesso! Por favor, verifique seu e-mail.');
     }
 }
