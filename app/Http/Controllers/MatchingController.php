@@ -662,7 +662,7 @@ class MatchingController extends Controller
         $commonInterests = array_intersect($user1Interests, $user2Interests);
 
         if (!empty($commonInterests)) {
-            $reasons[] = "Vocês compartilham interesses em: " . implode(', ', array_slice($commonInterests, 0, 3));
+            $reasons[] = __("messages.matching.shared_interests") . ": " . implode(', ', array_slice($commonInterests, 0, 3));
         }
 
         // Personality-based reasons
@@ -670,25 +670,25 @@ class MatchingController extends Controller
         $profile2 = $user2->psychologicalProfile;
         
         if ($profile1 && $profile2) {
-            $reasons[] = "Perfis psicológicos compatíveis";
+            $reasons[] = __("messages.matching.psychological_compatible");
         }
 
         // Age-based reasons
         if ($user1->age && $user2->age) {
             $ageDiff = abs($user1->age - $user2->age);
             if ($ageDiff <= 3) {
-                $reasons[] = "Idades compatíveis";
+                $reasons[] = __("messages.matching.compatible_ages");
             }
         }
 
         // High compatibility
         if ($score >= 80) {
-            $reasons[] = "Alta compatibilidade geral";
+            $reasons[] = __("messages.matching.high_compatibility");
         } elseif ($score >= 60) {
-            $reasons[] = "Boa compatibilidade";
+            $reasons[] = __("messages.matching.good_compatibility");
         }
 
-        return !empty($reasons) ? implode('. ', $reasons) : "Vocês podem ser uma boa combinação!";
+        return !empty($reasons) ? implode('. ', $reasons) : __("messages.matching.good_match");
     }
 
     /**
