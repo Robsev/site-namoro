@@ -120,6 +120,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/likes-sent', [MatchingController::class, 'likesSent'])->name('matching.likes-sent');
     Route::get('/likes-received', [MatchingController::class, 'likesReceived'])->name('matching.likes-received');
     Route::post('/matching/like/{user}', [MatchingController::class, 'like'])->name('matching.like');
+    Route::post('/matching/accept-like/{user}', [MatchingController::class, 'acceptLike'])->name('matching.accept-like');
     Route::post('/matching/undo-like/{user}', [MatchingController::class, 'undoLike'])->name('matching.undo-like');
     Route::post('/matching/pass/{user}', [MatchingController::class, 'pass'])->name('matching.pass');
     Route::post('/matching/super-like/{user}', [MatchingController::class, 'superLike'])->name('matching.super-like');

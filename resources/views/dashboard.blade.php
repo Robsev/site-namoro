@@ -147,7 +147,7 @@ $viewsCount = $likesReceivedCount + $matchesCount;
             <i class="fas fa-comments mr-2"></i>{{ __('messages.nav.chat') }}
         </a>
         <a href="{{ route('notifications.index') }}" class="block w-full bg-yellow-500 text-white py-2 px-4 rounded-lg text-center hover:bg-yellow-600 transition duration-200 relative">
-            <i class="fas fa-bell mr-2"></i>Notificações
+            <i class="fas fa-bell mr-2"></i>{{ __('messages.nav.notifications') }}
             @if(Auth::user()->unread_notifications_count > 0)
                 <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center">
                     {{ Auth::user()->unread_notifications_count }}
@@ -155,19 +155,19 @@ $viewsCount = $likesReceivedCount + $matchesCount;
             @endif
         </a>
         <a href="{{ route('subscriptions.plans') }}" class="block w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white py-2 px-4 rounded-lg text-center hover:from-yellow-600 hover:to-orange-600 transition duration-200">
-            <i class="fas fa-crown mr-2"></i>Assinaturas
+            <i class="fas fa-crown mr-2"></i>{{ __('messages.nav.subscriptions') }}
         </a>
         <a href="{{ route('language.index') }}" class="block w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-2 px-4 rounded-lg text-center hover:from-blue-600 hover:to-cyan-600 transition duration-200">
-            <i class="fas fa-globe mr-2"></i>Idioma
+            <i class="fas fa-globe mr-2"></i>{{ __('messages.language.title') }}
         </a>
         <a href="{{ route('profile.edit') }}" class="block w-full bg-purple-500 text-white py-2 px-4 rounded-lg text-center hover:bg-purple-600 transition duration-200">
-            <i class="fas fa-edit mr-2"></i>Editar Perfil
+            <i class="fas fa-edit mr-2"></i>{{ __('messages.dashboard.edit_profile') }}
         </a>
         <a href="{{ route('preferences.edit') }}" class="block w-full bg-indigo-500 text-white py-2 px-4 rounded-lg text-center hover:bg-indigo-600 transition duration-200">
-            <i class="fas fa-cog mr-2"></i>Preferências
+            <i class="fas fa-cog mr-2"></i>{{ __('messages.nav.preferences') }}
         </a>
         <a href="{{ route('profile.show') }}" class="block w-full bg-blue-500 text-white py-2 px-4 rounded-lg text-center hover:bg-blue-600 transition duration-200">
-            <i class="fas fa-user mr-2"></i>Ver Perfil
+            <i class="fas fa-user mr-2"></i>{{ __('messages.dashboard.view_profile') }}
         </a>
                 </div>
             </div>

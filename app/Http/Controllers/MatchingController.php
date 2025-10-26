@@ -707,4 +707,39 @@ class MatchingController extends Controller
 
         return $todaySuperLikes < $dailyLimit;
     }
+    
+    /**
+     * Accept a like received (create match)
+     */
+    public function acceptLike(Request $request, $userId)
+    {
+        $user = Auth::user();
+        
+        // Find the pending match where user2 is the current user and user1 is the target
+        $match = UserMatch::where('user1_id', $userId)
+            ->where('user2_id', $user->id)
+            ->where('status', 'pending')
+            ->first();
+        
+        if (!$match) {
+            return response()->json(['error' => 'Like não encontrado'], 404);
+        }
+        
+        // Update status to accepted
+        $match->update([
+            'status' => 'accepted',
+            'responded_at' => now()
+        ]);
+        
+        // Send notification to the user who sent the like
+        $liker = User::find($userId);
+        if ($liker) {
+            $liker->notify(new \App\Notifications\MatchAccepted($user));
+        }
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Match criado! Vocês podem conversar agora!'
+        ]);
+    }
 }

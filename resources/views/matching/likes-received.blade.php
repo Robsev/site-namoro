@@ -127,7 +127,7 @@ function viewProfile(userId) {
 }
 
 function acceptLike(userId) {
-    fetch(`/matching/like/${userId}`, {
+    fetch(`/matching/accept-like/${userId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

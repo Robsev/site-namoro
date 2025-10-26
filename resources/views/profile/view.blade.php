@@ -18,7 +18,7 @@
         
         @if($compatibilityScore)
             <div class="bg-pink-100 text-pink-800 px-4 py-2 rounded-lg">
-                <i class="fas fa-heart mr-2"></i>{{ round($compatibilityScore) }}% de Compatibilidade
+                <i class="fas fa-heart mr-2"></i>{{ round($compatibilityScore) }}% {{ __('messages.matching.compatibility') }}
             </div>
         @endif
     </div>
