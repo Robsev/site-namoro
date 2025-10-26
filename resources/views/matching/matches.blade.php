@@ -3,7 +3,7 @@
 @section('content')
 <div class="bg-white rounded-lg shadow-md p-6">
     <h2 class="text-2xl font-bold text-gray-800 mb-6">
-        <i class="fas fa-heart text-pink-500 mr-2"></i>Meus Matches
+        <i class="fas fa-heart text-pink-500 mr-2"></i>{{ __('messages.matching.my_matches') }}
     </h2>
 
     @if($matches->count() > 0)
@@ -30,7 +30,7 @@
                         <!-- Online Status -->
                         @if($match->other_user->last_seen && $match->other_user->last_seen->diffInMinutes(now()) < 30)
                             <div class="absolute bottom-4 left-4 bg-green-500 text-white rounded-full px-2 py-1 text-xs">
-                                <i class="fas fa-circle mr-1"></i>Online
+                                <i class="fas fa-circle mr-1"></i>{{ __('messages.matching.online') }}
                             </div>
                         @endif
                     </div>
@@ -40,12 +40,12 @@
                         <h3 class="text-lg font-semibold text-gray-800 mb-2">
                             {{ $match->other_user->full_name }}
                             @if($match->other_user->is_verified)
-                                <i class="fas fa-check-circle text-blue-500 ml-1" title="Verificado"></i>
+                                <i class="fas fa-check-circle text-blue-500 ml-1" title="{{ __('messages.matching.verified') }}"></i>
                             @endif
                         </h3>
                         
                         <p class="text-gray-600 text-sm mb-2">
-                            <i class="fas fa-map-marker-alt mr-1"></i>{{ $match->other_user->location ?? 'Localização não informada' }}
+                            <i class="fas fa-map-marker-alt mr-1"></i>{{ $match->other_user->location ?? __('messages.matching.location_not_informed') }}
                         </p>
 
                         @if($match->other_user->profile && $match->other_user->profile->bio)
@@ -63,19 +63,19 @@
 
                         <!-- Match Date -->
                         <p class="text-gray-500 text-xs mb-3">
-                            <i class="fas fa-clock mr-1"></i>Match em {{ $match->matched_at->format('d/m/Y H:i') }}
+                            <i class="fas fa-clock mr-1"></i>{{ __('messages.matching.match_date') }} {{ $match->matched_at->format('d/m/Y H:i') }}
                         </p>
 
                         <!-- Action Buttons -->
                         <div class="flex space-x-2">
                             <a href="{{ route('chat.show', $match->other_user->id) }}" 
                                class="flex-1 bg-pink-500 text-white py-2 px-4 rounded-lg hover:bg-pink-600 transition duration-200 text-center">
-                                <i class="fas fa-comment mr-1"></i>Conversar
+                                <i class="fas fa-comment mr-1"></i>{{ __('messages.matching.start_chat') }}
                             </a>
                             
                             <a href="{{ route('profile.show', $match->other_user->id) }}" 
                                class="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 transition duration-200 text-center">
-                                <i class="fas fa-user mr-1"></i>Ver Perfil
+                                <i class="fas fa-user mr-1"></i>{{ __('messages.matching.view_profile') }}
                             </a>
                         </div>
                     </div>
@@ -85,11 +85,11 @@
     @else
         <div class="text-center py-12">
             <i class="fas fa-heart-broken text-6xl text-gray-300 mb-4"></i>
-            <h3 class="text-xl font-semibold text-gray-600 mb-2">Nenhum match ainda</h3>
-            <p class="text-gray-500 mb-6">Comece a descobrir pessoas para encontrar seus matches!</p>
+            <h3 class="text-xl font-semibold text-gray-600 mb-2">{{ __('messages.matching.no_matches_yet') }}</h3>
+            <p class="text-gray-500 mb-6">{{ __('messages.matching.start_discovering') }}</p>
             <a href="{{ route('matching.discover') }}" 
                class="bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition duration-200">
-                <i class="fas fa-search mr-2"></i>Descobrir Pessoas
+                <i class="fas fa-search mr-2"></i>{{ __('messages.matching.discover_people') }}
             </a>
         </div>
     @endif

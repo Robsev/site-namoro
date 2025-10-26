@@ -186,6 +186,13 @@ return [
     'matching.error_liking_user' => 'Error liking user',
     'matching.error_passing_user' => 'Error passing user',
     'matching.error_super_liking_user' => 'Error sending Super Like',
+    'matching.my_matches' => 'My Matches',
+    'matching.start_chat' => 'Chat',
+    'matching.view_profile' => 'View Profile',
+    'matching.no_matches_yet' => 'No matches yet',
+    'matching.start_discovering' => 'Start discovering people to find your matches!',
+    'matching.discover_people' => 'Discover People',
+    'matching.match_date' => 'Match on',
 
     // Chat
     'chat.title' => 'Conversations',
