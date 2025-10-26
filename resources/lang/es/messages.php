@@ -159,6 +159,7 @@ return [
     'matching.like' => 'Me Gusta',
     'matching.pass' => 'Pasar',
     'matching.super_like' => 'Super Like',
+    'matching.super_like_info' => 'Super Like: Muestra que tienes un interés especial en esta persona',
     'matching.compatibility' => 'Compatibilidad',
     'matching.age' => 'años',
     'matching.location' => 'Ubicación',

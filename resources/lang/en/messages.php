@@ -159,6 +159,7 @@ return [
     'matching.like' => 'Like',
     'matching.pass' => 'Pass',
     'matching.super_like' => 'Super Like',
+    'matching.super_like_info' => 'Super Like: Shows you have a special interest in this person',
     'matching.compatibility' => 'Compatibility',
     'matching.age' => 'years old',
     'matching.location' => 'Location',

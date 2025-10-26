@@ -87,9 +87,9 @@
                 </button>
                 
                 <button onclick="superLikeUser({{ $match->id }})" 
-                        class="bg-blue-500 text-white py-2 px-3 rounded-lg hover:bg-blue-600 transition duration-200"
-                        title="{{ __('messages.matching.super_like') }}">
-                    <i class="fas fa-star"></i>
+                        class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200 flex items-center justify-center"
+                        title="{{ __('messages.matching.super_like_info') }}">
+                    <i class="fas fa-star mr-2"></i>{{ __('messages.matching.super_like') }}
                 </button>
             </div>
         </div>

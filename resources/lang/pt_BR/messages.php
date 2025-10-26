@@ -161,6 +161,7 @@ return [
     'matching.like' => 'Curtir',
     'matching.pass' => 'Passar',
     'matching.super_like' => 'Super Like',
+    'matching.super_like_info' => 'Super Like: Mostra que você tem um interesse especial por esta pessoa',
     'matching.compatibility' => 'Compatibilidade',
     'matching.age' => 'anos',
     'matching.location' => 'Localização',
