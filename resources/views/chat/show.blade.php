@@ -191,21 +191,12 @@
                     <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
                     <span class="text-sm text-pink-700" id="recording-time">0:00</span>
                 </div>
-                <div class="flex items-center space-x-2">
-                    <button type="button" 
-                            id="stop-recording"
-                            class="text-red-600 hover:text-red-800 text-sm font-medium"
-                            onclick="stopAudioRecording()">
-                        <i class="fas fa-stop mr-1"></i>Parar
-                    </button>
-                    <button type="button" 
-                            id="send-audio"
-                            class="bg-pink-500 text-white px-3 py-1 rounded-lg hover:bg-pink-600 text-sm font-medium disabled:opacity-50"
-                            onclick="sendAudioMessage()"
-                            disabled>
-                        <i class="fas fa-paper-plane mr-1"></i>Enviar
-                    </button>
-                </div>
+                <button type="button" 
+                        id="stop-recording"
+                        class="text-red-600 hover:text-red-800 text-sm font-medium"
+                        onclick="stopAudioRecording()">
+                    <i class="fas fa-stop mr-1"></i>Parar
+                </button>
             </div>
         </div>
         
@@ -708,7 +699,7 @@ function stopAudioRecording() {
     if (mediaRecorder && mediaRecorder.state && mediaRecorder.state !== 'inactive') {
         mediaRecorder.stop();
         
-        // Hide recording indicator
+        // Hide recording indicator and show preview
         document.getElementById('audio-recording').classList.add('hidden');
         document.getElementById('mic-icon').classList.add('fa-microphone');
         document.getElementById('mic-icon').classList.remove('fa-microphone-slash', 'text-red-500');
