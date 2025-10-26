@@ -163,8 +163,7 @@
                 <button type="button" 
                         id="audio-button"
                         class="text-gray-500 hover:text-pink-500 text-lg"
-                        title="Gravar áudio"
-                        onclick="toggleAudioRecording()">
+                        title="Gravar áudio">
                     <i class="fas fa-microphone" id="mic-icon"></i>
                 </button>
             </div>
@@ -455,38 +454,6 @@ function toggleAttachmentOptions() {
     options.classList.toggle('hidden');
 }
 
-// Handle file input
-document.getElementById('file-input').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const formData = new FormData();
-        formData.append('message', '');
-        formData.append('attachment', file);
-        formData.append('message_type', file.type.startsWith('image/') ? 'image' : 'file');
-        
-        fetch(`/chat/send/{{ $user->id }}`, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                addMessageToChat(data.message);
-                lastMessageId = data.message.id;
-            } else {
-                alert(data.error || 'Erro ao enviar arquivo');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Erro ao enviar arquivo');
-        });
-    }
-});
-
 // Toggle chat options
 function toggleChatOptions() {
     const optionsMenu = document.getElementById('chat-options-menu');
@@ -680,13 +647,21 @@ async function toggleAudioRecording() {
             
             // Handle recording stop
             mediaRecorder.onstop = () => {
+                console.log('Recording stopped, audioChunks:', audioChunks.length);
                 recordedBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                console.log('recordedBlob created:', recordedBlob.size, 'bytes');
                 const audioUrl = URL.createObjectURL(recordedBlob);
                 
                 // Show audio preview
-                document.getElementById('recorded-audio').src = audioUrl;
-                document.getElementById('audio-preview').classList.remove('hidden');
-                document.getElementById('send-audio').disabled = false;
+                const audioPreview = document.getElementById('audio-preview');
+                const audioElement = document.getElementById('recorded-audio');
+                const sendAudioButton = document.getElementById('send-audio');
+                
+                audioElement.src = audioUrl;
+                audioPreview.classList.remove('hidden');
+                sendAudioButton.disabled = false;
+                
+                console.log('Audio preview shown, blob size:', recordedBlob.size);
                 
                 // Stop all tracks
                 stream.getTracks().forEach(track => track.stop());
