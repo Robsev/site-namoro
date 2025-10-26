@@ -30,8 +30,8 @@ class GeolocationController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'latitude' => 'required|numeric|between:-90,90',
-            'longitude' => 'required|numeric|between:-180,180',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
             'city' => 'nullable|string|max:100',
             'state' => 'nullable|string|max:100',
             'country' => 'nullable|string|max:100',
@@ -40,19 +40,18 @@ class GeolocationController extends Controller
 
         $user = Auth::user();
         
-        // Get additional location data from coordinates if not provided
-        if (!$request->filled('city') || !$request->filled('state')) {
+        // Get additional location data from coordinates if not provided and coordinates are provided
+        $locationData = [];
+        if ($request->filled('latitude') && $request->filled('longitude') && (!$request->filled('city') || !$request->filled('state'))) {
             $locationData = $this->getLocationFromCoordinates(
                 $request->latitude, 
                 $request->longitude
             );
-        } else {
-            $locationData = [];
         }
 
         $user->update([
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
+            'latitude' => $request->latitude ?: null,
+            'longitude' => $request->longitude ?: null,
             'city' => $request->city ?: $locationData['city'] ?? null,
             'state' => $request->state ?: $locationData['state'] ?? null,
             'country' => $request->country ?: $locationData['country'] ?? null,
