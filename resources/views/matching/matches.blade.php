@@ -73,7 +73,7 @@
                                 <i class="fas fa-comment mr-1"></i>{{ __('messages.matching.start_chat') }}
                             </a>
                             
-                            <a href="{{ route('profile.show', $match->other_user->id) }}" 
+                            <a href="{{ route('profile.view', $match->other_user->id) }}" 
                                class="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-200 text-center">
                                 <i class="fas fa-user mr-1"></i>{{ __('messages.matching.view_profile') }}
                             </a>
