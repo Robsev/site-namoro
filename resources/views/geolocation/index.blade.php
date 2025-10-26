@@ -406,44 +406,54 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Função para inicializar o mapa
 function initMap() {
-    const mapAPI = detectMapAPI();
-    if (!mapAPI) {
-        console.error('Nenhuma API de mapa disponível');
-        return;
-    }
-    
-    // Coordenadas padrão (São Paulo) se não houver localização
-    const defaultLat = currentLat || -23.5505;
-    const defaultLng = currentLng || -46.6333;
-    
-    if (mapAPI === 'google') {
-        // Inicializar Google Maps
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: { lat: defaultLat, lng: defaultLng },
-            zoom: 15,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            styles: [
-                {
-                    featureType: 'poi',
-                    elementType: 'labels',
-                    stylers: [{ visibility: 'on' }]
-                }
-            ]
-        });
-    } else if (mapAPI === 'leaflet') {
-        // Inicializar OpenStreetMap com Leaflet
-        map = L.map('map').setView([defaultLat, defaultLng], 15);
+    try {
+        const mapAPI = detectMapAPI();
+        if (!mapAPI) {
+            console.warn('Nenhuma API de mapa disponível');
+            return;
+        }
         
-        // Adicionar tiles do OpenStreetMap
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-    }
-    
-    // Adicionar marcador se houver localização
-    if (currentLat && currentLng) {
-        addMarker(currentLat, currentLng, 'Sua localização atual');
-        updateMapInfo(currentLat, currentLng, '{{ $user->formatted_location ?? "Localização atual" }}');
+        // Coordenadas padrão (São Paulo) se não houver localização
+        const defaultLat = currentLat || -23.5505;
+        const defaultLng = currentLng || -46.6333;
+        
+        if (mapAPI === 'google') {
+            // Verificar se google.maps está disponível
+            if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
+                console.warn('Google Maps API não está disponível');
+                return;
+            }
+            
+            // Inicializar Google Maps
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: defaultLat, lng: defaultLng },
+                zoom: 15,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                styles: [
+                    {
+                        featureType: 'poi',
+                        elementType: 'labels',
+                        stylers: [{ visibility: 'on' }]
+                    }
+                ]
+            });
+        } else if (mapAPI === 'leaflet') {
+            // Inicializar OpenStreetMap com Leaflet
+            map = L.map('map').setView([defaultLat, defaultLng], 15);
+            
+            // Adicionar tiles do OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+        }
+        
+        // Adicionar marcador se houver localização
+        if (currentLat && currentLng) {
+            addMarker(currentLat, currentLng, 'Sua localização atual');
+            updateMapInfo(currentLat, currentLng, '{{ $user->formatted_location ?? "Localização atual" }}');
+        }
+    } catch (error) {
+        console.error('Erro ao inicializar mapa:', error);
     }
 }
 
