@@ -13,6 +13,34 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
+     * The "booted" method of the model.
+     */
+    protected static function booted()
+    {
+        static::creating(function ($user) {
+            // Set default email preferences
+            if (is_null($user->email_notifications_enabled)) {
+                $user->email_notifications_enabled = true;
+            }
+            if (is_null($user->email_new_matches)) {
+                $user->email_new_matches = true;
+            }
+            if (is_null($user->email_new_likes)) {
+                $user->email_new_likes = true;
+            }
+            if (is_null($user->email_new_messages)) {
+                $user->email_new_messages = false; // Default false to avoid email spam
+            }
+            if (is_null($user->email_photo_approvals)) {
+                $user->email_photo_approvals = true;
+            }
+            if (is_null($user->email_marketing)) {
+                $user->email_marketing = false;
+            }
+        });
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
