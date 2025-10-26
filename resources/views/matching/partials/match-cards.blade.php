@@ -68,10 +68,12 @@
 
             <!-- Action Buttons -->
             <div class="flex flex-wrap gap-2">
-                <a href="{{ route('profile.show', $match->id) }}" 
-                   class="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-200 text-center">
-                    <i class="fas fa-user mr-1"></i>{{ __('messages.matching.view_profile') }}
-                </a>
+                @if(auth()->user()->isPremium())
+                    <a href="{{ route('profile.view', $match->id) }}" 
+                       class="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-200 text-center">
+                        <i class="fas fa-user mr-1"></i>{{ __('messages.matching.view_profile') }}
+                    </a>
+                @endif
                 
                 <button onclick="passUser({{ $match->id }})" 
                         class="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 transition duration-200">
