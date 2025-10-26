@@ -56,12 +56,12 @@ class PreferencesController extends Controller
 
         $preferences = $user->matchingPreferences ?? new MatchingPreference(['user_id' => $user->id]);
 
-        $preferences->update([
+        // Prepare update data
+        $updateData = [
             'preferred_genders' => $request->preferred_genders ?? [],
             'min_age' => $request->min_age,
             'max_age' => $request->max_age,
             'enable_geographic_matching' => $request->boolean('enable_geographic_matching'),
-            'max_distance' => $request->enable_geographic_matching ? $request->max_distance : null,
             'preferred_interests' => $request->preferred_interests ?? [],
             'preferred_personality_traits' => $request->preferred_personality_traits ?? [],
             'preferred_education_levels' => $request->preferred_education_levels ?? [],
@@ -72,7 +72,14 @@ class PreferencesController extends Controller
             'verified_only' => $request->boolean('verified_only'),
             'photos_only' => $request->boolean('photos_only'),
             'complete_profiles_only' => $request->boolean('complete_profiles_only'),
-        ]);
+        ];
+
+        // Only update max_distance if geographic matching is enabled
+        if ($request->boolean('enable_geographic_matching')) {
+            $updateData['max_distance'] = $request->max_distance;
+        }
+
+        $preferences->update($updateData);
 
         return redirect()->route('preferences.edit')->with('success', 'Preferências de matching atualizadas com sucesso!');
     }

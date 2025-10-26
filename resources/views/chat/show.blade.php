@@ -91,6 +91,21 @@
                                     <p class="mt-2">{{ $message->message }}</p>
                                 @endif
                             </div>
+                        @elseif($message->message_type === 'audio')
+                            <div class="px-4 py-2 rounded-lg {{ $message->sender_id === Auth::id() ? 'bg-pink-500 text-white' : 'bg-white text-gray-800' }} shadow-sm">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-microphone text-lg"></i>
+                                    <audio controls class="flex-1" style="max-width: 250px;">
+                                        <source src="{{ Storage::url($message->attachment_path) }}" type="audio/webm">
+                                        <source src="{{ Storage::url($message->attachment_path) }}" type="audio/mp3">
+                                        <source src="{{ Storage::url($message->attachment_path) }}" type="audio/wav">
+                                        Seu navegador não suporta áudio.
+                                    </audio>
+                                </div>
+                                @if($message->message)
+                                    <p class="mt-2 text-xs">{{ $message->message }}</p>
+                                @endif
+                            </div>
                         @else
                             <div class="px-4 py-2 rounded-lg {{ $message->sender_id === Auth::id() ? 'bg-pink-500 text-white' : 'bg-white text-gray-800' }} shadow-sm">
                                 <div class="flex items-center">
@@ -122,23 +137,35 @@
     </div>
 
     <!-- Message Input -->
-    <div class="bg-white border-t border-gray-200 p-4">
-        <form id="message-form" class="flex items-center space-x-2" enctype="multipart/form-data">
+    <div class="bg-white border-t border-gray-200 p-2 md:p-4">
+        <form id="message-form" class="flex items-end space-x-2" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="message_type" value="text">
             
-            <!-- Image Upload Button -->
-            <div class="relative">
-                <input type="file" 
-                       id="image-input" 
-                       name="image" 
-                       accept="image/*" 
-                       class="hidden">
+            <!-- Attachments Buttons (Images and Audio) -->
+            <div class="flex flex-col space-y-2">
+                <!-- Image Upload Button -->
+                <div class="relative">
+                    <input type="file" 
+                           id="image-input" 
+                           name="image" 
+                           accept="image/*" 
+                           class="hidden">
+                    <button type="button" 
+                            id="image-button"
+                            class="text-gray-500 hover:text-pink-500 text-lg"
+                            title="Enviar imagem">
+                        <i class="fas fa-image"></i>
+                    </button>
+                </div>
+                
+                <!-- Audio Recording Button -->
                 <button type="button" 
-                        id="image-button"
-                        class="text-gray-500 hover:text-pink-500"
-                        title="Enviar imagem">
-                    <i class="fas fa-image"></i>
+                        id="audio-button"
+                        class="text-gray-500 hover:text-pink-500 text-lg"
+                        title="Gravar áudio"
+                        onclick="toggleAudioRecording()">
+                    <i class="fas fa-microphone" id="mic-icon"></i>
                 </button>
             </div>
             
@@ -147,16 +174,51 @@
                    name="message" 
                    id="message-input" 
                    placeholder="Digite sua mensagem..." 
-                   class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-pink-500"
+                   class="flex-1 border border-gray-300 rounded-lg px-2 md:px-4 py-2 text-sm md:text-base focus:outline-none focus:border-pink-500"
                    maxlength="1000">
             
             <!-- Send Button -->
             <button type="submit" 
-                    class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-200 disabled:opacity-50"
+                    class="bg-pink-500 text-white px-3 md:px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-200 disabled:opacity-50 text-sm md:text-base"
                     id="send-button">
                 <i class="fas fa-paper-plane"></i>
             </button>
         </form>
+        
+        <!-- Audio Recording Indicator -->
+        <div id="audio-recording" class="hidden mt-2 bg-pink-100 border border-pink-300 rounded-lg p-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                    <span class="text-sm text-pink-700" id="recording-time">0:00</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button type="button" 
+                            id="stop-recording"
+                            class="text-red-600 hover:text-red-800 text-sm font-medium"
+                            onclick="stopAudioRecording()">
+                        <i class="fas fa-stop mr-1"></i>Parar
+                    </button>
+                    <button type="button" 
+                            id="send-audio"
+                            class="bg-pink-500 text-white px-3 py-1 rounded-lg hover:bg-pink-600 text-sm font-medium"
+                            onclick="sendAudioMessage()"
+                            disabled>
+                        <i class="fas fa-paper-plane mr-1"></i>Enviar
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Audio Preview -->
+        <div id="audio-preview" class="hidden mt-2">
+            <audio id="recorded-audio" controls class="w-full"></audio>
+            <button type="button" 
+                    onclick="discardAudio()" 
+                    class="mt-2 text-sm text-red-600 hover:text-red-800">
+                <i class="fas fa-times mr-1"></i>Descartar áudio
+            </button>
+        </div>
         
         <!-- Image Preview -->
         <div id="image-preview" class="mt-3 hidden">
@@ -418,7 +480,7 @@ document.addEventListener('click', function(event) {
 function clearChat() {
     if (confirm('Tem certeza que deseja limpar o histórico desta conversa? Esta ação não pode ser desfeita.')) {
         // Implement clear chat functionality
-        fetch(`/chat/clear/{{ $otherUser->id }}`, {
+        fetch(`/chat/clear/{{ $user->id }}`, {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -448,7 +510,7 @@ function clearChat() {
 function blockUser() {
     if (confirm('Tem certeza que deseja bloquear este usuário? Vocês não poderão mais se comunicar.')) {
         // Implement block user functionality
-        fetch(`/chat/block/{{ $otherUser->id }}`, {
+        fetch(`/chat/block/{{ $user->id }}`, {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -478,7 +540,7 @@ function reportUser() {
     const reason = prompt('Por favor, descreva o motivo da denúncia:');
     if (reason && reason.trim()) {
         // Implement report user functionality
-        fetch(`/chat/report/{{ $otherUser->id }}`, {
+        fetch(`/chat/report/{{ $user->id }}`, {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -503,7 +565,7 @@ function reportUser() {
 
 function archiveChat() {
     // Implement archive chat functionality
-    fetch(`/chat/archive/{{ $otherUser->id }}`, {
+    fetch(`/chat/archive/{{ $user->id }}`, {
         method: 'POST',
         headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -563,6 +625,140 @@ function formatFileSize(bytes) {
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+// Audio recording variables
+let mediaRecorder = null;
+let audioChunks = [];
+let recordedBlob = null;
+let recordingTimer = null;
+let recordingSeconds = 0;
+
+// Toggle audio recording
+async function toggleAudioRecording() {
+    if (mediaRecorder === null || mediaRecorder.state === 'inactive') {
+        try {
+            // Request microphone access
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            
+            // Create MediaRecorder
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = [];
+            
+            // Handle data available
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    audioChunks.push(event.data);
+                }
+            };
+            
+            // Handle recording stop
+            mediaRecorder.onstop = () => {
+                recordedBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                const audioUrl = URL.createObjectURL(recordedBlob);
+                
+                // Show audio preview
+                document.getElementById('recorded-audio').src = audioUrl;
+                document.getElementById('audio-preview').classList.remove('hidden');
+                document.getElementById('send-audio').disabled = false;
+                
+                // Stop all tracks
+                stream.getTracks().forEach(track => track.stop());
+            };
+            
+            // Start recording
+            mediaRecorder.start();
+            
+            // Show recording indicator
+            document.getElementById('audio-recording').classList.remove('hidden');
+            document.getElementById('mic-icon').classList.remove('fa-microphone');
+            document.getElementById('mic-icon').classList.add('fa-microphone-slash', 'text-red-500');
+            document.getElementById('audio-button').disabled = true;
+            
+            // Start timer
+            recordingSeconds = 0;
+            recordingTimer = setInterval(() => {
+                recordingSeconds++;
+                const minutes = Math.floor(recordingSeconds / 60);
+                const seconds = recordingSeconds % 60;
+                document.getElementById('recording-time').textContent = 
+                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+            
+        } catch (error) {
+            console.error('Error accessing microphone:', error);
+            alert('Não foi possível acessar o microfone. Verifique as permissões do navegador.');
+        }
+    } else {
+        stopAudioRecording();
+    }
+}
+
+// Stop audio recording
+function stopAudioRecording() {
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+        
+        // Hide recording indicator
+        document.getElementById('audio-recording').classList.add('hidden');
+        document.getElementById('mic-icon').classList.add('fa-microphone');
+        document.getElementById('mic-icon').classList.remove('fa-microphone-slash', 'text-red-500');
+        document.getElementById('audio-button').disabled = false;
+        
+        // Stop timer
+        if (recordingTimer) {
+            clearInterval(recordingTimer);
+            recordingTimer = null;
+        }
+    }
+}
+
+// Send audio message
+async function sendAudioMessage() {
+    if (!recordedBlob) {
+        alert('Nenhum áudio gravado.');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+    formData.append('audio', recordedBlob, 'voice-message.webm');
+    formData.append('message_type', 'audio');
+    
+    try {
+        const response = await fetch(`/chat/send/{{ $user->id }}`, {
+            method: 'POST',
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Hide audio preview and reset
+            document.getElementById('audio-preview').classList.add('hidden');
+            document.getElementById('audio-recording').classList.add('hidden');
+            recordedBlob = null;
+            audioChunks = [];
+            
+            // Scroll to bottom
+            scrollToBottom();
+            
+            showNotification('Áudio enviado com sucesso!', 'success');
+        } else {
+            showNotification('Erro ao enviar áudio.', 'error');
+        }
+    } catch (error) {
+        console.error('Error sending audio:', error);
+        showNotification('Erro ao enviar áudio.', 'error');
+    }
+}
+
+// Discard audio
+function discardAudio() {
+    recordedBlob = null;
+    audioChunks = [];
+    document.getElementById('audio-preview').classList.add('hidden');
+    document.getElementById('recorded-audio').src = '';
 }
 
 // Open image in modal

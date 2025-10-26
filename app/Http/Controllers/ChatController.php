@@ -79,12 +79,15 @@ class ChatController extends Controller
 
         $request->validate([
             'message' => 'nullable|string|max:1000',
-            'message_type' => 'nullable|in:text,image,file',
+            'message_type' => 'nullable|in:text,image,file,audio',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // 5MB max
+            'audio' => 'nullable|file|mimes:webm,mp3,wav,ogg|max:10240', // 10MB max for audio
         ], [
             'image.image' => 'O arquivo deve ser uma imagem válida.',
             'image.mimes' => 'A imagem deve ser do tipo: jpeg, png, jpg, gif ou webp.',
             'image.max' => 'A imagem deve ter no máximo 5MB.',
+            'audio.mimes' => 'O áudio deve ser do tipo: webm, mp3, wav ou ogg.',
+            'audio.max' => 'O áudio deve ter no máximo 10MB.',
         ]);
 
         $messageType = $request->message_type ?? 'text';
@@ -117,6 +120,21 @@ class ChatController extends Controller
             
             // Update message content to show image info
             $messageContent = $messageContent ?: '📷 Imagem enviada';
+        }
+        
+        // Handle audio upload
+        if ($request->hasFile('audio') && $messageType === 'audio') {
+            $audio = $request->file('audio');
+            
+            // Generate unique filename
+            $filename = time() . '_' . uniqid() . '.' . $audio->getClientOriginalExtension();
+            
+            // Store audio in storage/app/public/chat-audio
+            $path = $audio->storeAs('chat-audio', $filename, 'public');
+            $attachmentPath = $path;
+            
+            // Update message content to show audio info
+            $messageContent = $messageContent ?: '🎤 Áudio enviado';
         }
 
         $messageData = [
