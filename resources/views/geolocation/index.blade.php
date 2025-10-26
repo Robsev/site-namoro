@@ -553,10 +553,6 @@ function clearLocation() {
         return;
     }
     
-    // Resetar variáveis globais
-    currentLat = null;
-    currentLng = null;
-    
     // Limpar campos do formulário
     document.getElementById('latitude').value = '';
     document.getElementById('longitude').value = '';
