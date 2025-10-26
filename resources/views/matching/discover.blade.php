@@ -3,7 +3,7 @@
 @section('content')
 <div class="bg-white rounded-lg shadow-md p-6">
     <h2 class="text-2xl font-bold text-gray-800 mb-6">
-        <i class="fas fa-heart text-pink-500 mr-2"></i>Descobrir Pessoas
+        <i class="fas fa-heart text-pink-500 mr-2"></i>{{ __('messages.matching.discover') }}
     </h2>
 
     @if($potentialMatches->count() > 0)
@@ -15,17 +15,17 @@
         <div class="text-center mt-8">
             <button onclick="loadMoreMatches()" 
                     class="bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition duration-200">
-                <i class="fas fa-refresh mr-2"></i>Carregar Mais Pessoas
+                <i class="fas fa-refresh mr-2"></i>{{ __('messages.matching.load_more_people') }}
             </button>
         </div>
     @else
         <div class="text-center py-12">
             <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
-            <h3 class="text-xl font-semibold text-gray-600 mb-2">Nenhuma pessoa encontrada</h3>
-            <p class="text-gray-500 mb-6">Tente ajustar suas preferências de matching para ver mais pessoas.</p>
+            <h3 class="text-xl font-semibold text-gray-600 mb-2">{{ __('messages.matching.no_one_found') }}</h3>
+            <p class="text-gray-500 mb-6">{{ __('messages.matching.try_adjusting_preferences') }}</p>
             <a href="{{ route('preferences.edit') }}" 
                class="bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition duration-200">
-                <i class="fas fa-cog mr-2"></i>Ajustar Preferências
+                <i class="fas fa-cog mr-2"></i>{{ __('messages.matching.adjust_preferences') }}
             </a>
         </div>
     @endif
@@ -33,11 +33,29 @@
 
 <!-- JavaScript for AJAX actions -->
 <script>
+const translations = {
+    user_id_not_found: '{{ __('messages.matching.user_id_not_found') }}',
+    like_sent: '{{ __('messages.matching.like_sent') }}',
+    error_liking: '{{ __('messages.matching.error_liking') }}',
+    error_liking_user: '{{ __('messages.matching.error_liking_user') }}',
+    user_passed: '{{ __('messages.matching.user_passed') }}',
+    error_passing: '{{ __('messages.matching.error_passing') }}',
+    error_passing_user: '{{ __('messages.matching.error_passing_user') }}',
+    confirm_super_like: '{{ __('messages.matching.confirm_super_like') }}',
+    super_like_sent: '{{ __('messages.matching.super_like_sent') }}',
+    error_super_liking: '{{ __('messages.matching.error_super_liking') }}',
+    error_super_liking_user: '{{ __('messages.matching.error_super_liking_user') }}',
+    loading: '{{ __('messages.matching.loading') }}',
+    all_loaded: '{{ __('messages.matching.all_loaded') }}',
+    new_people_loaded: '{{ __('messages.matching.new_people_loaded') }}',
+    error_loading: '{{ __('messages.matching.error_loading') }}'
+};
+
 function likeUser(userId) {
     console.log('Like user ID:', userId);
     
     if (!userId) {
-        showNotification('ID do usuário não encontrado', 'error');
+        showNotification(translations.user_id_not_found, 'error');
         return;
     }
     
@@ -51,7 +69,7 @@ function likeUser(userId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showNotification('Curtida enviada!', 'success');
+            showNotification(translations.like_sent, 'success');
             // Remove the card from the view
             const card = document.querySelector(`[data-user-id="${userId}"]`)?.closest('.bg-white.border');
             if (card) {
@@ -59,12 +77,12 @@ function likeUser(userId) {
                 currentOffset--; // Decrease offset since we removed a card
             }
         } else {
-            showNotification(data.error || 'Erro ao curtir', 'error');
+            showNotification(data.error || translations.error_liking, 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showNotification('Erro ao curtir usuário', 'error');
+        showNotification(translations.error_liking_user, 'error');
     });
 }
 
@@ -79,21 +97,21 @@ function passUser(userId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showNotification('Usuário passado', 'info');
+            showNotification(translations.user_passed, 'info');
             // Remove the card from the view
             document.querySelector(`[data-user-id="${userId}"]`)?.remove();
         } else {
-            showNotification(data.error || 'Erro ao passar', 'error');
+            showNotification(data.error || translations.error_passing, 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showNotification('Erro ao passar usuário', 'error');
+        showNotification(translations.error_passing_user, 'error');
     });
 }
 
 function superLikeUser(userId) {
-    if (!confirm('Tem certeza que deseja dar um Super Like? Você tem um número limitado por dia.')) {
+    if (!confirm(translations.confirm_super_like)) {
         return;
     }
 
@@ -107,16 +125,16 @@ function superLikeUser(userId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showNotification('Super Like enviado!', 'success');
+            showNotification(translations.super_like_sent, 'success');
             // Remove the card from the view
             document.querySelector(`[data-user-id="${userId}"]`)?.remove();
         } else {
-            showNotification(data.error || 'Erro ao enviar Super Like', 'error');
+            showNotification(data.error || translations.error_super_liking, 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showNotification('Erro ao enviar Super Like', 'error');
+        showNotification(translations.error_super_liking_user, 'error');
     });
 }
 
@@ -132,7 +150,7 @@ function loadMoreMatches() {
     isLoading = true;
     const button = document.querySelector('button[onclick="loadMoreMatches()"]');
     const originalText = button.innerHTML;
-    button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Carregando...';
+    button.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i>${translations.loading}`;
     button.disabled = true;
     
     fetch(`{{ route('matching.load-more') }}?offset=${currentOffset}&limit=20`, {
@@ -153,7 +171,7 @@ function loadMoreMatches() {
             hasMore = data.hasMore;
             
             if (!hasMore) {
-                button.innerHTML = '<i class="fas fa-check mr-2"></i>Todos carregados';
+                button.innerHTML = `<i class="fas fa-check mr-2"></i>${translations.all_loaded}`;
                 button.disabled = true;
                 button.classList.add('bg-gray-400', 'cursor-not-allowed');
                 button.classList.remove('bg-pink-500', 'hover:bg-pink-600');
@@ -162,11 +180,11 @@ function loadMoreMatches() {
                 button.disabled = false;
             }
             
-            showNotification(`${data.count} novas pessoas carregadas!`, 'success');
+            showNotification(`${data.count} ${translations.new_people_loaded}`, 'success');
         } else {
             button.innerHTML = originalText;
             button.disabled = false;
-            showNotification(data.message || 'Erro ao carregar mais pessoas', 'error');
+            showNotification(data.message || translations.error_loading, 'error');
             hasMore = false;
         }
     })
@@ -174,7 +192,7 @@ function loadMoreMatches() {
         console.error('Error:', error);
         button.innerHTML = originalText;
         button.disabled = false;
-        showNotification('Erro ao carregar mais pessoas', 'error');
+        showNotification(translations.error_loading, 'error');
     })
     .finally(() => {
         isLoading = false;
