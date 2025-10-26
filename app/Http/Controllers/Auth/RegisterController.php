@@ -24,6 +24,13 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
+        // Combine birth_day, birth_month, and birth_year into birth_date if they exist
+        if ($request->birth_day && $request->birth_month && $request->birth_year) {
+            $request->merge([
+                'birth_date' => $request->birth_year . '-' . str_pad($request->birth_month, 2, '0', STR_PAD_LEFT) . '-' . str_pad($request->birth_day, 2, '0', STR_PAD_LEFT)
+            ]);
+        }
+        
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
@@ -31,8 +38,6 @@ class RegisterController extends Controller
             'password' => ['required', 'confirmed', Password::defaults()],
             'birth_date' => ['required', 'date', 'before:today'],
             'gender' => ['required', 'in:male,female,other,prefer_not_to_say'],
-            'phone' => ['nullable', 'string', 'max:20'],
-            'location' => ['nullable', 'string', 'max:255'],
             'terms' => ['required', 'accepted'],
         ]);
 
@@ -44,8 +49,6 @@ class RegisterController extends Controller
             'password' => Hash::make($request->password),
             'birth_date' => $request->birth_date,
             'gender' => $request->gender,
-            'phone' => $request->phone,
-            'location' => $request->location,
             'is_verified' => false,
             'is_active' => true,
             'last_seen' => now(),
