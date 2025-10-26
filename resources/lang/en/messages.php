@@ -173,6 +173,9 @@ return [
     'common.error' => 'Error!',
     'common.warning' => 'Warning!',
     'common.info' => 'Information',
+    'common.select' => 'Select...',
+    'common.and' => 'and',
+    'common.years' => 'years',
 
     // Validation
     'validation.required' => 'This field is required.',

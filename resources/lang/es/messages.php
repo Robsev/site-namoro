@@ -152,6 +152,9 @@ return [
     'common.error' => '¡Error!',
     'common.warning' => '¡Advertencia!',
     'common.info' => 'Información',
+    'common.select' => 'Seleccione...',
+    'common.and' => 'y',
+    'common.years' => 'años',
 
     // Validation
     'validation.required' => 'Este campo es obligatorio.',

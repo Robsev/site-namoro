@@ -175,6 +175,9 @@ return [
     'common.error' => 'Erro!',
     'common.warning' => 'Atenção!',
     'common.info' => 'Informação',
+    'common.select' => 'Selecione...',
+    'common.and' => 'e',
+    'common.years' => 'anos',
 
     // Validation
     'validation.required' => 'Este campo é obrigatório.',
