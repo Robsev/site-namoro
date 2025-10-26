@@ -210,13 +210,21 @@
         </div>
         
         <!-- Audio Preview -->
-        <div id="audio-preview" class="hidden mt-2">
-            <audio id="recorded-audio" controls class="w-full"></audio>
-            <button type="button" 
-                    onclick="discardAudio()" 
-                    class="mt-2 text-sm text-red-600 hover:text-red-800">
-                <i class="fas fa-times mr-1"></i>Descartar áudio
-            </button>
+        <div id="audio-preview" class="hidden mt-2 bg-pink-50 border border-pink-200 rounded-lg p-3">
+            <p class="text-sm text-pink-700 mb-2"><i class="fas fa-microphone mr-2"></i>Áudio gravado</p>
+            <audio id="recorded-audio" controls class="w-full mb-2"></audio>
+            <div class="flex gap-2">
+                <button type="button" 
+                        onclick="sendAudioMessage()" 
+                        class="flex-1 bg-pink-500 text-white px-3 py-2 rounded-lg hover:bg-pink-600 text-sm font-medium">
+                    <i class="fas fa-paper-plane mr-1"></i>Enviar Áudio
+                </button>
+                <button type="button" 
+                        onclick="discardAudio()" 
+                        class="text-red-600 hover:text-red-800 px-3 py-2 text-sm font-medium">
+                    <i class="fas fa-times mr-1"></i>Descartar
+                </button>
+            </div>
         </div>
         
         <!-- Image Preview -->
