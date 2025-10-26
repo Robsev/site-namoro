@@ -535,12 +535,33 @@ function clearLocation() {
         return;
     }
     
+    // Resetar variáveis globais
+    currentLat = null;
+    currentLng = null;
+    
+    // Limpar campos do formulário
     document.getElementById('latitude').value = '';
     document.getElementById('longitude').value = '';
     document.getElementById('country').value = '';
     document.getElementById('state').value = '';
     document.getElementById('city').value = '';
     document.getElementById('neighborhood').value = '';
+    
+    // Remover marcador do mapa se existir
+    const mapAPI = detectMapAPI();
+    if (marker && map) {
+        if (mapAPI === 'google') {
+            marker.setMap(null);
+        } else if (mapAPI === 'leaflet') {
+            map.removeLayer(marker);
+        }
+    }
+    
+    // Atualizar informação no mapa
+    const mapAddress = document.getElementById('map-address');
+    if (mapAddress) {
+        mapAddress.textContent = '-';
+    }
     
     // Submeter formulário vazio
     document.getElementById('manualLocationForm').submit();
