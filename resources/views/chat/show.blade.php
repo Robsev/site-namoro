@@ -367,6 +367,22 @@ function addMessageToChat(message) {
                 ${message.message ? `<p class="mt-2">${message.message}</p>` : ''}
             </div>
         `;
+    } else if (message.message_type === 'audio' && message.attachment_path) {
+        // Audio message
+        messageContent = `
+            <div class="px-4 py-2 rounded-lg ${isOwnMessage ? 'bg-pink-500 text-white' : 'bg-white text-gray-800'} shadow-sm">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-microphone text-lg"></i>
+                    <audio controls class="flex-1" style="max-width: 250px;">
+                        <source src="/storage/${message.attachment_path}" type="audio/webm">
+                        <source src="/storage/${message.attachment_path}" type="audio/mp3">
+                        <source src="/storage/${message.attachment_path}" type="audio/wav">
+                        Seu navegador não suporta áudio.
+                    </audio>
+                </div>
+                ${message.message ? `<p class="mt-2 text-xs">${message.message}</p>` : ''}
+            </div>
+        `;
     } else {
         // Text message
         messageContent = `
@@ -734,11 +750,15 @@ async function sendAudioMessage() {
         const data = await response.json();
         
         if (data.success) {
+            // Add message to chat interface
+            addMessageToChat(data.message);
+            
             // Hide audio preview and reset
             document.getElementById('audio-preview').classList.add('hidden');
             document.getElementById('audio-recording').classList.add('hidden');
             recordedBlob = null;
             audioChunks = [];
+            lastMessageId = data.message.id;
             
             // Scroll to bottom
             scrollToBottom();
@@ -795,5 +815,20 @@ setInterval(function() {
 
 // Scroll to bottom on page load
 window.addEventListener('load', scrollToBottom);
+
+// Show notification function
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 bg-${type === 'success' ? 'green' : type === 'error' ? 'red' : 'blue'}-500 text-white px-6 py-3 rounded-lg shadow-lg z-50`;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.transition = 'opacity 0.5s';
+        notification.style.opacity = '0';
+        setTimeout(() => notification.remove(), 500);
+    }, 3000);
+}
 </script>
 @endsection
