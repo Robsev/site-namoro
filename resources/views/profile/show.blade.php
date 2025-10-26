@@ -94,7 +94,7 @@
                 @if($user->gender)
                 <div class="flex justify-between">
                     <span class="text-gray-600">{{ __('messages.profile.gender') }}:</span>
-                    <span class="font-medium capitalize">{{ $user->gender }}</span>
+                    <span class="font-medium">{{ __('messages.register.gender_' . $user->gender) }}</span>
                 </div>
                 @endif
 
@@ -132,28 +132,28 @@
                 @if($user->profile->education_level)
                 <div class="flex justify-between">
                     <span class="text-gray-600">{{ __('messages.profile.education') }}:</span>
-                    <span class="font-medium capitalize">{{ str_replace('_', ' ', $user->profile->education_level) }}</span>
+                    <span class="font-medium">{{ __('messages.profile.' . str_replace('_', '_', $user->profile->education_level)) }}</span>
                 </div>
                 @endif
 
                 @if($user->profile->relationship_goal)
                 <div class="flex justify-between">
                     <span class="text-gray-600">{{ __('messages.profile.relationship_goal') }}:</span>
-                    <span class="font-medium capitalize">{{ str_replace('_', ' ', $user->profile->relationship_goal) }}</span>
+                    <span class="font-medium">{{ __('messages.profile.' . $user->profile->relationship_goal) }}</span>
                 </div>
                 @endif
 
                 @if($user->profile->smoking)
                 <div class="flex justify-between">
                     <span class="text-gray-600">{{ __('messages.profile.smoking') }}:</span>
-                    <span class="font-medium capitalize">{{ str_replace('_', ' ', $user->profile->smoking) }}</span>
+                    <span class="font-medium">{{ __('messages.profile.' . $user->profile->smoking) }}</span>
                 </div>
                 @endif
 
                 @if($user->profile->drinking)
                 <div class="flex justify-between">
                     <span class="text-gray-600">{{ __('messages.profile.drinking') }}:</span>
-                    <span class="font-medium capitalize">{{ str_replace('_', ' ', $user->profile->drinking) }}</span>
+                    <span class="font-medium">{{ __('messages.profile.' . $user->profile->drinking) }}</span>
                 </div>
                 @endif
             </div>
@@ -181,7 +181,7 @@
                 </div>
                 @endif
 
-                @if(!$photo->is_approved)
+                @if($photo->moderation_status === 'pending')
                 <div class="absolute top-2 right-2 bg-yellow-500 text-white px-2 py-1 rounded text-xs font-medium">
                     {{ __('messages.profile.pending') }}
                 </div>

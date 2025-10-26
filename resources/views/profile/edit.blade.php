@@ -360,7 +360,7 @@
                         </div>
                         @endif
 
-                        @if(!$photo->is_approved)
+                        @if($photo->moderation_status === 'pending')
                         <div class="absolute top-2 right-2 bg-yellow-500 text-white px-2 py-1 rounded text-xs font-medium">
                             {{ __('messages.profile.pending') }}
                         </div>
