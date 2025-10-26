@@ -437,7 +437,13 @@ function addMessageToChat(message) {
 // Check for new messages periodically
 setInterval(function() {
     fetch(`/chat/messages/{{ $user->id }}?last_message_id=${lastMessageId}`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                // Server is down or returning error
+                throw new Error(`HTTP ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.messages && data.messages.length > 0) {
                 data.messages.forEach(message => {
@@ -446,7 +452,13 @@ setInterval(function() {
                 });
             }
         })
-        .catch(error => console.error('Error checking messages:', error));
+        .catch(error => {
+            // Silently ignore errors to prevent console spam
+            // Only log if it's not a server unavailable error
+            if (!error.message.includes('503') && !error.message.includes('Unexpected token')) {
+                console.error('Error checking messages:', error);
+            }
+        });
 }, 3000); // Check every 3 seconds
 
 // Toggle attachment options
@@ -826,7 +838,12 @@ setInterval(function() {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
             'X-Requested-With': 'XMLHttpRequest',
         }
-    }).catch(error => console.log('Last seen update failed:', error));
+    }).catch(error => {
+        // Silently ignore 503 errors to prevent console spam
+        if (!error.message || !error.message.includes('503')) {
+            console.log('Last seen update failed:', error);
+        }
+    });
 }, 30000); // Update every 30 seconds
 
 // Scroll to bottom on page load
