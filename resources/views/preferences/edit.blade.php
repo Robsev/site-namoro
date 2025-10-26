@@ -1,24 +1,24 @@
 @extends('layouts.profile')
 
-@section('title', 'Preferências de Matching')
+@section('title', __('messages.preferences.title'))
 
 @section('content')
 <div class="max-w-4xl mx-auto">
     <div class="bg-white rounded-lg shadow-sm border p-6">
         <h1 class="text-2xl font-bold text-gray-900 mb-6">
-            <i class="fas fa-heart mr-2"></i>Preferências de Matching
+            <i class="fas fa-heart mr-2"></i>{{ __('messages.preferences.title') }}
         </h1>
-        <p class="text-gray-600 mb-8">Configure suas preferências para encontrar pessoas compatíveis com você.</p>
+        <p class="text-gray-600 mb-8">{{ __('messages.preferences.description') }}</p>
 
         <form method="POST" action="{{ route('preferences.update') }}" class="space-y-8">
             @csrf
 
             <!-- Age Range -->
             <div class="space-y-4">
-                <h2 class="text-lg font-semibold text-gray-900">Faixa Etária</h2>
+                <h2 class="text-lg font-semibold text-gray-900">{{ __('messages.preferences.age_range') }}</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="min_age" class="block text-sm font-medium text-gray-700 mb-2">Idade Mínima *</label>
+                        <label for="min_age" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.preferences.min_age') }} *</label>
                         <input type="number" id="min_age" name="min_age" min="18" max="100" 
                                value="{{ old('min_age', $preferences?->min_age ?? 18) }}" 
                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent" required>
@@ -28,7 +28,7 @@
                     </div>
 
                     <div>
-                        <label for="max_age" class="block text-sm font-medium text-gray-700 mb-2">Idade Máxima *</label>
+                        <label for="max_age" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.preferences.max_age') }} *</label>
                         <input type="number" id="max_age" name="max_age" min="18" max="100" 
                                value="{{ old('max_age', $preferences?->max_age ?? 100) }}" 
                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent" required>
@@ -42,14 +42,14 @@
             <!-- Geographic Matching -->
             <div class="space-y-4">
                 <h2 class="text-lg font-semibold text-gray-900">
-                    <i class="fas fa-map-marker-alt text-green-500 mr-2"></i>Matching Geográfico
+                    <i class="fas fa-map-marker-alt text-green-500 mr-2"></i>{{ __('messages.preferences.geographic_matching') }}
                 </h2>
                 
                 <!-- Enable Geographic Matching Toggle -->
                 <div class="flex items-center justify-between">
                     <div>
-                        <h3 class="text-sm font-medium text-gray-900">Ativar matching geográfico</h3>
-                        <p class="text-sm text-gray-500">Limitar busca por proximidade geográfica</p>
+                        <h3 class="text-sm font-medium text-gray-900">{{ __('messages.preferences.enable_geographic') }}</h3>
+                        <p class="text-sm text-gray-500">{{ __('messages.preferences.enable_geographic_desc') }}</p>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" name="enable_geographic_matching" value="1" 

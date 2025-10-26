@@ -67,21 +67,26 @@
             @endif
 
             <!-- Action Buttons -->
-            <div class="flex space-x-2">
+            <div class="flex flex-wrap gap-2">
+                <a href="{{ route('profile.show', $match->id) }}" 
+                   class="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-200 text-center">
+                    <i class="fas fa-user mr-1"></i>{{ __('messages.matching.view_profile') }}
+                </a>
+                
                 <button onclick="passUser({{ $match->id }})" 
                         class="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 transition duration-200">
-                    <i class="fas fa-times mr-1"></i>Passar
+                    <i class="fas fa-times mr-1"></i>{{ __('messages.matching.pass') }}
                 </button>
                 
                 <button onclick="likeUser({{ $match->id }})" 
                         class="flex-1 bg-pink-500 text-white py-2 px-4 rounded-lg hover:bg-pink-600 transition duration-200"
                         data-user-id="{{ $match->id }}">
-                    <i class="fas fa-heart mr-1"></i>Curtir
+                    <i class="fas fa-heart mr-1"></i>{{ __('messages.matching.like') }}
                 </button>
                 
                 <button onclick="superLikeUser({{ $match->id }})" 
                         class="bg-blue-500 text-white py-2 px-3 rounded-lg hover:bg-blue-600 transition duration-200"
-                        title="Super Like">
+                        title="{{ __('messages.matching.super_like') }}">
                     <i class="fas fa-star"></i>
                 </button>
             </div>
