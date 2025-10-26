@@ -36,9 +36,11 @@ class RegisterController extends Controller
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Password::defaults()],
-            'birth_date' => ['required', 'date', 'before:today'],
+            'birth_date' => ['required', 'date', 'before:' . now()->subYears(18)->toDateString()],
             'gender' => ['required', 'in:male,female,other,prefer_not_to_say'],
             'terms' => ['required', 'accepted'],
+        ], [
+            'birth_date.before' => 'Você deve ter pelo menos 18 anos para se registrar.',
         ]);
 
         $user = User::create([
