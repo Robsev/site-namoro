@@ -422,8 +422,8 @@ function initMap() {
         }
         
         // Coordenadas padrão (São Paulo) se não houver localização
-        const defaultLat = currentLat || -23.5505;
-        const defaultLng = currentLng || -46.6333;
+        const defaultLat = currentLat ?? -23.5505;
+        const defaultLng = currentLng ?? -46.6333;
         
         if (mapAPI === 'google') {
             // Verificar se google.maps está disponível
@@ -456,7 +456,7 @@ function initMap() {
         }
         
         // Adicionar marcador se houver localização
-        if (currentLat && currentLng) {
+        if (currentLat !== null && currentLng !== null && currentLat !== undefined && currentLng !== undefined) {
             addMarker(currentLat, currentLng, 'Sua localização atual');
             updateMapInfo(currentLat, currentLng, '{{ $user->formatted_location ?? "Localização atual" }}');
         }
@@ -502,14 +502,21 @@ function addMarker(lat, lng, title = 'Localização') {
             });
         }
         
-        // Adicionar info window
+        // Adicionar info window (compatível com ambos marcadores)
         const infoWindow = new google.maps.InfoWindow({
             content: `<div class="p-2"><strong>${title}</strong><br>${lat.toFixed(6)}, ${lng.toFixed(6)}</div>`
         });
         
-        marker.addListener('click', () => {
-            infoWindow.open(map, marker);
-        });
+        // Usar addEventListener para compatibilidade com AdvancedMarkerElement
+        if (marker instanceof google.maps.marker.AdvancedMarkerElement) {
+            marker.element.addEventListener('click', () => {
+                infoWindow.open(map, marker);
+            });
+        } else {
+            marker.addListener('click', () => {
+                infoWindow.open(map, marker);
+            });
+        }
         
         // Centralizar mapa na nova localização
         map.setCenter({ lat: lat, lng: lng });
