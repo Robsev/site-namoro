@@ -245,6 +245,7 @@ let audioChunks = [];
 let recordedBlob = null;
 let recordingTimer = null;
 let recordingSeconds = 0;
+let isSendingAudio = false; // Flag to prevent double-sending
 
 // Auto-scroll to bottom
 function scrollToBottom() {

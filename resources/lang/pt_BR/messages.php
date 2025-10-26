@@ -134,6 +134,7 @@ return [
     'profile.never' => 'Nunca',
     'profile.occasionally' => 'Ocasionalmente',
     'profile.regularly' => 'Regularmente',
+    'profile.prefer_not_to_say' => 'Prefiro não dizer',
     'profile.describe_what_you_are_looking_for' => 'Descreva o que você está procurando em um relacionamento...',
     'profile.save_basic_info' => 'Salvar Informações Básicas',
     'profile.save_details' => 'Salvar Detalhes',
