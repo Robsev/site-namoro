@@ -24,6 +24,26 @@ cleanup() {
 # Configurar trap para limpeza em caso de erro
 trap cleanup ERR
 
+# =============================================================================
+# VERIFICAÇÃO DE ATUALIZAÇÕES GIT
+# =============================================================================
+print_header "🔄 VERIFICANDO ATUALIZAÇÕES DO REPOSITÓRIO"
+
+# Fazer fetch primeiro
+print_status "Verificando atualizações no repositório..."
+git fetch origin
+
+# Comparar commits
+LOCAL=$(git rev-parse HEAD)
+REMOTE=$(git rev-parse origin/main)
+
+if [ "$LOCAL" = "$REMOTE" ]; then
+    print_success "Já está na versão mais recente. Nada a fazer."
+    exit 0
+fi
+
+print_success "Nova versão disponível! Iniciando deploy..."
+
 # Cores para output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -63,6 +83,16 @@ if [ ! -f "artisan" ]; then
 fi
 
 print_header "🚀 INICIANDO DEPLOY - AMIGOS PARA SEMPRE"
+
+# =============================================================================
+# 0. GIT PULL
+# =============================================================================
+print_header "⬇️ BAIXANDO ATUALIZAÇÕES"
+
+# Fazer pull
+print_status "Fazendo pull do repositório..."
+git pull origin main
+print_success "Código atualizado"
 
 # =============================================================================
 # 0. VERIFICAÇÃO INICIAL
