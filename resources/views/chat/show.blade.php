@@ -652,7 +652,7 @@ let recordingSeconds = 0;
 
 // Toggle audio recording
 async function toggleAudioRecording() {
-    if (mediaRecorder === null || mediaRecorder.state === 'inactive') {
+    if (!mediaRecorder || (mediaRecorder && mediaRecorder.state === 'inactive')) {
         try {
             // Request microphone access
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -712,7 +712,7 @@ async function toggleAudioRecording() {
 
 // Stop audio recording
 function stopAudioRecording() {
-    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+    if (mediaRecorder && mediaRecorder.state && mediaRecorder.state !== 'inactive') {
         mediaRecorder.stop();
         
         // Hide recording indicator
