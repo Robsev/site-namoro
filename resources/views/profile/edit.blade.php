@@ -328,20 +328,20 @@
                 <div class="mb-6 p-4 border-2 border-dashed border-gray-300 rounded-lg">
                     <form method="POST" action="{{ route('photos.store') }}" enctype="multipart/form-data" class="text-center">
                         @csrf
-                        <div class="space-y-4">
-                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400"></i>
-                            <div>
-                                <label for="photo" class="cursor-pointer">
+                        <label for="photo" class="cursor-pointer block">
+                            <div class="space-y-4">
+                                <i class="fas fa-cloud-upload-alt text-4xl text-gray-400"></i>
+                                <div>
                                     <span class="mt-2 block text-sm font-medium text-gray-900">
                                         {{ __('messages.profile.click_to_add_photo') }}
                                     </span>
                                     <span class="mt-1 block text-sm text-gray-500">
                                         {{ __('messages.profile.photo_recommendation_upload') }}
                                     </span>
-                                </label>
-                                <input type="file" id="photo" name="photo" accept="image/*" class="hidden" onchange="this.form.submit()">
+                                </div>
                             </div>
-                        </div>
+                        </label>
+                        <input type="file" id="photo" name="photo" accept="image/*" class="hidden" onchange="this.form.submit()">
                     </form>
                 </div>
 

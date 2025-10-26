@@ -281,8 +281,12 @@ return [
 
     // Subscriptions
     'subscriptions.title' => 'Assinaturas',
+    'subscriptions.subscription_plans' => 'Planos de Assinatura',
     'subscriptions.plans' => 'Planos',
     'subscriptions.current' => 'Assinatura Ativa',
+    'subscriptions.current_plan' => 'Plano Atual',
+    'subscriptions.expires_on' => 'Expira em',
+    'subscriptions.most_popular' => 'Mais Popular',
     'subscriptions.history' => 'Histórico de Assinaturas',
     'subscriptions.usage' => 'Uso da Assinatura',
     'subscriptions.cancel' => 'Cancelar Assinatura',
@@ -291,6 +295,18 @@ return [
     'subscriptions.free' => 'Gratuito',
     'subscriptions.premium_monthly' => 'Premium Mensal',
     'subscriptions.premium_yearly' => 'Premium Anual',
+    'subscriptions.per_month' => '/mês',
+    'subscriptions.per_year' => '/ano',
+    'subscriptions.limitations' => 'Limitações:',
+    'subscriptions.manage' => 'Gerenciar Assinatura',
+    'subscriptions.subscribe_now' => 'Assinar Agora',
+    'subscriptions.faq' => 'Perguntas Frequentes',
+    'subscriptions.faq_cancel' => 'Posso cancelar minha assinatura a qualquer momento?',
+    'subscriptions.faq_cancel_answer' => 'Sim, você pode cancelar sua assinatura a qualquer momento. Você continuará tendo acesso aos recursos premium até o final do período pago.',
+    'subscriptions.faq_refund' => 'Há garantia de reembolso?',
+    'subscriptions.faq_refund_answer' => 'Oferecemos garantia de 7 dias para novos usuários. Se não estiver satisfeito, entre em contato conosco.',
+    'subscriptions.faq_payment' => 'Quais métodos de pagamento são aceitos?',
+    'subscriptions.faq_payment_answer' => 'Aceitamos cartões de crédito (Visa, Mastercard, American Express) e PIX.',
 
     // Common
     'common.save' => 'Salvar',

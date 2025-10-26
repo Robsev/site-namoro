@@ -70,9 +70,9 @@
                     <div id="searchResults" class="mt-2 space-y-1 hidden"></div>
                 </div>
 
-                <!-- Manual Coordinates -->
+                <!-- Manual Coordinates (Read-only for security) -->
                 <div class="space-y-4">
-                    <h3 class="text-sm font-medium text-gray-700">Ou insira as coordenadas manualmente:</h3>
+                    <h3 class="text-sm font-medium text-gray-700">Informações de Localização:</h3>
                     
                     <form id="manualLocationForm" action="{{ route('location.update') }}" method="POST">
                         @csrf
@@ -81,17 +81,21 @@
                                 <label class="block text-xs font-medium text-gray-700 mb-1">Latitude</label>
                                 <input type="number" 
                                        name="latitude" 
+                                       id="latitude"
                                        step="any" 
                                        value="{{ $user->latitude }}"
-                                       class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                       readonly
+                                       class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed">
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-gray-700 mb-1">Longitude</label>
                                 <input type="number" 
                                        name="longitude" 
+                                       id="longitude"
                                        step="any" 
                                        value="{{ $user->longitude }}"
-                                       class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                       readonly
+                                       class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed">
                             </div>
                         </div>
                         
@@ -100,8 +104,10 @@
                             <label class="block text-xs font-medium text-gray-700 mb-1">País</label>
                             <input type="text" 
                                    name="country" 
+                                   id="country"
                                    value="{{ $user->country }}"
-                                   class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                   readonly
+                                   class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed">
                         </div>
 
                         <div class="grid grid-cols-2 gap-4 mt-4">
@@ -109,15 +115,19 @@
                                 <label class="block text-xs font-medium text-gray-700 mb-1">Estado</label>
                                 <input type="text" 
                                        name="state" 
+                                       id="state"
                                        value="{{ $user->state }}"
-                                       class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                       readonly
+                                       class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed">
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-gray-700 mb-1">Cidade</label>
                                 <input type="text" 
                                        name="city" 
+                                       id="city"
                                        value="{{ $user->city }}"
-                                       class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                       readonly
+                                       class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed">
                             </div>
                         </div>
 
@@ -125,15 +135,25 @@
                             <label class="block text-xs font-medium text-gray-700 mb-1">Bairro</label>
                             <input type="text" 
                                    name="neighborhood" 
+                                   id="neighborhood"
                                    value="{{ $user->neighborhood }}"
-                                   class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                   readonly
+                                   class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed">
                         </div>
 
-                        <button type="submit" 
-                                class="w-full mt-6 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-200">
-                            <i class="fas fa-save mr-2"></i>
-                            Salvar Localização
-                        </button>
+                        <div class="grid grid-cols-2 gap-4 mt-6">
+                            <button type="submit" 
+                                    class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-200">
+                                <i class="fas fa-save mr-2"></i>
+                                Salvar Localização
+                            </button>
+                            <button type="button" 
+                                    onclick="clearLocation()"
+                                    class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200">
+                                <i class="fas fa-trash mr-2"></i>
+                                Limpar Localização
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -507,6 +527,23 @@ function updateMapWithLocation(lat, lng, address = '') {
     currentLng = lng;
     addMarker(lat, lng, 'Nova localização detectada');
     updateMapInfo(lat, lng, address);
+}
+
+// Função para limpar localização
+function clearLocation() {
+    if (!confirm('Tem certeza que deseja limpar todos os dados de localização? Este processo não pode ser desfeito.')) {
+        return;
+    }
+    
+    document.getElementById('latitude').value = '';
+    document.getElementById('longitude').value = '';
+    document.getElementById('country').value = '';
+    document.getElementById('state').value = '';
+    document.getElementById('city').value = '';
+    document.getElementById('neighborhood').value = '';
+    
+    // Submeter formulário vazio
+    document.getElementById('manualLocationForm').submit();
 }
 
 // Função para mostrar notificações
