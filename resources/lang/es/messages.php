@@ -10,6 +10,8 @@ return [
     'nav.subscriptions' => 'Suscripciones',
     'nav.profile' => 'Perfil',
     'nav.preferences' => 'Preferencias',
+    'nav.likes' => 'Me Gusta',
+    'nav.more' => 'Más',
     'nav.logout' => 'Cerrar Sesión',
 
     // Authentication

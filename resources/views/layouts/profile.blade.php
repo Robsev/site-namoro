@@ -105,25 +105,25 @@
                         </div>
                         
                         <a href="{{ route('profile.show') }}" class="text-gray-700 hover:text-pink-600 px-2 py-2 rounded-md text-sm font-medium">
-                            <i class="fas fa-user mr-1"></i>Perfil
+                            <i class="fas fa-user mr-1"></i>{{ __('messages.nav.profile') }}
                         </a>
                         <a href="{{ route('matching.discover') }}" class="text-gray-700 hover:text-pink-600 px-2 py-2 rounded-md text-sm font-medium">
-                            <i class="fas fa-search mr-1"></i>Descobrir
+                            <i class="fas fa-search mr-1"></i>{{ __('messages.nav.discover') }}
                         </a>
                         <a href="{{ route('matching.matches') }}" class="text-gray-700 hover:text-pink-600 px-2 py-2 rounded-md text-sm font-medium">
-                            <i class="fas fa-users mr-1"></i>Matches
+                            <i class="fas fa-users mr-1"></i>{{ __('messages.nav.matches') }}
                         </a>
                         <a href="{{ route('chat.conversations') }}" class="text-gray-700 hover:text-pink-600 px-2 py-2 rounded-md text-sm font-medium">
-                            <i class="fas fa-comments mr-1"></i>Chat
+                            <i class="fas fa-comments mr-1"></i>{{ __('messages.nav.chat') }}
                         </a>
                         <a href="{{ route('matching.likes-sent') }}" class="text-gray-700 hover:text-pink-600 px-2 py-2 rounded-md text-sm font-medium">
-                            <i class="fas fa-heart mr-1"></i>Likes
+                            <i class="fas fa-heart mr-1"></i>{{ __('messages.nav.likes') }}
                         </a>
                         
                         <!-- Dropdown Menu -->
                         <div class="relative group">
                             <button class="text-gray-700 hover:text-pink-600 px-2 py-2 rounded-md text-sm font-medium flex items-center">
-                                <i class="fas fa-cog mr-1"></i>Mais
+                                <i class="fas fa-cog mr-1"></i>{{ __('messages.nav.more') }}
                                 <i class="fas fa-chevron-down ml-1 text-xs"></i>
                             </button>
                             <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">

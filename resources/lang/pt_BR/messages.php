@@ -11,6 +11,8 @@ return [
     'nav.subscriptions' => 'Assinaturas',
     'nav.profile' => 'Perfil',
     'nav.preferences' => 'Preferências',
+    'nav.likes' => 'Likes',
+    'nav.more' => 'Mais',
     'nav.logout' => 'Sair',
 
     // Authentication
