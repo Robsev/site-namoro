@@ -86,8 +86,15 @@ class ProfileController extends Controller
             'occupation' => ['nullable', 'string', 'max:255'],
             'smoking' => ['nullable', 'in:never,occasionally,regularly,prefer_not_to_say'],
             'drinking' => ['nullable', 'in:never,occasionally,regularly,prefer_not_to_say'],
-            'exercise_frequency' => ['nullable', 'in:never,rarely,weekly,daily'],
+            'exercise_frequency' => ['nullable', 'in:never,rarely,weekly,daily,several_times_week,monthly,prefer_not_to_say'],
             'looking_for' => ['nullable', 'string', 'max:1000'],
+            // New lifestyle fields
+            'has_children' => ['nullable', 'in:yes,no,prefer_not_to_say'],
+            'wants_children' => ['nullable', 'in:yes,no,maybe,prefer_not_to_say'],
+            'body_type' => ['nullable', 'in:slim,athletic,average,curvy,plus_size,muscular,prefer_not_to_say'],
+            'height' => ['nullable', 'integer', 'min:100', 'max:250'],
+            'weight' => ['nullable', 'integer', 'min:30', 'max:200'],
+            'diet_type' => ['nullable', 'in:omnivore,vegetarian,vegan,pescatarian,keto,paleo,other,prefer_not_to_say'],
         ]);
 
         $profile = $user->profile ?? new UserProfile(['user_id' => $user->id]);
@@ -104,6 +111,13 @@ class ProfileController extends Controller
             'drinking' => $request->drinking,
             'exercise_frequency' => $request->exercise_frequency,
             'looking_for' => $request->looking_for,
+            // New lifestyle fields
+            'has_children' => $request->has_children,
+            'wants_children' => $request->wants_children,
+            'body_type' => $request->body_type,
+            'height' => $request->height,
+            'weight' => $request->weight,
+            'diet_type' => $request->diet_type,
         ]);
 
         return redirect()->route('profile.edit')->with('success', 'Perfil atualizado com sucesso!');
