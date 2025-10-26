@@ -201,7 +201,7 @@
                     </button>
                     <button type="button" 
                             id="send-audio"
-                            class="bg-pink-500 text-white px-3 py-1 rounded-lg hover:bg-pink-600 text-sm font-medium"
+                            class="bg-pink-500 text-white px-3 py-1 rounded-lg hover:bg-pink-600 text-sm font-medium disabled:opacity-50"
                             onclick="sendAudioMessage()"
                             disabled>
                         <i class="fas fa-paper-plane mr-1"></i>Enviar
@@ -741,6 +741,8 @@ function stopAudioRecording() {
 
 // Send audio message
 async function sendAudioMessage() {
+    console.log('sendAudioMessage called', { recordedBlob, hasBlob: !!recordedBlob, blobSize: recordedBlob?.size });
+    
     if (!recordedBlob) {
         alert('Nenhum áudio gravado.');
         return;
@@ -751,13 +753,18 @@ async function sendAudioMessage() {
     formData.append('audio', recordedBlob, 'voice-message.webm');
     formData.append('message_type', 'audio');
     
+    console.log('Sending audio to:', `/chat/send/{{ $user->id }}`);
+    console.log('FormData entries:', Array.from(formData.entries()));
+    
     try {
         const response = await fetch(`/chat/send/{{ $user->id }}`, {
             method: 'POST',
             body: formData
         });
         
+        console.log('Response received:', response.status, response.statusText);
         const data = await response.json();
+        console.log('Response data:', data);
         
         if (data.success) {
             // Add message to chat interface

@@ -44,23 +44,23 @@
             <div class="space-y-4">
                 <div class="question">
                     <p class="text-gray-700 mb-3">1. Eu gosto de experimentar coisas novas e diferentes</p>
-                    <div class="flex space-x-4">
-                        <label class="flex items-center"><input type="radio" name="responses[1]" value="1" class="mr-2"> Discordo totalmente</label>
-                        <label class="flex items-center"><input type="radio" name="responses[1]" value="2" class="mr-2"> Discordo</label>
-                        <label class="flex items-center"><input type="radio" name="responses[1]" value="3" class="mr-2"> Neutro</label>
-                        <label class="flex items-center"><input type="radio" name="responses[1]" value="4" class="mr-2"> Concordo</label>
-                        <label class="flex items-center"><input type="radio" name="responses[1]" value="5" class="mr-2"> Concordo totalmente</label>
+                    <div class="flex flex-wrap gap-2 sm:gap-4">
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[1]" value="1" class="mr-1.5"> Discordo totalmente</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[1]" value="2" class="mr-1.5"> Discordo</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[1]" value="3" class="mr-1.5"> Neutro</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[1]" value="4" class="mr-1.5"> Concordo</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[1]" value="5" class="mr-1.5"> Concordo totalmente</label>
                     </div>
                 </div>
                 
                 <div class="question">
                     <p class="text-gray-700 mb-3">2. Eu tenho uma imaginação muito ativa</p>
-                    <div class="flex space-x-4">
-                        <label class="flex items-center"><input type="radio" name="responses[2]" value="1" class="mr-2"> Discordo totalmente</label>
-                        <label class="flex items-center"><input type="radio" name="responses[2]" value="2" class="mr-2"> Discordo</label>
-                        <label class="flex items-center"><input type="radio" name="responses[2]" value="3" class="mr-2"> Neutro</label>
-                        <label class="flex items-center"><input type="radio" name="responses[2]" value="4" class="mr-2"> Concordo</label>
-                        <label class="flex items-center"><input type="radio" name="responses[2]" value="5" class="mr-2"> Concordo totalmente</label>
+                    <div class="flex flex-wrap gap-2 sm:gap-4">
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[2]" value="1" class="mr-1.5"> Discordo totalmente</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[2]" value="2" class="mr-1.5"> Discordo</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[2]" value="3" class="mr-1.5"> Neutro</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[2]" value="4" class="mr-1.5"> Concordo</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[2]" value="5" class="mr-1.5"> Concordo totalmente</label>
                     </div>
                 </div>
                 
