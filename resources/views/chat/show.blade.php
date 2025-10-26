@@ -206,6 +206,7 @@
             <audio id="recorded-audio" controls class="w-full mb-2"></audio>
             <div class="flex gap-2">
                 <button type="button" 
+                        id="send-audio-button"
                         onclick="sendAudioMessage()" 
                         class="flex-1 bg-pink-500 text-white px-3 py-2 rounded-lg hover:bg-pink-600 text-sm font-medium">
                     <i class="fas fa-paper-plane mr-1"></i>Enviar Áudio
@@ -716,11 +717,27 @@ function stopAudioRecording() {
 
 // Send audio message
 async function sendAudioMessage() {
-    console.log('sendAudioMessage called', { recordedBlob, hasBlob: !!recordedBlob, blobSize: recordedBlob?.size });
+    console.log('sendAudioMessage called', { recordedBlob, hasBlob: !!recordedBlob, blobSize: recordedBlob?.size, isSendingAudio });
+    
+    // Prevent double-sending
+    if (isSendingAudio) {
+        console.log('Already sending audio, ignoring duplicate click');
+        return;
+    }
     
     if (!recordedBlob) {
         alert('Nenhum áudio gravado.');
         return;
+    }
+    
+    // Set flag to prevent duplicate submissions
+    isSendingAudio = true;
+    
+    // Disable the send audio button
+    const sendAudioButton = document.getElementById('send-audio-button');
+    if (sendAudioButton) {
+        sendAudioButton.disabled = true;
+        sendAudioButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Enviando...';
     }
     
     const formData = new FormData();
@@ -762,6 +779,13 @@ async function sendAudioMessage() {
     } catch (error) {
         console.error('Error sending audio:', error);
         showNotification('Erro ao enviar áudio.', 'error');
+    } finally {
+        // Re-enable the send audio button
+        isSendingAudio = false;
+        if (sendAudioButton) {
+            sendAudioButton.disabled = false;
+            sendAudioButton.innerHTML = '<i class="fas fa-paper-plane mr-1"></i>Enviar Áudio';
+        }
     }
 }
 
