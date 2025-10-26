@@ -1,26 +1,26 @@
 @extends('layouts.profile')
 
-@section('title', 'Preferências de E-mail')
+@section('title', __('messages.email.title'))
 
 @section('content')
 <div class="max-w-4xl mx-auto">
     <div class="bg-white rounded-lg shadow-sm border p-6">
         <h1 class="text-2xl font-bold text-gray-900 mb-6">
-            <i class="fas fa-envelope mr-2"></i>Preferências de E-mail
+            <i class="fas fa-envelope mr-2"></i>{{ __('messages.email.title') }}
         </h1>
-        <p class="text-gray-600 mb-8">Configure como e quando você deseja receber notificações por e-mail.</p>
+        <p class="text-gray-600 mb-8">{{ __('messages.email.description') }}</p>
 
         <form method="POST" action="{{ route('email-preferences.update') }}" class="space-y-8">
             @csrf
 
             <!-- Global Email Toggle -->
             <div class="space-y-4">
-                <h2 class="text-lg font-semibold text-gray-900">Configurações Gerais</h2>
+                <h2 class="text-lg font-semibold text-gray-900">{{ __('messages.email.global_settings') }}</h2>
                 <div class="bg-gray-50 rounded-lg p-6">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h3 class="text-sm font-medium text-gray-900">Ativar notificações por e-mail</h3>
-                            <p class="text-sm text-gray-500">Habilita o envio de notificações por e-mail para este usuário</p>
+                            <h3 class="text-sm font-medium text-gray-900">{{ __('messages.email.enable_notifications') }}</h3>
+                            <p class="text-sm text-gray-500">{{ __('messages.email.enable_notifications_desc') }}</p>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" name="email_notifications_enabled" value="1" 
@@ -34,8 +34,8 @@
 
             <!-- Specific Notifications -->
             <div class="space-y-4">
-                <h2 class="text-lg font-semibold text-gray-900">Tipos de Notificação</h2>
-                <p class="text-sm text-gray-600">Escolha quais tipos de notificação você deseja receber por e-mail:</p>
+                <h2 class="text-lg font-semibold text-gray-900">{{ __('messages.email.notification_types') }}</h2>
+                <p class="text-sm text-gray-600">{{ __('messages.email.notification_types_desc') }}</p>
                 
                 <div class="space-y-6">
                     <!-- New Matches -->
@@ -45,8 +45,8 @@
                                 <i class="fas fa-heart text-pink-500 text-xl"></i>
                             </div>
                             <div class="ml-4">
-                                <h3 class="text-sm font-medium text-gray-900">Novos Matches</h3>
-                                <p class="text-sm text-gray-500">Quando alguém curte você de volta e vocês fazem match</p>
+                                <h3 class="text-sm font-medium text-gray-900">{{ __('messages.email.new_matches') }}</h3>
+                                <p class="text-sm text-gray-500">{{ __('messages.email.new_matches_desc') }}</p>
                             </div>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
@@ -64,8 +64,8 @@
                                 <i class="fas fa-thumbs-up text-blue-500 text-xl"></i>
                             </div>
                             <div class="ml-4">
-                                <h3 class="text-sm font-medium text-gray-900">Novos Likes</h3>
-                                <p class="text-sm text-gray-500">Quando alguém curte seu perfil</p>
+                                <h3 class="text-sm font-medium text-gray-900">{{ __('messages.email.new_likes') }}</h3>
+                                <p class="text-sm text-gray-500">{{ __('messages.email.new_likes_desc') }}</p>
                             </div>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
@@ -83,8 +83,8 @@
                                 <i class="fas fa-comment text-green-500 text-xl"></i>
                             </div>
                             <div class="ml-4">
-                                <h3 class="text-sm font-medium text-gray-900">Novas Mensagens</h3>
-                                <p class="text-sm text-gray-500">Quando você recebe uma nova mensagem no chat</p>
+                                <h3 class="text-sm font-medium text-gray-900">{{ __('messages.email.new_messages') }}</h3>
+                                <p class="text-sm text-gray-500">{{ __('messages.email.new_messages_desc') }}</p>
                             </div>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
@@ -102,8 +102,8 @@
                                 <i class="fas fa-camera text-purple-500 text-xl"></i>
                             </div>
                             <div class="ml-4">
-                                <h3 class="text-sm font-medium text-gray-900">Aprovação de Fotos</h3>
-                                <p class="text-sm text-gray-500">Quando suas fotos são aprovadas ou rejeitadas</p>
+                                <h3 class="text-sm font-medium text-gray-900">{{ __('messages.email.photo_approvals') }}</h3>
+                                <p class="text-sm text-gray-500">{{ __('messages.email.photo_approvals_desc') }}</p>
                             </div>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
@@ -121,8 +121,8 @@
                                 <i class="fas fa-bullhorn text-orange-500 text-xl"></i>
                             </div>
                             <div class="ml-4">
-                                <h3 class="text-sm font-medium text-gray-900">E-mails de Marketing</h3>
-                                <p class="text-sm text-gray-500">Ofertas especiais, novidades e dicas de relacionamento</p>
+                                <h3 class="text-sm font-medium text-gray-900">{{ __('messages.email.marketing') }}</h3>
+                                <p class="text-sm text-gray-500">{{ __('messages.email.marketing_desc') }}</p>
                             </div>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
@@ -142,12 +142,12 @@
                         <i class="fas fa-info-circle text-blue-400"></i>
                     </div>
                     <div class="ml-3">
-                        <h3 class="text-sm font-medium text-blue-800">Importante</h3>
+                        <h3 class="text-sm font-medium text-blue-800">{{ __('messages.email.important') }}</h3>
                         <div class="mt-2 text-sm text-blue-700">
                             <ul class="list-disc list-inside space-y-1">
-                                <li>E-mails importantes do sistema (como confirmação de conta) sempre serão enviados</li>
-                                <li>Você pode alterar essas configurações a qualquer momento</li>
-                                <li>As notificações por e-mail são enviadas para: <strong>{{ $user->email }}</strong></li>
+                                <li>{{ __('messages.email.important_system') }}</li>
+                                <li>{{ __('messages.email.important_customize') }}</li>
+                                <li>{{ __('messages.email.important_address') }} <strong>{{ $user->email }}</strong></li>
                             </ul>
                         </div>
                     </div>
@@ -157,7 +157,7 @@
             <!-- Submit Button -->
             <div class="flex justify-end pt-6 border-t border-gray-200">
                 <button type="submit" class="bg-pink-600 text-white px-8 py-3 rounded-lg hover:bg-pink-700 transition duration-200 font-medium">
-                    <i class="fas fa-save mr-2"></i>Salvar Preferências
+                    <i class="fas fa-save mr-2"></i>{{ __('messages.email.save') }}
                 </button>
             </div>
         </form>
