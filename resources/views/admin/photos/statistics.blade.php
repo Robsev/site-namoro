@@ -145,15 +145,25 @@
                     Atividade dos Últimos 7 Dias
                 </h2>
                 <div class="h-64 flex items-end justify-between space-x-2">
+                    @php
+                        // First, get all day stats to find the maximum
+                        $allDayStats = [];
+                        for($j = 6; $j >= 0; $j--) {
+                            $dateCheck = now()->subDays($j);
+                            $allDayStats[] = \App\Models\UserPhoto::whereDate('created_at', $dateCheck)->count();
+                        }
+                        $maxDayCount = max($allDayStats) ?: 1; // Prevent division by zero
+                    @endphp
                     @for($i = 6; $i >= 0; $i--)
                         @php
                             $date = now()->subDays($i);
                             $dayStats = \App\Models\UserPhoto::whereDate('created_at', $date)->count();
-                            $maxHeight = 100;
-                            $height = $stats['total'] > 0 ? ($dayStats / max($stats['total'] / 7, 1)) * $maxHeight : 0;
+                            $maxHeightPx = 200; // Maximum height in pixels
+                            $height = $maxDayCount > 0 ? ($dayStats / $maxDayCount) * $maxHeightPx : 4;
+                            $height = max($height, 4); // Minimum height of 4px
                         @endphp
                         <div class="flex flex-col items-center">
-                            <div class="w-8 bg-blue-500 rounded-t" style="height: {{ max($height, 4) }}px;"></div>
+                            <div class="w-8 bg-blue-500 rounded-t" style="height: {{ $height }}px;"></div>
                             <div class="text-xs text-gray-500 mt-2">{{ $date->format('d/m') }}</div>
                             <div class="text-xs text-gray-400">{{ $dayStats }}</div>
                         </div>
