@@ -61,23 +61,30 @@ class ChatController extends Controller
      */
     public function sendMessage(Request $request, User $user)
     {
-        $currentUser = Auth::user();
-        
-        // Update current user's last_seen when sending message
-        $currentUser->update(['last_seen' => now()]);
-        
-        // Check if users are matched
-        $match = UserMatch::where(function($query) use ($currentUser, $user) {
-            $query->where('user1_id', $currentUser->id)->where('user2_id', $user->id);
-        })->orWhere(function($query) use ($currentUser, $user) {
-            $query->where('user1_id', $user->id)->where('user2_id', $currentUser->id);
-        })->where('status', 'accepted')->first();
+        try {
+            $currentUser = Auth::user();
+            
+            // Update current user's last_seen when sending message
+            $currentUser->update(['last_seen' => now()]);
+            
+            // Check if users are matched
+            $match = UserMatch::where(function($query) use ($currentUser, $user) {
+                $query->where('user1_id', $currentUser->id)->where('user2_id', $user->id);
+            })->orWhere(function($query) use ($currentUser, $user) {
+                $query->where('user1_id', $user->id)->where('user2_id', $currentUser->id);
+            })->where('status', 'accepted')->first();
 
-        if (!$match) {
-            return response()->json(['error' => 'Você não tem match com este usuário.'], 403);
-        }
+            if (!$match) {
+                return response()->json(['error' => 'Você não tem match com este usuário.'], 403);
+            }
 
-        $request->validate([
+            \Log::info('Send message request', [
+                'request_data' => $request->all(),
+                'has_file' => $request->hasFile('audio'),
+                'file_name' => $request->hasFile('audio') ? $request->file('audio')->getClientOriginalName() : null,
+            ]);
+
+            $request->validate([
             'message' => 'nullable|string|max:1000',
             'message_type' => 'nullable|in:text,image,file,audio',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // 5MB max
