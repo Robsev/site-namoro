@@ -1035,4 +1035,22 @@ return [
     'welcome.feature2_desc' => 'Verification and moderation system to ensure a safe and reliable environment.',
     'welcome.feature3_title' => 'Active Community',
     'welcome.feature3_desc' => 'Connect with real people who share your interests and values.',
+
+    // Navigation - Menu Items
+    'nav.location' => 'Location',
+    'nav.interests' => 'Interests',
+    'nav.psychological_profile' => 'Psychological Profile',
+    'nav.email' => 'Email',
+    'nav.my_profile' => 'My Profile',
+    'nav.likes_received' => 'Likes Received',
+    'nav.photo_moderation' => 'Photo Moderation',
+
+    // Footer
+    'footer.connecting_people' => 'Connecting special people through authentic and meaningful relationships.',
+    'footer.legal_section' => 'Legal',
+    'footer.contact_email' => 'Contact',
+    'footer.support_section' => 'Support',
+    'footer.support_email' => 'suporte@amigosparasempre.com',
+    'footer.response_time' => 'We respond within 24 hours',
+    'footer.copyright' => '© :year Amigos Para Sempre. All rights reserved.',
 ];
