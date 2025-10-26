@@ -241,6 +241,13 @@
 let lastMessageId = {{ $messages->last() ? $messages->last()->id : 0 }};
 let isTyping = false;
 
+// Audio recording variables
+let mediaRecorder = null;
+let audioChunks = [];
+let recordedBlob = null;
+let recordingTimer = null;
+let recordingSeconds = 0;
+
 // Auto-scroll to bottom
 function scrollToBottom() {
     const container = document.getElementById('messages-container');
@@ -283,6 +290,12 @@ document.getElementById('image-input').addEventListener('change', function(e) {
 document.getElementById('remove-image').addEventListener('click', function() {
     document.getElementById('image-input').value = '';
     document.getElementById('image-preview').classList.add('hidden');
+});
+
+// Audio button click handler
+document.getElementById('audio-button').addEventListener('click', function() {
+    console.log('Audio button clicked');
+    toggleAudioRecording();
 });
 
 // Send message
@@ -643,19 +656,16 @@ function formatFileSize(bytes) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-// Audio recording variables
-let mediaRecorder = null;
-let audioChunks = [];
-let recordedBlob = null;
-let recordingTimer = null;
-let recordingSeconds = 0;
-
 // Toggle audio recording
 async function toggleAudioRecording() {
+    console.log('toggleAudioRecording called', { mediaRecorder, hasGetUserMedia: !!navigator.mediaDevices });
+    
     if (!mediaRecorder || (mediaRecorder && mediaRecorder.state === 'inactive')) {
         try {
+            console.log('Requesting microphone access...');
             // Request microphone access
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            console.log('Microphone access granted');
             
             // Create MediaRecorder
             mediaRecorder = new MediaRecorder(stream);
