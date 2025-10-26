@@ -146,6 +146,13 @@
                                     <a href="{{ route('language.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         <i class="fas fa-globe mr-2"></i>{{ __('messages.language.title') }}
                                     </a>
+                                    
+                                    @if(auth()->user()->is_admin)
+                                    <div class="border-t border-gray-100"></div>
+                                    <a href="{{ route('admin.photos.statistics') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-shield-alt mr-2"></i>Moderação de Fotos
+                                    </a>
+                                    @endif
                                     <a href="{{ route('matching.likes-received') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         <i class="fas fa-heart-broken mr-2"></i>Likes Recebidos
                                     </a>
@@ -208,6 +215,14 @@
                         <a href="{{ route('language.index') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-pink-600 hover:bg-gray-50 rounded-md">
                             <i class="fas fa-globe mr-2"></i>{{ __('messages.language.title') }}
                         </a>
+                        
+                        @if(auth()->user()->is_admin)
+                        <div class="border-t border-gray-200"></div>
+                        <a href="{{ route('admin.photos.statistics') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-pink-600 hover:bg-gray-50 rounded-md">
+                            <i class="fas fa-shield-alt mr-2"></i>Moderação de Fotos
+                        </a>
+                        @endif
+                        
                         <div class="border-t border-gray-200 pt-2">
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
