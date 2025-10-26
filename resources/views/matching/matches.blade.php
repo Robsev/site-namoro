@@ -45,7 +45,7 @@
                         </h3>
                         
                         <p class="text-gray-600 text-sm mb-2">
-                            <i class="fas fa-map-marker-alt mr-1"></i>{{ $match->other_user->location ?? __('messages.matching.location_not_informed') }}
+                            <i class="fas fa-map-marker-alt mr-1"></i>@if($match->other_user->city && $match->other_user->state){{ $match->other_user->city }}, {{ $match->other_user->state }}@else{{ __('messages.matching.location_not_informed') }}@endif
                         </p>
 
                         @if($match->other_user->profile && $match->other_user->profile->bio)
