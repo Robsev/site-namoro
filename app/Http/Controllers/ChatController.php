@@ -177,6 +177,17 @@ class ChatController extends Controller
             'success' => true,
             'message' => $message
         ]);
+        } catch (\Exception $e) {
+            \Log::error('Error sending message', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'error' => 'Erro ao enviar mensagem.'
+            ], 500);
+        }
     }
 
     /**
