@@ -9,41 +9,6 @@
 
 set -e  # Exit on any error
 
-# Função para limpeza em caso de erro
-cleanup() {
-    print_error "Erro detectado! Desativando modo de manutenção..."
-    if [ "$MAINTENANCE_AVAILABLE" = true ]; then
-        php artisan up 2>/dev/null || true
-        print_warning "Modo de manutenção desativado devido a erro"
-    else
-        print_warning "Modo de manutenção não estava ativo"
-    fi
-    exit 1
-}
-
-# Configurar trap para limpeza em caso de erro
-trap cleanup ERR
-
-# =============================================================================
-# VERIFICAÇÃO DE ATUALIZAÇÕES GIT
-# =============================================================================
-print_header "🔄 VERIFICANDO ATUALIZAÇÕES DO REPOSITÓRIO"
-
-# Fazer fetch primeiro
-print_status "Verificando atualizações no repositório..."
-git fetch origin
-
-# Comparar commits
-LOCAL=$(git rev-parse HEAD)
-REMOTE=$(git rev-parse origin/main)
-
-if [ "$LOCAL" = "$REMOTE" ]; then
-    print_success "Já está na versão mais recente. Nada a fazer."
-    exit 0
-fi
-
-print_success "Nova versão disponível! Iniciando deploy..."
-
 # Cores para output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -76,11 +41,46 @@ print_header() {
     echo -e "${PURPLE}=============================================================================${NC}"
 }
 
+# Função para limpeza em caso de erro
+cleanup() {
+    print_error "Erro detectado! Desativando modo de manutenção..."
+    if [ "$MAINTENANCE_AVAILABLE" = true ]; then
+        php artisan up 2>/dev/null || true
+        print_warning "Modo de manutenção desativado devido a erro"
+    else
+        print_warning "Modo de manutenção não estava ativo"
+    fi
+    exit 1
+}
+
+# Configurar trap para limpeza em caso de erro
+trap cleanup ERR
+
 # Verificar se estamos no diretório correto
 if [ ! -f "artisan" ]; then
     print_error "Este script deve ser executado no diretório raiz do projeto Laravel!"
     exit 1
 fi
+
+# =============================================================================
+# VERIFICAÇÃO DE ATUALIZAÇÕES GIT
+# =============================================================================
+print_header "🔄 VERIFICANDO ATUALIZAÇÕES DO REPOSITÓRIO"
+
+# Fazer fetch primeiro
+print_status "Verificando atualizações no repositório..."
+git fetch origin
+
+# Comparar commits
+LOCAL=$(git rev-parse HEAD)
+REMOTE=$(git rev-parse origin/main)
+
+if [ "$LOCAL" = "$REMOTE" ]; then
+    print_success "Já está na versão mais recente. Nada a fazer."
+    exit 0
+fi
+
+print_success "Nova versão disponível! Iniciando deploy..."
 
 print_header "🚀 INICIANDO DEPLOY - AMIGOS PARA SEMPRE"
 
