@@ -538,6 +538,14 @@ return [
     'profile.missing.interests' => 'Intereses (mínimo: 3)',
     'profile.missing.psychological_profile' => 'Perfil psicológico',
 
+    // Profile Completeness Levels
+    'profile.completeness_level.excellent' => 'Excelente',
+    'profile.completeness_level.good' => 'Bueno',
+    'profile.completeness_level.fair' => 'Regular',
+    'profile.completeness_level.poor' => 'Incompleto',
+    'profile.completeness_level.incomplete' => 'Muy Incompleto',
+    'profile.completeness_level.unknown' => 'Desconocido',
+
     // Matching Filters
     'filters.title' => 'Filtros de Búsqueda',
     'filters.age_range' => 'Rango de Edad',

@@ -465,14 +465,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getProfileCompletenessLabelAttribute()
     {
         $levels = [
-            'excellent' => 'Excelente',
-            'good' => 'Bom',
-            'fair' => 'Regular',
-            'poor' => 'Incompleto',
-            'incomplete' => 'Muito Incompleto'
+            'excellent' => __('messages.profile.completeness_level.excellent'),
+            'good' => __('messages.profile.completeness_level.good'),
+            'fair' => __('messages.profile.completeness_level.fair'),
+            'poor' => __('messages.profile.completeness_level.poor'),
+            'incomplete' => __('messages.profile.completeness_level.incomplete')
         ];
 
-        return $levels[$this->profile_completeness_level] ?? 'Desconhecido';
+        return $levels[$this->profile_completeness_level] ?? __('messages.profile.completeness_level.unknown');
     }
 
     /**
