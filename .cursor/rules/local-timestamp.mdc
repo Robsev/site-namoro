@@ -1,0 +1,4 @@
+Adicionar timestamp com horário local a todas as mensgens enviadas pelos agentes na janela de chat. O timestamp deve ser obtido usando o comando date executado localmente.
+--
+alwaysApply: true
+---
