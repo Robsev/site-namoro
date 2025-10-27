@@ -81,6 +81,6 @@ class PreferencesController extends Controller
 
         $preferences->update($updateData);
 
-        return redirect()->route('preferences.edit')->with('success', 'Preferências de matching atualizadas com sucesso!');
+        return redirect()->route('preferences.edit')->with('success', __('messages.preferences.updated'));
     }
 }

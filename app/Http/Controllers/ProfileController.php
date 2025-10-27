@@ -63,7 +63,7 @@ class ProfileController extends Controller
             'gender' => $request->gender,
         ]);
 
-        return redirect()->route('profile.edit')->with('success', 'Informações básicas atualizadas com sucesso!');
+        return redirect()->route('profile.edit')->with('success', __('messages.profile.basic_info_updated'));
     }
 
     /**
@@ -120,7 +120,7 @@ class ProfileController extends Controller
             'diet_type' => $request->diet_type,
         ]);
 
-        return redirect()->route('profile.edit')->with('success', 'Perfil atualizado com sucesso!');
+        return redirect()->route('profile.edit')->with('success', __('messages.profile.profile_updated'));
     }
 
     /**

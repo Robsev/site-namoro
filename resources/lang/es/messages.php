@@ -104,6 +104,8 @@ return [
     'profile.no_photos_available' => 'No hay fotos disponibles',
     'profile.actions' => 'Acciones',
     'profile.about' => 'Acerca de',
+    'profile.basic_info_updated' => '¡Información básica actualizada con éxito!',
+    'profile.profile_updated' => '¡Perfil actualizado con éxito!',
     'profile.preferences' => 'Preferencias',
     'profile.profile_photo' => 'Foto de perfil',
     'profile.name' => 'Nombre',
