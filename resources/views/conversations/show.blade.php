@@ -50,10 +50,10 @@
 
         <!-- Messages Container -->
         <div class="bg-white max-h-[70vh] h-[60vh] overflow-y-auto" id="messagesContainer">
-            <div class="p-6 space-y-4">
+            <div class="p-3 sm:p-6 space-y-4">
                 @forelse($messages as $message)
                     <div class="flex {{ $message->sender_id === auth()->id() ? 'justify-end' : 'justify-start' }}" data-message-id="{{ $message->id }}">
-                        <div class="max-w-xs lg:max-w-md">
+                        <div class="max-w-[85%] sm:max-w-xs lg:max-w-md">
                             <!-- Message Bubble -->
                             <div class="px-4 py-2 rounded-lg {{ $message->sender_id === auth()->id() 
                                 ? 'bg-blue-500 text-white' 
@@ -96,15 +96,15 @@
         </div>
 
         <!-- Message Input -->
-        <div class="bg-white border-t border-gray-200 px-6 py-4">
-            <form id="messageForm" class="flex items-center space-x-4" enctype="multipart/form-data">
+        <div class="bg-white border-t border-gray-200 px-3 sm:px-6 py-4">
+            <form id="messageForm" class="flex items-center space-x-2 sm:space-x-4" enctype="multipart/form-data">
                 @csrf
-                <div class="flex-1">
+                <div class="flex-1 min-w-0">
                     <input type="text" 
                            name="message" 
                            id="messageInput"
                            placeholder="Digite sua mensagem..."
-                           class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           class="w-full border border-gray-300 rounded-lg px-2 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                            maxlength="1000">
                 </div>
                 
@@ -117,17 +117,17 @@
                            class="hidden">
                     <button type="button" 
                             id="imageButton"
-                            class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition duration-200"
+                            class="bg-gray-500 text-white px-2 sm:px-4 py-2 rounded-lg hover:bg-gray-600 transition duration-200"
                             title="Enviar imagem">
-                        <i class="fas fa-image"></i>
+                        <i class="fas fa-image text-sm sm:text-base"></i>
                     </button>
                 </div>
                 
                 <button type="submit" 
-                        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200 disabled:opacity-50"
+                        class="bg-blue-600 text-white px-3 sm:px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200 disabled:opacity-50 text-sm sm:text-base whitespace-nowrap"
                         id="sendButton">
-                    <i class="fas fa-paper-plane mr-2"></i>
-                    Enviar
+                    <i class="fas fa-paper-plane sm:mr-2"></i>
+                    <span class="hidden sm:inline">Enviar</span>
                 </button>
             </form>
             
