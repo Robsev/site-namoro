@@ -466,6 +466,7 @@ return [
     'preferences.complete_profiles_only' => 'Somente perfis completos',
     'preferences.complete_profiles_only_desc' => 'Mostrar apenas pessoas com perfis 100% completos',
     'preferences.save' => 'Salvar Preferências',
+    'preferences.updated' => 'Preferências de matching atualizadas com sucesso!',
     'preferences.male' => 'Masculino',
     'preferences.female' => 'Feminino',
     'preferences.other' => 'Outro',

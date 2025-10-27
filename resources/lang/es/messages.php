@@ -443,6 +443,7 @@ return [
     'preferences.complete_profiles_only' => 'Solo perfiles completos',
     'preferences.complete_profiles_only_desc' => 'Mostrar solo personas con perfiles 100% completos',
     'preferences.save' => 'Guardar Preferencias',
+    'preferences.updated' => '¡Preferencias de matching actualizadas con éxito!',
     'preferences.male' => 'Masculino',
     'preferences.female' => 'Femenino',
     'preferences.other' => 'Otro',
