@@ -38,35 +38,35 @@
                     <!-- Title -->
                     <div>
                         <h1 class="text-3xl font-bold text-gray-900 mb-2">
-                            Ops! Algo deu errado
+                            {{ __('messages.errors.500.title') }}
                         </h1>
                         <p class="text-gray-600">
-                            Encontramos um problema interno no servidor
+                            {{ __('messages.errors.500.description') }}
                         </p>
                     </div>
 
                     <!-- Error Code -->
                     <div class="bg-gray-100 rounded-lg p-4">
                         <p class="text-2xl font-bold text-gray-800">500</p>
-                        <p class="text-sm text-gray-600">Erro Interno do Servidor</p>
+                        <p class="text-sm text-gray-600">{{ __('messages.errors.500.code') }}</p>
                     </div>
 
                     <!-- Description -->
                     <div class="text-left bg-gray-50 rounded-lg p-4">
                         <h3 class="font-semibold text-gray-900 mb-2">
                             <i class="fas fa-info-circle text-blue-500 mr-2"></i>
-                            O que aconteceu?
+                            {{ __('messages.errors.500.what_happened') }}
                         </h3>
                         <p class="text-sm text-gray-600 mb-3">
-                            Nosso servidor encontrou um erro inesperado e não conseguiu processar sua solicitação.
+                            {{ __('messages.errors.500.what_happened_desc') }}
                         </p>
                         
                         <h3 class="font-semibold text-gray-900 mb-2">
                             <i class="fas fa-wrench text-green-500 mr-2"></i>
-                            O que fazer?
+                            {{ __('messages.errors.500.what_to_do') }}
                         </h3>
                         <p class="text-sm text-gray-600">
-                            Tente novamente em alguns minutos. Se o problema persistir, entre em contato conosco.
+                            {{ __('messages.errors.500.what_to_do_desc') }}
                         </p>
                     </div>
 
@@ -81,7 +81,7 @@
                         <button onclick="window.location.href='{{ url('/') }}'" 
                                 class="w-full bg-pink-600 text-white py-3 px-6 rounded-lg hover:bg-pink-700 transition duration-200 font-medium">
                             <i class="fas fa-home mr-2"></i>
-                            Ir para o Início
+                            {{ __('messages.errors.404.go_home') }}
                         </button>
                     </div>
 
@@ -89,10 +89,10 @@
                     <div class="bg-pink-50 rounded-lg p-4">
                         <h3 class="font-semibold text-gray-900 mb-2">
                             <i class="fas fa-envelope text-pink-500 mr-2"></i>
-                            Precisa de ajuda?
+                            {{ __('messages.errors.500.need_help') }}
                         </h3>
                         <p class="text-sm text-gray-600 mb-2">
-                            Se o problema persistir, entre em contato conosco:
+                            {{ __('messages.errors.500.contact_desc') }}
                         </p>
                         <div class="space-y-1">
                             <p class="text-sm text-gray-700">
@@ -110,8 +110,8 @@
 
             <!-- Footer -->
             <div class="text-center text-gray-500 text-sm">
-                <p>&copy; {{ date('Y') }} Amigos Para Sempre. Todos os direitos reservados.</p>
-                <p class="mt-1">Conectando pessoas, criando amizades para sempre ❤️</p>
+                <p>&copy; {{ date('Y') }} Amigos Para Sempre. {{ __('messages.errors.404.footer') }}</p>
+                <p class="mt-1">{{ __('messages.errors.404.footer_tagline') }}</p>
             </div>
         </div>
     </div>

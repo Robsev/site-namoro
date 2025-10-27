@@ -487,6 +487,15 @@ return [
     'errors.404.search_placeholder' => 'Type your search...',
     'errors.404.footer' => 'All rights reserved.',
     'errors.404.footer_tagline' => 'Connecting people, creating friendships forever ❤️',
+    'errors.500.title' => 'Oops! Something went wrong',
+    'errors.500.description' => 'We found an internal server problem',
+    'errors.500.code' => 'Internal Server Error',
+    'errors.500.what_happened' => 'What happened?',
+    'errors.500.what_happened_desc' => 'Our server encountered an unexpected error and could not process your request.',
+    'errors.500.what_to_do' => 'What to do?',
+    'errors.500.what_to_do_desc' => 'Try again in a few minutes. If the problem persists, contact us.',
+    'errors.500.need_help' => 'Need help?',
+    'errors.500.contact_desc' => 'If the problem persists, contact us:',
 
     // Validation
     'validation.required' => 'This field is required.',

@@ -552,6 +552,15 @@ return [
     'errors.404.search_placeholder' => 'Digite sua busca...',
     'errors.404.footer' => 'Todos os direitos reservados.',
     'errors.404.footer_tagline' => 'Conectando pessoas, criando amizades para sempre ❤️',
+    'errors.500.title' => 'Ops! Algo deu errado',
+    'errors.500.description' => 'Encontramos um problema interno no servidor',
+    'errors.500.code' => 'Erro Interno do Servidor',
+    'errors.500.what_happened' => 'O que aconteceu?',
+    'errors.500.what_happened_desc' => 'Nosso servidor encontrou um erro inesperado e não conseguiu processar sua solicitação.',
+    'errors.500.what_to_do' => 'O que fazer?',
+    'errors.500.what_to_do_desc' => 'Tente novamente em alguns minutos. Se o problema persistir, entre em contato conosco.',
+    'errors.500.need_help' => 'Precisa de ajuda?',
+    'errors.500.contact_desc' => 'Se o problema persistir, entre em contato conosco:',
 
     // Validation
     'validation.required' => 'Este campo é obrigatório.',
