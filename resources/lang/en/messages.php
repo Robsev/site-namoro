@@ -103,6 +103,7 @@ return [
     'profile.public_profile' => 'Public Profile',
     'profile.no_photos_available' => 'No photos available',
     'profile.actions' => 'Actions',
+    'profile.about' => 'About',
     'profile.preferences' => 'Preferences',
     'profile.profile_photo' => 'Profile photo',
     'profile.name' => 'Name',

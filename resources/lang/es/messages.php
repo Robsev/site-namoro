@@ -103,6 +103,7 @@ return [
     'profile.public_profile' => 'Perfil Público',
     'profile.no_photos_available' => 'No hay fotos disponibles',
     'profile.actions' => 'Acciones',
+    'profile.about' => 'Acerca de',
     'profile.preferences' => 'Preferencias',
     'profile.profile_photo' => 'Foto de perfil',
     'profile.name' => 'Nombre',
