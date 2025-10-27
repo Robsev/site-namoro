@@ -63,7 +63,9 @@
                                            id="profile_photo" 
                                            name="profile_photo" 
                                            accept="image/*"
-                                           class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100">
+                                           class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100"
+                                           data-label="{{ __('messages.profile.choose_file') }}"
+                                           data-no-file="{{ __('messages.profile.no_file_chosen') }}">
                                     <p class="mt-1 text-xs text-gray-500">{{ __('messages.profile.photo_recommendation') }}</p>
                                     @error('profile_photo')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -609,6 +611,14 @@ document.addEventListener('DOMContentLoaded', function() {
         birthDay.addEventListener('change', updateBirthDate);
         birthMonth.addEventListener('change', updateBirthDate);
         birthYear.addEventListener('change', updateBirthDate);
+    }
+});
+
+// Update file input label
+document.getElementById('profile_photo').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        this.value = file.name;
     }
 });
 </script>
