@@ -249,6 +249,7 @@ return [
     'matching.compatible_ages' => 'Idades compatíveis',
     'matching.high_compatibility' => 'Alta compatibilidade geral',
     'matching.good_compatibility' => 'Boa compatibilidade',
+    'matching.super_like_reason' => 'Super Like!',
     'matching.good_match' => 'Vocês podem ser uma boa combinação!',
     'matching.connected_via_google' => 'Usuário conectado via Google',
     'matching.confirm_super_like' => 'Tem certeza que deseja dar um Super Like? Você tem um número limitado por dia.',

@@ -309,7 +309,7 @@ class MatchingController extends Controller
             'status' => 'pending',
             'matched_at' => now(),
             'is_super_like' => true,
-            'match_reason' => 'Super Like!'
+            'match_reason' => __('messages.matching.super_like_reason')
         ]);
 
         // Send notification to the super liked user

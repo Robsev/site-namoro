@@ -277,6 +277,7 @@ return [
     'matching.compatible_ages' => 'Compatible ages',
     'matching.high_compatibility' => 'High overall compatibility',
     'matching.good_compatibility' => 'Good compatibility',
+    'matching.super_like_reason' => 'Super Like!',
     'matching.good_match' => 'You might be a good match!',
     'matching.connected_via_google' => 'User connected via Google',
     'matching.confirm_super_like' => 'Are you sure you want to give a Super Like? You have a limited number per day.',
