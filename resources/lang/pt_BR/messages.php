@@ -188,6 +188,7 @@ return [
     'profile.describe_what_you_are_looking_for' => 'Descreva o que você está procurando em um relacionamento...',
     'profile.save_basic_info' => 'Salvar Informações Básicas',
     'profile.save_details' => 'Salvar Detalhes',
+    'profile.save_psychological_profile' => 'Salvar Perfil Psicológico',
     'profile.click_to_add_photo' => 'Clique para adicionar uma foto',
     'profile.photo_recommendation_upload' => 'PNG, JPG, GIF até 5MB',
     'profile.manage_photos' => 'Gerenciar Fotos',

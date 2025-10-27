@@ -270,7 +270,7 @@
 
         <div class="flex justify-end">
             <button type="submit" class="bg-pink-600 text-white px-8 py-3 rounded-lg hover:bg-pink-700 transition duration-200 font-medium">
-                <i class="fas fa-brain mr-2"></i>Salvar Perfil Psicológico
+                <i class="fas fa-brain mr-2"></i>{{ __('messages.profile.save_psychological_profile') }}
             </button>
         </div>
     </form>

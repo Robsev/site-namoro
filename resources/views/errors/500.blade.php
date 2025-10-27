@@ -75,7 +75,7 @@
                         <button onclick="window.history.back()" 
                                 class="w-full bg-gray-600 text-white py-3 px-6 rounded-lg hover:bg-gray-700 transition duration-200 font-medium">
                             <i class="fas fa-arrow-left mr-2"></i>
-                            Voltar
+                            {{ __('messages.common.back') }}
                         </button>
                         
                         <button onclick="window.location.href='{{ url('/') }}'" 
