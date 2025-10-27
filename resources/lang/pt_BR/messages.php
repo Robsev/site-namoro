@@ -1258,11 +1258,16 @@ return [
     'dashboard.likes_sent' => 'Likes Enviados',
     'dashboard.likes_received' => 'Likes Recebidos',
     'dashboard.statistics' => 'Estatísticas',
+    'dashboard.matches' => 'Matches',
+    'dashboard.views' => 'Visualizações',
     'dashboard.matches_count' => 'Matches',
     'dashboard.views_count' => 'Visualizações',
     'dashboard.profile_completeness' => 'Completude do Perfil',
     'dashboard.edit_profile' => 'Editar Perfil',
     'dashboard.view_profile' => 'Ver Perfil',
+    'dashboard.recent_activity' => 'Atividade Recente',
+    'dashboard.no_recent_activity' => 'Nenhuma atividade recente',
+    'dashboard.complete_profile_to_start' => 'Complete seu perfil para começar a encontrar matches!',
 
     // Welcome Page
     'welcome.title' => 'Conecte-se com pessoas especiais',

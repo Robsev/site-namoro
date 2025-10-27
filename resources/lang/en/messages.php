@@ -1186,11 +1186,16 @@ return [
     'dashboard.likes_sent' => 'Likes Sent',
     'dashboard.likes_received' => 'Likes Received',
     'dashboard.statistics' => 'Statistics',
+    'dashboard.matches' => 'Matches',
+    'dashboard.views' => 'Views',
     'dashboard.matches_count' => 'Matches',
     'dashboard.views_count' => 'Views',
     'dashboard.profile_completeness' => 'Profile Completeness',
     'dashboard.edit_profile' => 'Edit Profile',
     'dashboard.view_profile' => 'View Profile',
+    'dashboard.recent_activity' => 'Recent Activity',
+    'dashboard.no_recent_activity' => 'No recent activity',
+    'dashboard.complete_profile_to_start' => 'Complete your profile to start finding matches!',
 
     // Footer
     'footer.product' => 'Product',

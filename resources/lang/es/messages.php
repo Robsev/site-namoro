@@ -1186,11 +1186,16 @@ return [
     'dashboard.likes_sent' => 'Likes Enviados',
     'dashboard.likes_received' => 'Likes Recibidos',
     'dashboard.statistics' => 'Estadísticas',
+    'dashboard.matches' => 'Matches',
+    'dashboard.views' => 'Visualizaciones',
     'dashboard.matches_count' => 'Matches',
     'dashboard.views_count' => 'Visualizaciones',
     'dashboard.profile_completeness' => 'Completitud del Perfil',
     'dashboard.edit_profile' => 'Editar Perfil',
     'dashboard.view_profile' => 'Ver Perfil',
+    'dashboard.recent_activity' => 'Actividad Reciente',
+    'dashboard.no_recent_activity' => 'No hay actividad reciente',
+    'dashboard.complete_profile_to_start' => '¡Completa tu perfil para comenzar a encontrar matches!',
 
     // Footer
     'footer.product' => 'Producto',
