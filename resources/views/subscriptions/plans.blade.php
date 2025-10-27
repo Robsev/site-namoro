@@ -47,7 +47,7 @@
 
                 @if(isset($plan['savings']))
                     <div class="bg-yellow-100 text-yellow-800 px-3 py-2 rounded-lg text-sm font-semibold mb-4">
-                        <i class="fas fa-gift mr-1"></i>{{ $plan['savings'] }}
+                        <i class="fas fa-gift mr-1"></i>{{ $plan['savings'] ?? '' }}
                     </div>
                 @endif
 

@@ -26,57 +26,57 @@ class SubscriptionController extends Controller
         
         $plans = [
             'free' => [
-                'name' => 'Gratuito',
+                'name' => __('messages.subscriptions.free'),
                 'price' => 0,
                 'currency' => 'BRL',
                 'interval' => 'forever',
                 'features' => [
-                    'Até 6 fotos no perfil',
-                    '5 likes por dia',
-                    '1 super like por dia',
-                    'Chat básico',
-                    'Matching básico'
+                    __('messages.subscriptions.feature_profile_photos', ['count' => 6]),
+                    __('messages.subscriptions.feature_likes_per_day', ['count' => 5]),
+                    __('messages.subscriptions.feature_super_likes', ['count' => 1]),
+                    __('messages.subscriptions.feature_basic_chat'),
+                    __('messages.subscriptions.feature_basic_matching')
                 ],
                 'limitations' => [
-                    'Sem filtros avançados',
-                    'Sem ver quem te curtiu',
-                    'Sem boost de perfil'
+                    __('messages.subscriptions.limitation_no_filters'),
+                    __('messages.subscriptions.limitation_no_who_liked'),
+                    __('messages.subscriptions.limitation_no_boost')
                 ]
             ],
             'premium_monthly' => [
-                'name' => 'Premium Mensal',
+                'name' => __('messages.subscriptions.premium_monthly'),
                 'price' => 29.90,
                 'currency' => 'BRL',
                 'interval' => 'month',
                 'features' => [
-                    'Até 20 fotos no perfil',
-                    'Likes ilimitados',
-                    '5 super likes por dia',
-                    'Chat avançado',
-                    'Filtros avançados',
-                    'Ver quem te curtiu',
-                    'Boost de perfil',
-                    'Modo invisível'
+                    __('messages.subscriptions.feature_profile_photos', ['count' => 20]),
+                    __('messages.subscriptions.feature_unlimited_likes'),
+                    __('messages.subscriptions.feature_super_likes', ['count' => 5]),
+                    __('messages.subscriptions.feature_advanced_chat'),
+                    __('messages.subscriptions.feature_advanced_filters'),
+                    __('messages.subscriptions.feature_see_who_liked'),
+                    __('messages.subscriptions.feature_profile_boost'),
+                    __('messages.subscriptions.feature_stealth_mode')
                 ],
                 'popular' => true
             ],
             'premium_yearly' => [
-                'name' => 'Premium Anual',
+                'name' => __('messages.subscriptions.premium_yearly'),
                 'price' => 299.90,
                 'currency' => 'BRL',
                 'interval' => 'year',
                 'features' => [
-                    'Até 20 fotos no perfil',
-                    'Likes ilimitados',
-                    '5 super likes por dia',
-                    'Chat avançado',
-                    'Filtros avançados',
-                    'Ver quem te curtiu',
-                    'Boost de perfil',
-                    'Modo invisível',
-                    'Suporte prioritário'
+                    __('messages.subscriptions.feature_profile_photos', ['count' => 20]),
+                    __('messages.subscriptions.feature_unlimited_likes'),
+                    __('messages.subscriptions.feature_super_likes', ['count' => 5]),
+                    __('messages.subscriptions.feature_advanced_chat'),
+                    __('messages.subscriptions.feature_advanced_filters'),
+                    __('messages.subscriptions.feature_see_who_liked'),
+                    __('messages.subscriptions.feature_profile_boost'),
+                    __('messages.subscriptions.feature_stealth_mode'),
+                    __('messages.subscriptions.feature_priority_support')
                 ],
-                'savings' => '2 meses grátis'
+                'savings' => __('messages.subscriptions.savings_two_months')
             ]
         ];
 
