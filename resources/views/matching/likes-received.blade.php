@@ -8,16 +8,16 @@
         <div>
             <h1 class="text-3xl font-bold text-gray-900">
                 <i class="fas fa-heart-broken text-blue-500 mr-3"></i>
-                Likes Recebidos
+                {{ __('messages.nav.likes_received') }}
             </h1>
-            <p class="mt-2 text-gray-600">Pessoas que curtiram você - responda aos likes!</p>
+            <p class="mt-2 text-gray-600">{{ __('messages.matching.likes_received_desc') }}</p>
         </div>
         <div class="flex space-x-3">
             <a href="{{ route('matching.discover') }}" class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-200">
-                <i class="fas fa-search mr-2"></i>Descobrir
+                <i class="fas fa-search mr-2"></i>{{ __('messages.nav.discover') }}
             </a>
             <a href="{{ route('matching.likes-sent') }}" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition duration-200">
-                <i class="fas fa-heart mr-2"></i>Likes Enviados
+                <i class="fas fa-heart mr-2"></i>{{ __('messages.dashboard.likes_sent') }}
             </a>
         </div>
     </div>
@@ -25,10 +25,10 @@
     @if($likesReceived->isEmpty())
         <div class="bg-white rounded-lg shadow p-8 text-center">
             <i class="fas fa-heart-broken text-gray-400 text-6xl mb-4"></i>
-            <h3 class="text-xl font-semibold text-gray-900 mb-2">Nenhum like recebido ainda</h3>
-            <p class="text-gray-600 mb-6">Complete seu perfil para receber mais likes!</p>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ __('messages.matching.no_likes_received') }}</h3>
+            <p class="text-gray-600 mb-6">{{ __('messages.matching.no_likes_received_desc') }}</p>
             <a href="{{ route('profile.show') }}" class="bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition duration-200">
-                <i class="fas fa-user mr-2"></i>Completar Perfil
+                <i class="fas fa-user mr-2"></i>{{ __('messages.profile.complete_profile') }}
             </a>
         </div>
     @else
@@ -53,7 +53,7 @@
                         
                         <!-- Status Badge -->
                         <div class="absolute top-4 right-4 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
-                            <i class="fas fa-heart mr-1"></i>Te Curtiu!
+                            <i class="fas fa-heart mr-1"></i>{{ __('messages.matching.liked_you') }}
                         </div>
 
                         <!-- Compatibility Score -->
@@ -89,23 +89,23 @@
                         <div class="flex space-x-2">
                             <button onclick="viewProfile({{ $like->user1->id }})" 
                                     class="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200">
-                                <i class="fas fa-eye mr-1"></i>Ver Perfil
+                                <i class="fas fa-eye mr-1"></i>{{ __('messages.common.view') }}
                             </button>
                             
                             <button onclick="acceptLike({{ $like->user1->id }})" 
                                     class="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-200">
-                                <i class="fas fa-check mr-1"></i>Aceitar
+                                <i class="fas fa-check mr-1"></i>{{ __('messages.matching.accept_like') }}
                             </button>
                             
                             <button onclick="rejectLike({{ $like->user1->id }})" 
                                     class="flex-1 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-200">
-                                <i class="fas fa-times mr-1"></i>Recusar
+                                <i class="fas fa-times mr-1"></i>{{ __('messages.matching.reject_like') }}
                             </button>
                         </div>
 
                         <!-- Received Date -->
                         <p class="text-xs text-gray-500 mt-3 text-center">
-                            Recebido em {{ $like->matched_at->format('d/m/Y H:i') }}
+                            {{ __('messages.matching.received_on') }} {{ $like->matched_at->format('d/m/Y H:i') }}
                         </p>
                     </div>
                 </div>
@@ -153,7 +153,7 @@ function acceptLike(userId) {
 }
 
 function rejectLike(userId) {
-    if (!confirm('Tem certeza que deseja recusar este like?')) {
+    if (!confirm('{{ __('messages.matching.confirm_reject_like') }}')) {
         return;
     }
 

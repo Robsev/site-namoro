@@ -256,6 +256,12 @@ return [
     'matching.accept_like' => 'Aceptar Me Gusta',
     'matching.reject_like' => 'Rechazar Me Gusta',
     'matching.start_conversation' => 'Iniciar Conversación',
+    'matching.likes_received_desc' => 'Personas que te dieron me gusta - ¡responde a los likes!',
+    'matching.no_likes_received' => 'No se ha recibido ningún me gusta todavía',
+    'matching.no_likes_received_desc' => '¡Completa tu perfil para recibir más likes!',
+    'matching.liked_you' => '¡Te Ha Gustado!',
+    'matching.received_on' => 'Recibido el',
+    'matching.confirm_reject_like' => '¿Estás seguro de que deseas rechazar este me gusta?',
 
     // Psychological Traits
     'psychological.openness' => 'Apertura',

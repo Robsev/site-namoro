@@ -348,6 +348,12 @@ return [
     'matching.accept_like' => 'Aceitar Like',
     'matching.reject_like' => 'Recusar Like',
     'matching.start_conversation' => 'Iniciar Conversa',
+    'matching.likes_received_desc' => 'Pessoas que curtiram você - responda aos likes!',
+    'matching.no_likes_received' => 'Nenhum like recebido ainda',
+    'matching.no_likes_received_desc' => 'Complete seu perfil para receber mais likes!',
+    'matching.liked_you' => 'Te Curtiu!',
+    'matching.received_on' => 'Recebido em',
+    'matching.confirm_reject_like' => 'Tem certeza que deseja recusar este like?',
 
     // Psychological Traits
     'psychological.openness' => 'Abertura',

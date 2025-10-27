@@ -256,6 +256,12 @@ return [
     'matching.accept_like' => 'Accept Like',
     'matching.reject_like' => 'Reject Like',
     'matching.start_conversation' => 'Start Conversation',
+    'matching.likes_received_desc' => 'People who liked you - respond to likes!',
+    'matching.no_likes_received' => 'No likes received yet',
+    'matching.no_likes_received_desc' => 'Complete your profile to receive more likes!',
+    'matching.liked_you' => 'Liked you!',
+    'matching.received_on' => 'Received on',
+    'matching.confirm_reject_like' => 'Are you sure you want to reject this like?',
 
     // Psychological Traits
     'psychological.openness' => 'Openness',
