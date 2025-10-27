@@ -56,7 +56,7 @@
                         @if($match->match_reason)
                             <div class="bg-pink-50 border border-pink-200 rounded-lg p-3 mb-3">
                                 <p class="text-pink-700 text-sm">
-                                    <i class="fas fa-info-circle mr-1"></i>{{ $match->match_reason }}
+                                    <i class="fas fa-info-circle mr-1"></i>{{ $match->translated_match_reason }}
                                 </p>
                             </div>
                         @endif
