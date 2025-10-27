@@ -80,7 +80,7 @@
                         @if($like->match_reason)
                             <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
                                 <p class="text-blue-800 text-sm">
-                                    <i class="fas fa-lightbulb mr-2"></i>{{ $like->match_reason }}
+                                    <i class="fas fa-lightbulb mr-2"></i>{{ $like->translated_match_reason }}
                                 </p>
                             </div>
                         @endif
