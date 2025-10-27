@@ -11,14 +11,14 @@
                 <div>
                     <h1 class="text-3xl font-bold text-gray-900">
                         <i class="fas fa-chart-bar text-blue-500 mr-3"></i>
-                        Estatísticas de Moderação
+                        {{ __('messages.admin.photos.statistics.title') }}
                     </h1>
-                    <p class="mt-2 text-gray-600">Acompanhe o desempenho do sistema de moderação</p>
+                    <p class="mt-2 text-gray-600">{{ __('messages.admin.photos.statistics.desc') }}</p>
                 </div>
                 <a href="{{ route('admin.photos.index') }}" 
                    class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-200">
                     <i class="fas fa-arrow-left mr-2"></i>
-                    Voltar
+                    {{ __('messages.admin.photos.back') }}
                 </a>
             </div>
         </div>
@@ -33,7 +33,7 @@
                         </div>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">Pendentes</p>
+                        <p class="text-sm font-medium text-gray-500">{{ __('messages.admin.pending_photos') }}</p>
                         <p class="text-2xl font-semibold text-gray-900">{{ $stats['pending'] }}</p>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                         </div>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">Aprovadas</p>
+                        <p class="text-sm font-medium text-gray-500">{{ __('messages.admin.approved_photos') }}</p>
                         <p class="text-2xl font-semibold text-gray-900">{{ $stats['approved'] }}</p>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                         </div>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">Rejeitadas</p>
+                        <p class="text-sm font-medium text-gray-500">{{ __('messages.admin.rejected_photos') }}</p>
                         <p class="text-2xl font-semibold text-gray-900">{{ $stats['rejected'] }}</p>
                     </div>
                 </div>
@@ -75,7 +75,7 @@
                         </div>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">Total</p>
+                        <p class="text-sm font-medium text-gray-500">{{ __('messages.admin.total_photos') }}</p>
                         <p class="text-2xl font-semibold text-gray-900">{{ $stats['total'] }}</p>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
             <div class="bg-white rounded-lg shadow p-6">
                 <h2 class="text-xl font-semibold text-gray-900 mb-4">
                     <i class="fas fa-chart-pie text-green-500 mr-2"></i>
-                    Taxa de Aprovação
+                    {{ __('messages.admin.photos.statistics.approval_rate') }}
                 </h2>
                 <div class="flex items-center justify-center">
                     <div class="relative w-48 h-48">
@@ -117,7 +117,7 @@
                         <div class="absolute inset-0 flex items-center justify-center">
                             <div class="text-center">
                                 <div class="text-2xl font-bold text-gray-900">{{ number_format($approvedRate, 1) }}%</div>
-                                <div class="text-sm text-gray-500">Aprovadas</div>
+                                <div class="text-sm text-gray-500">{{ __('messages.admin.approved_photos') }}</div>
                             </div>
                         </div>
                     </div>
@@ -125,15 +125,15 @@
                 <div class="mt-4 flex justify-center space-x-6">
                     <div class="flex items-center">
                         <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-                        <span class="text-sm text-gray-600">Aprovadas ({{ $stats['approved'] }})</span>
+                        <span class="text-sm text-gray-600">{{ __('messages.admin.photos.statistics.approved_count', ['count' => $stats['approved']]) }}</span>
                     </div>
                     <div class="flex items-center">
                         <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
-                        <span class="text-sm text-gray-600">Rejeitadas ({{ $stats['rejected'] }})</span>
+                        <span class="text-sm text-gray-600">{{ __('messages.admin.photos.statistics.rejected_count', ['count' => $stats['rejected']]) }}</span>
                     </div>
                     <div class="flex items-center">
                         <div class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
-                        <span class="text-sm text-gray-600">Pendentes ({{ $stats['pending'] }})</span>
+                        <span class="text-sm text-gray-600">{{ __('messages.admin.photos.statistics.pending_count', ['count' => $stats['pending']]) }}</span>
                     </div>
                 </div>
             </div>
@@ -142,7 +142,7 @@
             <div class="bg-white rounded-lg shadow p-6">
                 <h2 class="text-xl font-semibold text-gray-900 mb-4">
                     <i class="fas fa-chart-line text-blue-500 mr-2"></i>
-                    Atividade dos Últimos 7 Dias
+                    {{ __('messages.admin.photos.statistics.last_7_days') }}
                 </h2>
                 <div class="h-64 flex items-end justify-between space-x-2">
                     @php
@@ -177,7 +177,7 @@
             <div class="px-6 py-4 border-b border-gray-200">
                 <h2 class="text-xl font-semibold text-gray-900">
                     <i class="fas fa-history text-purple-500 mr-2"></i>
-                    Atividade Recente
+                    {{ __('messages.admin.photos.statistics.recent_activity') }}
                 </h2>
             </div>
             <div class="divide-y divide-gray-200">
@@ -193,16 +193,16 @@
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center space-x-2">
                                 <p class="text-sm font-medium text-gray-900">
-                                    Foto {{ $activity->moderation_status === 'approved' ? 'aprovada' : 'rejeitada' }}
+                                    {{ $activity->moderation_status === 'approved' ? __('messages.admin.photos.statistics.photo_approved') : __('messages.admin.photos.statistics.photo_rejected') }}
                                 </p>
                                 <span class="text-xs text-gray-500">
                                     {{ $activity->moderated_at->diffForHumans() }}
                                 </span>
                             </div>
                             <p class="text-sm text-gray-600">
-                                Usuário: <span class="font-medium">{{ $activity->user->name }}</span>
+                                {{ __('messages.admin.photos.statistics.user') }}: <span class="font-medium">{{ $activity->user->name }}</span>
                                 @if($activity->moderator)
-                                    • Moderada por: <span class="font-medium">{{ $activity->moderator->name }}</span>
+                                    • {{ __('messages.admin.photos.moderated_by') }}: <span class="font-medium">{{ $activity->moderator->name }}</span>
                                 @endif
                             </p>
                             @if($activity->moderation_notes)
@@ -215,14 +215,14 @@
                         <div class="flex-shrink-0">
                             <a href="{{ route('admin.photos.show', $activity) }}" 
                                class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                                Ver detalhes
+                                {{ __('messages.admin.photos.statistics.view_details') }}
                             </a>
                         </div>
                     </div>
                 @empty
                     <div class="px-6 py-8 text-center">
                         <i class="fas fa-history text-gray-400 text-4xl mb-4"></i>
-                        <p class="text-gray-500">Nenhuma atividade recente encontrada.</p>
+                        <p class="text-gray-500">{{ __('messages.admin.photos.statistics.no_recent_activity') }}</p>
                     </div>
                 @endforelse
             </div>

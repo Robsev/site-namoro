@@ -11,15 +11,15 @@
                 <div>
                     <h1 class="text-3xl font-bold text-gray-900">
                         <i class="fas fa-images text-blue-500 mr-3"></i>
-                        Moderação de Fotos
+                        {{ __('messages.admin.photos') }}
                     </h1>
-                    <p class="mt-2 text-gray-600">Gerencie e modere fotos enviadas pelos usuários</p>
+                    <p class="mt-2 text-gray-600">{{ __('messages.admin.photos.manage') }}</p>
                 </div>
                 <div class="flex space-x-4">
                     <a href="{{ route('admin.photos.statistics') }}" 
                        class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-200">
                         <i class="fas fa-chart-bar mr-2"></i>
-                        Estatísticas
+                        {{ __('messages.admin.statistics') }}
                     </a>
                 </div>
             </div>
@@ -35,7 +35,7 @@
                         </div>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">Pendentes</p>
+                        <p class="text-sm font-medium text-gray-500">{{ __('messages.admin.pending_photos') }}</p>
                         <p class="text-2xl font-semibold text-gray-900">{{ $photos->total() }}</p>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                         </div>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">Aprovadas</p>
+                        <p class="text-sm font-medium text-gray-500">{{ __('messages.admin.approved_photos') }}</p>
                         <p class="text-2xl font-semibold text-gray-900">{{ \App\Models\UserPhoto::where('moderation_status', 'approved')->count() }}</p>
                     </div>
                 </div>
@@ -63,7 +63,7 @@
                         </div>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">Rejeitadas</p>
+                        <p class="text-sm font-medium text-gray-500">{{ __('messages.admin.rejected_photos') }}</p>
                         <p class="text-2xl font-semibold text-gray-900">{{ \App\Models\UserPhoto::where('moderation_status', 'rejected')->count() }}</p>
                     </div>
                 </div>
@@ -77,7 +77,7 @@
                         </div>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">Total</p>
+                        <p class="text-sm font-medium text-gray-500">{{ __('messages.admin.total_photos') }}</p>
                         <p class="text-2xl font-semibold text-gray-900">{{ \App\Models\UserPhoto::count() }}</p>
                     </div>
                 </div>
@@ -88,9 +88,9 @@
         <div class="bg-white rounded-lg shadow mb-6 p-6">
             <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Usuário</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.admin.photos.filter.user') }}</label>
                     <select name="user_id" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Todos os usuários</option>
+                        <option value="">{{ __('messages.admin.photos.filter.all_users') }}</option>
                         @foreach($users as $user)
                             <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
                                 {{ $user->name }} ({{ $user->email }})
@@ -100,13 +100,13 @@
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Data Inicial</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.admin.photos.filter.date_from') }}</label>
                     <input type="date" name="date_from" value="{{ request('date_from') }}" 
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Data Final</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.admin.photos.filter.date_to') }}</label>
                     <input type="date" name="date_to" value="{{ request('date_to') }}" 
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
@@ -114,7 +114,7 @@
                 <div class="flex items-end">
                     <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
                         <i class="fas fa-search mr-2"></i>
-                        Filtrar
+                        {{ __('messages.admin.photos.filter.filter') }}
                     </button>
                 </div>
             </form>
@@ -128,22 +128,22 @@
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-4">
                         <button type="button" id="selectAll" class="text-blue-600 hover:text-blue-800 font-medium">
-                            Selecionar Todas
+                            {{ __('messages.admin.photos.select_all') }}
                         </button>
-                        <span id="selectedCount" class="text-sm text-gray-500">0 selecionadas</span>
+                        <span id="selectedCount" class="text-sm text-gray-500"></span>
                     </div>
                     <div class="flex space-x-2">
                         <button type="button" id="bulkApproveBtn" 
                                 class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                                 disabled>
                             <i class="fas fa-check mr-2"></i>
-                            Aprovar Selecionadas
+                            {{ __('messages.admin.bulk_approve') }}
                         </button>
                         <button type="button" id="bulkRejectBtn" 
                                 class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                                 disabled>
                             <i class="fas fa-times mr-2"></i>
-                            Rejeitar Selecionadas
+                            {{ __('messages.admin.bulk_reject') }}
                         </button>
                     </div>
                 </div>
@@ -181,14 +181,14 @@
                                     <a href="{{ route('admin.photos.show', $photo) }}" 
                                        class="flex-1 bg-blue-600 text-white text-center px-3 py-2 rounded text-sm hover:bg-blue-700 transition duration-200">
                                         <i class="fas fa-eye mr-1"></i>
-                                        Ver
+                                        {{ __('messages.admin.photos.view') }}
                                     </a>
                                     <form method="POST" action="{{ route('admin.photos.approve', $photo) }}" class="flex-1">
                                         @csrf
                                         <button type="submit" 
                                                 class="w-full bg-green-600 text-white px-3 py-2 rounded text-sm hover:bg-green-700 transition duration-200">
                                             <i class="fas fa-check mr-1"></i>
-                                            Aprovar
+                                            {{ __('messages.admin.approve') }}
                                         </button>
                                     </form>
                                     <form method="POST" action="{{ route('admin.photos.reject', $photo) }}" class="flex-1">
@@ -196,7 +196,7 @@
                                         <button type="submit" 
                                                 class="w-full bg-red-600 text-white px-3 py-2 rounded text-sm hover:bg-red-700 transition duration-200">
                                             <i class="fas fa-times mr-1"></i>
-                                            Rejeitar
+                                            {{ __('messages.admin.reject') }}
                                         </button>
                                     </form>
                                 </div>
@@ -212,8 +212,8 @@
             @else
                 <div class="text-center py-12">
                     <i class="fas fa-images text-gray-400 text-6xl mb-4"></i>
-                    <h3 class="text-lg font-medium text-gray-900 mb-2">Nenhuma foto pendente</h3>
-                    <p class="text-gray-500">Todas as fotos foram moderadas ou não há fotos para moderar.</p>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">{{ __('messages.admin.photos.no_pending') }}</h3>
+                    <p class="text-gray-500">{{ __('messages.admin.photos.no_pending_desc') }}</p>
                 </div>
             @endif
         </div>
@@ -224,33 +224,33 @@
 <div id="bulkRejectModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
     <div class="flex items-center justify-center min-h-screen p-4">
         <div class="bg-white rounded-lg max-w-md w-full p-6">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Rejeitar Fotos Selecionadas</h3>
+            <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('messages.admin.photos.reject_selected') }}</h3>
             <form id="bulkRejectForm" method="POST" action="{{ route('admin.photos.bulk-reject') }}">
                 @csrf
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Motivo da Rejeição</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.admin.photos.reject_reason') }}</label>
                     <select name="reason" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Selecione um motivo</option>
-                        <option value="inappropriate">Conteúdo inadequado</option>
-                        <option value="low_quality">Baixa qualidade</option>
-                        <option value="not_clear">Imagem não clara</option>
-                        <option value="other">Outro</option>
+                        <option value="">{{ __('messages.admin.photos.select_reason') }}</option>
+                        <option value="inappropriate">{{ __('messages.admin.photos.reason.inappropriate') }}</option>
+                        <option value="low_quality">{{ __('messages.admin.photos.reason.low_quality') }}</option>
+                        <option value="not_clear">{{ __('messages.admin.photos.reason.not_clear') }}</option>
+                        <option value="other">{{ __('messages.admin.photos.reason.other') }}</option>
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Observações</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.admin.photos.moderation_notes') }}</label>
                     <textarea name="moderation_notes" required rows="3" 
                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                              placeholder="Explique o motivo da rejeição..."></textarea>
+                              placeholder="{{ __('messages.admin.photos.moderation_notes_placeholder') }}"></textarea>
                 </div>
                 <div class="flex justify-end space-x-3">
                     <button type="button" id="cancelBulkReject" 
                             class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-200">
-                        Cancelar
+                        {{ __('messages.admin.photos.cancel') }}
                     </button>
                     <button type="submit" 
                             class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-200">
-                        Rejeitar Fotos
+                        {{ __('messages.admin.bulk_reject') }}
                     </button>
                 </div>
             </form>
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateSelectedCount() {
         const selected = document.querySelectorAll('.photo-checkbox:checked');
-        selectedCount.textContent = `${selected.length} selecionadas`;
+        selectedCount.textContent = '{{ __('messages.admin.photos.selected') }}'.replace(':count', selected.length);
         bulkApproveBtn.disabled = selected.length === 0;
         bulkRejectBtn.disabled = selected.length === 0;
     }
@@ -309,11 +309,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         updateSelectedCount();
         updateBulkForm();
-        selectAllBtn.textContent = allChecked ? 'Selecionar Todas' : 'Desselecionar Todas';
+        selectAllBtn.textContent = allChecked ? '{{ __('messages.admin.photos.select_all') }}' : '{{ __('messages.admin.photos.deselect_all') }}';
     });
 
     bulkApproveBtn.addEventListener('click', function() {
-        if (confirm('Tem certeza que deseja aprovar as fotos selecionadas?')) {
+        if (confirm('{{ __('messages.admin.photos.confirm_approve_bulk') }}')) {
             bulkForm.submit();
         }
     });
