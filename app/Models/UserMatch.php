@@ -46,15 +46,21 @@ class UserMatch extends Model
             'Boa compatibilidade' => __('messages.matching.good_compatibility'),
             'Alta compatibilidade geral' => __('messages.matching.high_compatibility'),
             'Super Like!' => __('messages.matching.super_like_reason'),
+            'Vocês compartilham interesses em' => __('messages.matching.shared_interests'),
+            'Perfis psicológicos compatíveis' => __('messages.matching.psychological_compatible'),
+            'Idades compatíveis' => __('messages.matching.compatible_ages'),
+            'Vocês podem ser uma boa combinação!' => __('messages.matching.good_match'),
         ];
         
+        $reason = $this->match_reason;
+        
         foreach ($translations as $pt => $translation) {
-            if (str_contains($this->match_reason, $pt)) {
-                return str_replace($pt, $translation, $this->match_reason);
+            if (str_contains($reason, $pt)) {
+                $reason = str_replace($pt, $translation, $reason);
             }
         }
         
-        return $this->match_reason;
+        return $reason;
     }
     
     /**
