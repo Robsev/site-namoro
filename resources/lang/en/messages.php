@@ -257,6 +257,7 @@ return [
     'matching.load_more_people' => 'Load More People',
     'matching.loading' => 'Loading...',
     'matching.all_loaded' => 'All loaded',
+    'matching.no_more_people' => 'No more people to show',
     'matching.new_people_loaded' => 'new people loaded!',
     'matching.error_loading' => 'Error loading more people',
     'matching.years' => 'years',

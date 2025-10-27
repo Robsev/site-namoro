@@ -257,6 +257,7 @@ return [
     'matching.load_more_people' => 'Cargar Más Personas',
     'matching.loading' => 'Cargando...',
     'matching.all_loaded' => 'Todos cargados',
+    'matching.no_more_people' => 'No hay más personas para mostrar',
     'matching.new_people_loaded' => 'nuevas personas cargadas!',
     'matching.error_loading' => 'Error al cargar más personas',
     'matching.years' => 'años',

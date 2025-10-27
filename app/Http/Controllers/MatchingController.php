@@ -48,7 +48,7 @@ class MatchingController extends Controller
         if ($potentialMatches->isEmpty()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Não há mais pessoas para mostrar',
+                'message' => __('messages.matching.no_more_people'),
                 'hasMore' => false
             ]);
         }
