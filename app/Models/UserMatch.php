@@ -33,6 +33,31 @@ class UserMatch extends Model
     }
 
     /**
+     * Get translated match reason
+     */
+    public function getTranslatedMatchReasonAttribute()
+    {
+        if (!$this->match_reason) {
+            return __('messages.matching.good_match');
+        }
+        
+        // Translate old hardcoded Portuguese reasons
+        $translations = [
+            'Boa compatibilidade' => __('messages.matching.good_compatibility'),
+            'Alta compatibilidade geral' => __('messages.matching.high_compatibility'),
+            'Super Like!' => __('messages.matching.super_like_reason'),
+        ];
+        
+        foreach ($translations as $pt => $translation) {
+            if (str_contains($this->match_reason, $pt)) {
+                return str_replace($pt, $translation, $this->match_reason);
+            }
+        }
+        
+        return $this->match_reason;
+    }
+    
+    /**
      * Get the first user in the match.
      */
     public function user1()
