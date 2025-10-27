@@ -45,11 +45,11 @@ class NewLike extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('💖 Alguém te curtiu! - Amigos Para Sempre')
-            ->line("{$this->liker->name} te curtiu!")
-            ->line('Veja quem te curtiu e descubra novos matches!')
-            ->action('Ver Quem Te Curtiu', route('matching.likes-received'))
-            ->line('Obrigado por usar o Amigos Para Sempre!');
+            ->subject(__('messages.notifications.new_like_subject', ['name' => config('app.name')]))
+            ->line(__('messages.notifications.someone_liked_you', ['name' => $this->liker->name]))
+            ->line(__('messages.notifications.check_likes_message'))
+            ->action(__('messages.notifications.view_who_liked'), route('matching.likes-received'))
+            ->line(__('messages.notifications.thanks'));
     }
 
     /**
@@ -61,8 +61,8 @@ class NewLike extends Notification
     {
         return [
             'type' => 'new_like',
-            'title' => '💖 Alguém te curtiu!',
-            'message' => "{$this->liker->name} te curtiu!",
+            'title' => __('messages.notifications.new_like_title'),
+            'message' => __('messages.notifications.someone_liked_you', ['name' => $this->liker->name]),
             'data' => [
                 'liker_id' => $this->liker->id,
                 'liker_name' => $this->liker->name,

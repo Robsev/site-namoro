@@ -47,11 +47,11 @@ class NewMatch extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('🎉 Novo Match! - Amigos Para Sempre')
-            ->line("Parabéns! Você tem um novo match com {$this->matchUser->name}!")
-            ->line($this->matchData['match_reason'] ?? 'Vocês podem ser uma boa combinação!')
-            ->action('Ver Conversa', route('conversations.show', $this->matchData['conversation_id'] ?? ''))
-            ->line('Obrigado por usar o Amigos Para Sempre!');
+            ->subject(__('messages.notifications.new_match_subject', ['name' => config('app.name')]))
+            ->line(__('messages.notifications.new_match_message', ['name' => $this->matchUser->name]))
+            ->line($this->matchData['match_reason'] ?? __('messages.matching.good_match'))
+            ->action(__('messages.notifications.view_conversation'), route('conversations.show', $this->matchData['conversation_id'] ?? ''))
+            ->line(__('messages.notifications.thanks'));
     }
 
     /**
@@ -63,8 +63,8 @@ class NewMatch extends Notification
     {
         return [
             'type' => 'new_match',
-            'title' => '🎉 Novo Match!',
-            'message' => "Você tem um novo match com {$this->matchUser->name}!",
+            'title' => __('messages.notifications.new_match_title'),
+            'message' => __('messages.notifications.new_match_message', ['name' => $this->matchUser->name]),
             'data' => [
                 'match_user_id' => $this->matchUser->id,
                 'match_user_name' => $this->matchUser->name,

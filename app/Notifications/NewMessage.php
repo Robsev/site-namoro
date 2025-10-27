@@ -45,11 +45,11 @@ class NewMessage extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Nova mensagem de ' . $this->message->sender->name)
-            ->line('Você recebeu uma nova mensagem de ' . $this->message->sender->name)
-            ->line('Mensagem: ' . $this->message->message)
-            ->action('Ver Conversa', route('conversations.show', $this->message->conversation))
-            ->line('Obrigado por usar o Amigos Para Sempre!');
+            ->subject(__('messages.notifications.new_message_subject', ['name' => $this->message->sender->name]))
+            ->line(__('messages.notifications.new_message_from', ['name' => $this->message->sender->name]))
+            ->line(__('messages.notifications.message') . ': ' . $this->message->message)
+            ->action(__('messages.notifications.view_conversation'), route('conversations.show', $this->message->conversation))
+            ->line(__('messages.notifications.thanks'));
     }
 
     /**
@@ -61,8 +61,8 @@ class NewMessage extends Notification
     {
         return [
             'type' => 'new_message',
-            'title' => 'Nova Mensagem',
-            'message' => 'Você recebeu uma nova mensagem de ' . $this->message->sender->name,
+            'title' => __('messages.notifications.new_message_title'),
+            'message' => __('messages.notifications.new_message_from', ['name' => $this->message->sender->name]),
             'data' => [
                 'conversation_id' => $this->message->conversation_id,
                 'sender_id' => $this->message->sender_id,

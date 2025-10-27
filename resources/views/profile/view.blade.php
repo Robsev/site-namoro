@@ -72,7 +72,7 @@
                     @if($user->gender)
                         <div class="flex items-center">
                             <i class="fas fa-venus-mars text-gray-400 w-5"></i>
-                            <span class="ml-3 text-gray-700">{{ ucfirst($user->gender) }}</span>
+                            <span class="ml-3 text-gray-700">{{ __('messages.register.gender_' . $user->gender) }}</span>
                         </div>
                     @endif
                     

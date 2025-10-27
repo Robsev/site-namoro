@@ -45,11 +45,11 @@ class NewSuperLike extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('⭐ Super Like! - Amigos Para Sempre')
-            ->line("{$this->liker->name} te deu um Super Like!")
-            ->line('Isso significa que você chamou muito a atenção!')
-            ->action('Ver Quem Te Curtiu', route('matching.likes-received'))
-            ->line('Obrigado por usar o Amigos Para Sempre!');
+            ->subject(__('messages.notifications.super_like_subject', ['name' => config('app.name')]))
+            ->line(__('messages.notifications.super_like_you', ['name' => $this->liker->name]))
+            ->line(__('messages.notifications.super_like_meaning'))
+            ->action(__('messages.notifications.view_who_liked'), route('matching.likes-received'))
+            ->line(__('messages.notifications.thanks'));
     }
 
     /**
@@ -61,8 +61,8 @@ class NewSuperLike extends Notification
     {
         return [
             'type' => 'new_super_like',
-            'title' => '⭐ Super Like!',
-            'message' => "{$this->liker->name} te deu um Super Like!",
+            'title' => __('messages.notifications.super_like_title'),
+            'message' => __('messages.notifications.super_like_you', ['name' => $this->liker->name]),
             'data' => [
                 'liker_id' => $this->liker->id,
                 'liker_name' => $this->liker->name,
