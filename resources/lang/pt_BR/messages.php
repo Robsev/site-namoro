@@ -132,6 +132,8 @@ return [
     'profile.last_name' => 'Sobrenome',
     'profile.birth_date' => 'Data de Nascimento',
     'profile.change_profile_photo' => 'Alterar Foto de Perfil',
+    'profile.choose_file' => 'Escolher arquivo',
+    'profile.no_file_chosen' => 'Nenhum arquivo escolhido',
     'profile.photo_recommendation' => 'PNG, JPG, GIF até 2MB. Recomendado: 400x400px',
     'profile.update_photo' => 'Atualizar Foto',
     'profile.confirm_remove_photo' => 'Tem certeza que deseja remover a foto de perfil?',

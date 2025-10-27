@@ -130,6 +130,8 @@ return [
     'profile.last_name' => 'Last Name',
     'profile.birth_date' => 'Birth Date',
     'profile.change_profile_photo' => 'Change Profile Photo',
+    'profile.choose_file' => 'Choose file',
+    'profile.no_file_chosen' => 'No file chosen',
     'profile.photo_recommendation' => 'PNG, JPG, GIF up to 2MB. Recommended: 400x400px',
     'profile.update_photo' => 'Update Photo',
     'profile.confirm_remove_photo' => 'Are you sure you want to remove your profile photo?',
