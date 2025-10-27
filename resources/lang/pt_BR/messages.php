@@ -611,6 +611,25 @@ return [
     'profile.tip_photos' => '• Adicione 2-3 fotos de boa qualidade',
     'profile.tip_psychological' => '• Preencha o questionário psicológico para melhor matching',
 
+    // Profile Missing Fields
+    'profile.missing.first_name' => 'Nome',
+    'profile.missing.last_name' => 'Sobrenome',
+    'profile.missing.birth_date' => 'Data de nascimento',
+    'profile.missing.gender' => 'Gênero',
+    'profile.missing.location' => 'Localização',
+    'profile.missing.profile_photo' => 'Foto de perfil',
+    'profile.missing.bio' => 'Biografia',
+    'profile.missing.relationship_goal' => 'Objetivo de relacionamento',
+    'profile.missing.education_level' => 'Nível de educação',
+    'profile.missing.smoking' => 'Hábito de fumar',
+    'profile.missing.drinking' => 'Hábito de beber',
+    'profile.missing.profile_info' => 'Informações do perfil',
+    'profile.missing.photos' => 'Fotos do perfil',
+    'profile.missing.more_photos' => 'Mais fotos (recomendado: 2-3)',
+    'profile.missing.photos_pending' => 'Aguardando aprovação de :count foto(s)',
+    'profile.missing.interests' => 'Interesses (mínimo: 3)',
+    'profile.missing.psychological_profile' => 'Perfil psicológico',
+
     // Matching Filters
     'filters.title' => 'Filtros de Busca',
     'filters.age_range' => 'Faixa de Idade',

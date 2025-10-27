@@ -519,6 +519,25 @@ return [
     'profile.tip_photos' => '• Add 2-3 good quality photos',
     'profile.tip_psychological' => '• Complete the psychological questionnaire for better matching',
 
+    // Profile Missing Fields
+    'profile.missing.first_name' => 'First Name',
+    'profile.missing.last_name' => 'Last Name',
+    'profile.missing.birth_date' => 'Birth Date',
+    'profile.missing.gender' => 'Gender',
+    'profile.missing.location' => 'Location',
+    'profile.missing.profile_photo' => 'Profile Photo',
+    'profile.missing.bio' => 'Biography',
+    'profile.missing.relationship_goal' => 'Relationship Goal',
+    'profile.missing.education_level' => 'Education Level',
+    'profile.missing.smoking' => 'Smoking Habit',
+    'profile.missing.drinking' => 'Drinking Habit',
+    'profile.missing.profile_info' => 'Profile Information',
+    'profile.missing.photos' => 'Profile Photos',
+    'profile.missing.more_photos' => 'More photos (recommended: 2-3)',
+    'profile.missing.photos_pending' => 'Waiting for approval of :count photo(s)',
+    'profile.missing.interests' => 'Interests (minimum: 3)',
+    'profile.missing.psychological_profile' => 'Psychological Profile',
+
     // Matching Filters
     'filters.title' => 'Search Filters',
     'filters.age_range' => 'Age Range',

@@ -399,27 +399,27 @@ class User extends Authenticatable implements MustVerifyEmail
         $missing = [];
 
         // Basic Information
-        if (empty($this->first_name)) $missing[] = 'Nome';
-        if (empty($this->last_name)) $missing[] = 'Sobrenome';
-        if (empty($this->birth_date)) $missing[] = 'Data de nascimento';
-        if (empty($this->gender)) $missing[] = 'Gênero';
-        if (empty($this->location)) $missing[] = 'Localização';
+        if (empty($this->first_name)) $missing[] = __('messages.profile.missing.first_name');
+        if (empty($this->last_name)) $missing[] = __('messages.profile.missing.last_name');
+        if (empty($this->birth_date)) $missing[] = __('messages.profile.missing.birth_date');
+        if (empty($this->gender)) $missing[] = __('messages.profile.missing.gender');
+        if (empty($this->location)) $missing[] = __('messages.profile.missing.location');
         
         // Check if user has any photos before asking for profile photo
         $photoCount = $this->photos()->where('moderation_status', 'approved')->count();
         if (empty($this->profile_photo) && $photoCount == 0) {
-            $missing[] = 'Foto de perfil';
+            $missing[] = __('messages.profile.missing.profile_photo');
         }
 
         // Profile Details
         if ($this->profile) {
-            if (empty($this->profile->bio)) $missing[] = 'Biografia';
-            if (empty($this->profile->relationship_goal)) $missing[] = 'Objetivo de relacionamento';
-            if (empty($this->profile->education_level)) $missing[] = 'Nível de educação';
-            if (empty($this->profile->smoking)) $missing[] = 'Hábito de fumar';
-            if (empty($this->profile->drinking)) $missing[] = 'Hábito de beber';
+            if (empty($this->profile->bio)) $missing[] = __('messages.profile.missing.bio');
+            if (empty($this->profile->relationship_goal)) $missing[] = __('messages.profile.missing.relationship_goal');
+            if (empty($this->profile->education_level)) $missing[] = __('messages.profile.missing.education_level');
+            if (empty($this->profile->smoking)) $missing[] = __('messages.profile.missing.smoking');
+            if (empty($this->profile->drinking)) $missing[] = __('messages.profile.missing.drinking');
         } else {
-            $missing[] = 'Informações do perfil';
+            $missing[] = __('messages.profile.missing.profile_info');
         }
 
         // Photos - check both profile_photo and gallery photos (including pending)
@@ -428,19 +428,19 @@ class User extends Authenticatable implements MustVerifyEmail
         $totalPhotos = $photoCount + $pendingPhotoCount + ($hasProfilePhoto ? 1 : 0);
         
         if ($totalPhotos == 0) {
-            $missing[] = 'Fotos do perfil';
+            $missing[] = __('messages.profile.missing.photos');
         } elseif ($totalPhotos < 2) {
-            $missing[] = 'Mais fotos (recomendado: 2-3)';
+            $missing[] = __('messages.profile.missing.more_photos');
         } elseif ($pendingPhotoCount > 0) {
-            $missing[] = 'Aguardando aprovação de ' . $pendingPhotoCount . ' foto(s)';
+            $missing[] = __('messages.profile.missing.photos_pending', ['count' => $pendingPhotoCount]);
         }
 
         // Interests
         $interestCount = $this->interests()->count();
-        if ($interestCount < 3) $missing[] = 'Interesses (mínimo: 3)';
+        if ($interestCount < 3) $missing[] = __('messages.profile.missing.interests');
 
         // Psychological Profile
-        if (!$this->psychologicalProfile) $missing[] = 'Perfil psicológico';
+        if (!$this->psychologicalProfile) $missing[] = __('messages.profile.missing.psychological_profile');
 
         return $missing;
     }
