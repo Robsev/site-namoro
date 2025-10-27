@@ -225,20 +225,20 @@ function likeUser(userId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showNotification('Curtida enviada!', 'success');
+            showNotification('{{ __('messages.matching.like_sent') }}', 'success');
             setTimeout(() => window.location.reload(), 1500);
         } else {
-            showNotification(data.error || 'Erro ao curtir', 'error');
+            showNotification(data.error || '{{ __('messages.matching.error_liking') }}', 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showNotification('Erro ao curtir', 'error');
+        showNotification('{{ __('messages.matching.error_liking') }}', 'error');
     });
 }
 
 function passUser(userId) {
-    if (!confirm('Tem certeza que deseja passar este perfil?')) {
+    if (!confirm('{{ __('messages.matching.confirm_pass') }}')) {
         return;
     }
 
@@ -252,15 +252,15 @@ function passUser(userId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showNotification('Perfil passado', 'success');
+            showNotification('{{ __('messages.matching.user_passed') }}', 'success');
             setTimeout(() => window.location.reload(), 1500);
         } else {
-            showNotification(data.error || 'Erro ao passar perfil', 'error');
+            showNotification(data.error || '{{ __('messages.matching.error_passing') }}', 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showNotification('Erro ao passar perfil', 'error');
+        showNotification('{{ __('messages.matching.error_passing') }}', 'error');
     });
 }
 
@@ -275,20 +275,20 @@ function acceptLike(userId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showNotification('Match criado! Vocês podem conversar agora!', 'success');
+            showNotification('{{ __('messages.matching.match_created') }}', 'success');
             setTimeout(() => window.location.reload(), 2000);
         } else {
-            showNotification(data.error || 'Erro ao aceitar like', 'error');
+            showNotification(data.error || '{{ __('messages.matching.error_accepting') }}', 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showNotification('Erro ao aceitar like', 'error');
+        showNotification('{{ __('messages.matching.error_accepting') }}', 'error');
     });
 }
 
 function rejectLike(userId) {
-    if (!confirm('Tem certeza que deseja recusar este like?')) {
+    if (!confirm('{{ __('messages.matching.confirm_reject_like') }}')) {
         return;
     }
 
@@ -302,15 +302,15 @@ function rejectLike(userId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showNotification('Like recusado', 'success');
+            showNotification('{{ __('messages.matching.like_rejected') }}', 'success');
             setTimeout(() => window.location.reload(), 1500);
         } else {
-            showNotification(data.error || 'Erro ao recusar like', 'error');
+            showNotification(data.error || '{{ __('messages.matching.error_rejecting') }}', 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showNotification('Erro ao recusar like', 'error');
+        showNotification('{{ __('messages.matching.error_rejecting') }}', 'error');
     });
 }
 
