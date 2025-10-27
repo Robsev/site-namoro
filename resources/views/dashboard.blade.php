@@ -56,7 +56,7 @@ $viewsCount = $likesReceivedCount + $matchesCount;
                                     @csrf
                                     <input type="hidden" name="locale" value="pt_BR">
                                     <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                        <span class="mr-3">🇧🇷</span>Português
+                                        <span class="mr-3">🇧🇷</span>{{ __('messages.language.portuguese') }}
                                         @if(app()->getLocale() === 'pt_BR')
                                             <i class="fas fa-check ml-auto text-green-500"></i>
                                         @endif
@@ -66,7 +66,7 @@ $viewsCount = $likesReceivedCount + $matchesCount;
                                     @csrf
                                     <input type="hidden" name="locale" value="en">
                                     <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                        <span class="mr-3">🇺🇸</span>English
+                                        <span class="mr-3">🇺🇸</span>{{ __('messages.language.english') }}
                                         @if(app()->getLocale() === 'en')
                                             <i class="fas fa-check ml-auto text-green-500"></i>
                                         @endif
@@ -76,7 +76,7 @@ $viewsCount = $likesReceivedCount + $matchesCount;
                                     @csrf
                                     <input type="hidden" name="locale" value="es">
                                     <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                        <span class="mr-3">🇪🇸</span>Español
+                                        <span class="mr-3">🇪🇸</span>{{ __('messages.language.spanish') }}
                                         @if(app()->getLocale() === 'es')
                                             <i class="fas fa-check ml-auto text-green-500"></i>
                                         @endif
