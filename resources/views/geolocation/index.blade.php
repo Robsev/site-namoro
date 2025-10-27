@@ -145,7 +145,7 @@
                             <button type="submit" 
                                     class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-200">
                                 <i class="fas fa-save mr-2"></i>
-                                Salvar Localização
+                                {{ __('messages.common.save') }}
                             </button>
                             <button type="button" 
                                     onclick="clearLocation()"

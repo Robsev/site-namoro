@@ -70,7 +70,7 @@
 
         <div class="flex justify-end">
             <button type="submit" class="bg-pink-600 text-white px-8 py-3 rounded-lg hover:bg-pink-700 transition duration-200 font-medium">
-                <i class="fas fa-save mr-2"></i>Salvar Interesses
+                <i class="fas fa-save mr-2"></i>{{ __('messages.interests.save_interests') }}
             </button>
         </div>
     </form>

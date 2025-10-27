@@ -231,6 +231,7 @@ return [
         ],
         'selected_of' => 'of',
         'selected' => 'selected',
+        'save_interests' => 'Save Interests',
     ],
 
     // Matching

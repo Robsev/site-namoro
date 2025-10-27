@@ -89,7 +89,7 @@
                 @empty
                     <div class="text-center py-8">
                         <i class="fas fa-comment text-gray-400 text-4xl mb-4"></i>
-                        <p class="text-gray-500">Nenhuma mensagem ainda. Comece a conversa!</p>
+                        <p class="text-gray-500">{{ __('messages.chat.no_messages_yet') }}</p>
                     </div>
                 @endforelse
             </div>

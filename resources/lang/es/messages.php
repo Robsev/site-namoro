@@ -231,6 +231,7 @@ return [
         ],
         'selected_of' => 'de',
         'selected' => 'seleccionados',
+        'save_interests' => 'Guardar Intereses',
     ],
 
     // Matching

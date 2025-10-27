@@ -332,6 +332,7 @@ return [
         ],
         'selected_of' => 'de',
         'selected' => 'selecionados',
+        'save_interests' => 'Salvar Interesses',
     ],
     'matching.error_passing' => 'Erro ao passar',
     'matching.super_like_sent' => 'Super Like enviado!',
