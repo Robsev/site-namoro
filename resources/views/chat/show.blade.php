@@ -3,9 +3,9 @@
 @section('content')
 <div class="bg-white rounded-lg shadow-md max-h-[80vh] h-[70vh] sm:h-[75vh] md:h-[80vh] flex flex-col">
     <!-- Chat Header -->
-    <div class="bg-pink-500 text-white p-4 rounded-t-lg flex items-center justify-between">
+    <div class="bg-orange-500 text-white p-4 rounded-t-lg flex items-center justify-between">
         <div class="flex items-center">
-            <a href="{{ route('matching.matches') }}" class="mr-4 text-white hover:text-pink-200">
+            <a href="{{ route('matching.matches') }}" class="mr-4 text-white hover:text-orange-200">
                 <i class="fas fa-arrow-left"></i>
             </a>
             @if($user->profile_photo)
@@ -17,7 +17,7 @@
             @endif
             <div>
                 <h3 class="font-semibold">{{ $user->full_name }}</h3>
-                <p class="text-sm text-pink-200">
+                <p class="text-sm text-orange-200">
                     @if($user->last_seen && $user->last_seen->diffInMinutes(now()) < 30)
                         <i class="fas fa-circle text-green-400 mr-1"></i>Online
                     @else
@@ -27,10 +27,10 @@
             </div>
         </div>
         <div class="flex items-center space-x-2">
-            <a href="{{ route('profile.show', $user->id) }}" class="text-white hover:text-pink-200" title="Ver Perfil">
+            <a href="{{ route('profile.show', $user->id) }}" class="text-white hover:text-orange-200" title="Ver Perfil">
                 <i class="fas fa-user"></i>
             </a>
-            <button id="chat-options-button" onclick="toggleChatOptions()" class="text-white hover:text-pink-200" title="Opções">
+            <button id="chat-options-button" onclick="toggleChatOptions()" class="text-white hover:text-orange-200" title="Opções">
                 <i class="fas fa-ellipsis-v"></i>
             </button>
         </div>
@@ -81,21 +81,21 @@
                     
                     <div class="relative">
                         @if($message->message_type === 'text')
-                            <div class="px-4 py-2 rounded-lg {{ $message->sender_id === Auth::id() ? 'bg-pink-500 text-white' : 'bg-white text-gray-800' }} shadow-sm">
+                            <div class="px-4 py-2 rounded-lg {{ $message->sender_id === Auth::id() ? 'bg-orange-500 text-white' : 'bg-white text-gray-800' }} shadow-sm">
                                 {{ $message->message }}
                             </div>
                         @elseif($message->message_type === 'image')
-                            <div class="px-4 py-2 rounded-lg {{ $message->sender_id === Auth::id() ? 'bg-pink-500 text-white' : 'bg-white text-gray-800' }} shadow-sm">
+                            <div class="px-4 py-2 rounded-lg {{ $message->sender_id === Auth::id() ? 'bg-orange-500 text-white' : 'bg-white text-gray-800' }} shadow-sm">
                                 <img src="{{ Storage::url($message->attachment_path) }}" alt="Imagem" class="max-w-full h-auto rounded cursor-pointer" onclick="openImageModal('{{ Storage::url($message->attachment_path) }}')">
                                 @if($message->message)
                                     <p class="mt-2">{{ $message->message }}</p>
                                 @endif
                             </div>
                         @elseif($message->message_type === 'audio')
-                            <div class="px-4 py-2 rounded-lg {{ $message->sender_id === Auth::id() ? 'bg-pink-500 text-white' : 'bg-white text-gray-800' }} shadow-sm">
+                            <div class="px-4 py-2 rounded-lg {{ $message->sender_id === Auth::id() ? 'bg-orange-500 text-white' : 'bg-white text-gray-800' }} shadow-sm">
                                 <div class="flex items-center space-x-2">
                                     <i class="fas fa-microphone text-lg"></i>
-                                    <audio controls class="flex-1" style="max-width: 250px;">
+                                    <audio controls class="flex-1" style="max-width: 250px;" controlsList="nodownload">
                                         <source src="{{ Storage::url($message->attachment_path) }}" type="audio/webm">
                                         <source src="{{ Storage::url($message->attachment_path) }}" type="audio/mp3">
                                         <source src="{{ Storage::url($message->attachment_path) }}" type="audio/wav">
@@ -107,7 +107,7 @@
                                 @endif
                             </div>
                         @else
-                            <div class="px-4 py-2 rounded-lg {{ $message->sender_id === Auth::id() ? 'bg-pink-500 text-white' : 'bg-white text-gray-800' }} shadow-sm">
+                            <div class="px-4 py-2 rounded-lg {{ $message->sender_id === Auth::id() ? 'bg-orange-500 text-white' : 'bg-white text-gray-800' }} shadow-sm">
                                 <div class="flex items-center">
                                     <i class="fas fa-file mr-2"></i>
                                     <a href="{{ Storage::url($message->attachment_path) }}" target="_blank" class="underline">
@@ -153,7 +153,7 @@
                            class="hidden">
                     <button type="button" 
                             id="image-button"
-                            class="text-gray-500 hover:text-pink-500 text-lg"
+                            class="text-gray-500 hover:text-orange-500 text-lg"
                             title="Enviar imagem">
                         <i class="fas fa-image"></i>
                     </button>
@@ -173,23 +173,23 @@
                    name="message" 
                    id="message-input" 
                    placeholder="Digite sua mensagem..." 
-                   class="flex-1 border border-gray-300 rounded-lg px-2 md:px-4 py-2 text-sm md:text-base focus:outline-none focus:border-pink-500"
+                   class="flex-1 border border-gray-300 rounded-lg px-2 md:px-4 py-2 text-sm md:text-base focus:outline-none focus:border-orange-500"
                    maxlength="1000">
             
             <!-- Send Button -->
             <button type="submit" 
-                    class="bg-pink-500 text-white px-3 md:px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-200 disabled:opacity-50 text-sm md:text-base"
+                    class="bg-orange-500 text-white px-3 md:px-4 py-2 rounded-lg hover:bg-orange-600 transition duration-200 disabled:opacity-50 text-sm md:text-base"
                     id="send-button">
                 <i class="fas fa-paper-plane"></i>
             </button>
         </form>
         
         <!-- Audio Recording Indicator -->
-        <div id="audio-recording" class="hidden mt-2 bg-pink-100 border border-pink-300 rounded-lg p-3">
+        <div id="audio-recording" class="hidden mt-2 bg-orange-100 border border-orange-300 rounded-lg p-3">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
                     <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                    <span class="text-sm text-pink-700" id="recording-time">0:00</span>
+                    <span class="text-sm text-orange-700" id="recording-time">0:00</span>
                 </div>
                 <button type="button" 
                         id="stop-recording"
@@ -201,14 +201,14 @@
         </div>
         
         <!-- Audio Preview -->
-        <div id="audio-preview" class="hidden mt-2 bg-pink-50 border border-pink-200 rounded-lg p-3">
-            <p class="text-sm text-pink-700 mb-2"><i class="fas fa-microphone mr-2"></i>Áudio gravado</p>
+        <div id="audio-preview" class="hidden mt-2 bg-orange-50 border border-orange-200 rounded-lg p-3">
+            <p class="text-sm text-orange-700 mb-2"><i class="fas fa-microphone mr-2"></i>Áudio gravado</p>
             <audio id="recorded-audio" controls class="w-full mb-2"></audio>
             <div class="flex gap-2">
                 <button type="button" 
                         id="send-audio-button"
                         onclick="sendAudioMessage()" 
-                        class="flex-1 bg-pink-500 text-white px-3 py-2 rounded-lg hover:bg-pink-600 text-sm font-medium">
+                        class="flex-1 bg-orange-500 text-white px-3 py-2 rounded-lg hover:bg-orange-600 text-sm font-medium">
                     <i class="fas fa-paper-plane mr-1"></i>Enviar Áudio
                 </button>
                 <button type="button" 
@@ -372,7 +372,7 @@ function addMessageToChat(message) {
     if (message.message_type === 'image' && message.attachment_path) {
         // Image message
         messageContent = `
-            <div class="px-4 py-2 rounded-lg ${isOwnMessage ? 'bg-pink-500 text-white' : 'bg-white text-gray-800'} shadow-sm">
+            <div class="px-4 py-2 rounded-lg ${isOwnMessage ? 'bg-orange-500 text-white' : 'bg-white text-gray-800'} shadow-sm">
                 <img src="/storage/${message.attachment_path}" 
                      alt="Imagem enviada" 
                      class="max-w-full h-auto rounded cursor-pointer"
@@ -381,12 +381,12 @@ function addMessageToChat(message) {
             </div>
         `;
     } else if (message.message_type === 'audio' && message.attachment_path) {
-        // Audio message
+        // Audio message - download disabled for privacy
         messageContent = `
-            <div class="px-4 py-2 rounded-lg ${isOwnMessage ? 'bg-pink-500 text-white' : 'bg-white text-gray-800'} shadow-sm">
+            <div class="px-4 py-2 rounded-lg ${isOwnMessage ? 'bg-orange-500 text-white' : 'bg-white text-gray-800'} shadow-sm">
                 <div class="flex items-center space-x-2">
                     <i class="fas fa-microphone text-lg"></i>
-                    <audio controls class="flex-1" style="max-width: 250px;">
+                    <audio controls class="flex-1" style="max-width: 250px;" controlsList="nodownload">
                         <source src="/storage/${message.attachment_path}" type="audio/webm">
                         <source src="/storage/${message.attachment_path}" type="audio/mp3">
                         <source src="/storage/${message.attachment_path}" type="audio/wav">
@@ -399,7 +399,7 @@ function addMessageToChat(message) {
     } else {
         // Text message
         messageContent = `
-            <div class="px-4 py-2 rounded-lg ${isOwnMessage ? 'bg-pink-500 text-white' : 'bg-white text-gray-800'} shadow-sm">
+            <div class="px-4 py-2 rounded-lg ${isOwnMessage ? 'bg-orange-500 text-white' : 'bg-white text-gray-800'} shadow-sm">
                 ${message.message}
             </div>
         `;
