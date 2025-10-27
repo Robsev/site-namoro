@@ -330,6 +330,8 @@ return [
             'ginástica' => 'Ginástica',
             'pole_dance' => 'Pole Dance',
         ],
+        'selected_of' => 'de',
+        'selected' => 'selecionados',
     ],
     'matching.error_passing' => 'Erro ao passar',
     'matching.super_like_sent' => 'Super Like enviado!',

@@ -63,7 +63,7 @@
             @enderror
 
             <div class="mt-4 text-sm text-gray-500">
-                <span id="selected-count-{{ $category->id }}">0</span> de {{ $category->max_selections }} selecionados
+                <span id="selected-count-{{ $category->id }}">0</span> {{ __('messages.interests.selected_of') }} {{ $category->max_selections }}
             </div>
         </div>
         @endforeach

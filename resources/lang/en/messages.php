@@ -204,6 +204,35 @@ return [
     'profile.invalid_date' => 'Invalid date',
     'profile.verified' => 'Verified',
 
+    // Interests
+    'interests' => [
+        'category' => [
+            'music' => 'Music',
+            'sports' => 'Sports',
+            'literature' => 'Literature',
+            'cinema_tv' => 'Cinema & TV',
+            'hobbies' => 'Hobbies',
+            'travel' => 'Travel',
+            'food' => 'Food',
+            'technology' => 'Technology',
+        ],
+        'description' => [
+            'music' => 'Music genres and preferences',
+            'sports' => 'Sports and physical activities',
+            'literature' => 'Literary genres and reading types',
+            'cinema_tv' => 'Film and television genres',
+            'hobbies' => 'Hobbies and leisure activities',
+            'travel' => 'Travel types and preferred destinations',
+            'food' => 'Food preferences and cuisine',
+            'technology' => 'Technology and digital interests',
+        ],
+        'option' => [
+            // EN translations for all interests
+        ],
+        'selected_of' => 'of',
+        'selected' => 'selected',
+    ],
+
     // Matching
     'matching.discover' => 'Discover People',
     'matching.matches' => 'My Matches',

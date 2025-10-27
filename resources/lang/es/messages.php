@@ -204,6 +204,35 @@ return [
     'profile.invalid_date' => 'Fecha inválida',
     'profile.verified' => 'Verificado',
 
+    // Interests
+    'interests' => [
+        'category' => [
+            'music' => 'Música',
+            'sports' => 'Deportes',
+            'literature' => 'Literatura',
+            'cinema_tv' => 'Cine y TV',
+            'hobbies' => 'Pasatiempos',
+            'travel' => 'Viajes',
+            'food' => 'Comida',
+            'technology' => 'Tecnología',
+        ],
+        'description' => [
+            'music' => 'Géneros musicales y preferencias',
+            'sports' => 'Deportes y actividades físicas',
+            'literature' => 'Géneros literarios y tipos de lectura',
+            'cinema_tv' => 'Géneros cinematográficos y televisivos',
+            'hobbies' => 'Pasatiempos y actividades de ocio',
+            'travel' => 'Tipos de viaje y destinos preferidos',
+            'food' => 'Preferencias alimentarias y gastronomía',
+            'technology' => 'Intereses tecnológicos y digitales',
+        ],
+        'option' => [
+            // ES translations for all interests
+        ],
+        'selected_of' => 'de',
+        'selected' => 'seleccionados',
+    ],
+
     // Matching
     'matching.discover' => 'Descubrir Personas',
     'matching.matches' => 'Mis Matches',
