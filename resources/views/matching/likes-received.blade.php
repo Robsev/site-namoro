@@ -68,7 +68,7 @@
                         
                         @if($like->user1->age)
                             <p class="text-gray-600 mb-2">
-                                <i class="fas fa-birthday-cake mr-2"></i>{{ $like->user1->age }} anos
+                                <i class="fas fa-birthday-cake mr-2"></i>{{ $like->user1->age }} {{ __('messages.common.years') }}
                             </p>
                         @endif
 
