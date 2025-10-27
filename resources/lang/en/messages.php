@@ -257,6 +257,13 @@ return [
     'matching.reject_like' => 'Reject Like',
     'matching.start_conversation' => 'Start Conversation',
 
+    // Psychological Traits
+    'psychological.openness' => 'Openness',
+    'psychological.conscientiousness' => 'Conscientiousness',
+    'psychological.extraversion' => 'Extraversion',
+    'psychological.agreeableness' => 'Agreeableness',
+    'psychological.neuroticism' => 'Neuroticism',
+
     // Chat
     'chat.title' => 'Conversations',
     'chat.send_message' => 'Send message',

@@ -65,7 +65,7 @@
                     @if($user->age)
                         <div class="flex items-center">
                             <i class="fas fa-birthday-cake text-gray-400 w-5"></i>
-                            <span class="ml-3 text-gray-700">{{ $user->age }} anos</span>
+                            <span class="ml-3 text-gray-700">{{ $user->age }} {{ __('messages.common.years') }}</span>
                         </div>
                     @endif
                     
@@ -120,11 +120,11 @@
                     <div class="space-y-3">
                         @php
                             $traits = [
-                                'openness' => 'Abertura',
-                                'conscientiousness' => 'Conscienciosidade',
-                                'extraversion' => 'Extroversão',
-                                'agreeableness' => 'Amabilidade',
-                                'neuroticism' => 'Neuroticismo'
+                                'openness' => __('messages.psychological.openness'),
+                                'conscientiousness' => __('messages.psychological.conscientiousness'),
+                                'extraversion' => __('messages.psychological.extraversion'),
+                                'agreeableness' => __('messages.psychological.agreeableness'),
+                                'neuroticism' => __('messages.psychological.neuroticism')
                             ];
                         @endphp
                         @foreach($traits as $trait => $label)

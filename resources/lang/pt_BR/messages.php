@@ -349,6 +349,13 @@ return [
     'matching.reject_like' => 'Recusar Like',
     'matching.start_conversation' => 'Iniciar Conversa',
 
+    // Psychological Traits
+    'psychological.openness' => 'Abertura',
+    'psychological.conscientiousness' => 'Conscienciosidade',
+    'psychological.extraversion' => 'Extroversão',
+    'psychological.agreeableness' => 'Amabilidade',
+    'psychological.neuroticism' => 'Neuroticismo',
+
     // Chat
     'chat.title' => 'Conversas',
     'chat.send_message' => 'Enviar mensagem',
