@@ -1110,6 +1110,20 @@ return [
     'nav.likes_received' => 'Me Gustas Recibidos',
     'nav.photo_moderation' => 'Moderación de Fotos',
 
+    // Location
+    'location.title' => 'Configuración de Ubicación',
+    'location.description' => 'Configura tu ubicación para encontrar personas cerca de ti.',
+    'location.map' => 'Mapa de Ubicación',
+    'location.current_location' => 'Ubicación',
+    'location.settings' => 'Configuraciones',
+    'location.detect_current' => 'Detectar Ubicación Actual',
+    'location.search_city' => 'Buscar por Ciudad',
+    'location.city_placeholder' => 'Ingresa el nombre de la ciudad...',
+    'location.info_title' => 'Información de Ubicación:',
+    'location.latitude' => 'Latitud',
+    'location.longitude' => 'Longitud',
+    'location.clear_location' => 'Limpiar Ubicación',
+
     // Footer
     'footer.connecting_people' => 'Conectando personas especiales a través de relaciones auténticas y significativas.',
     'footer.legal_section' => 'Legal',

@@ -1475,6 +1475,20 @@ return [
     'nav.likes_received' => 'Likes Recebidos',
     'nav.photo_moderation' => 'Moderação de Fotos',
 
+    // Location
+    'location.title' => 'Configuração de Localização',
+    'location.description' => 'Configure sua localização para encontrar pessoas próximas a você.',
+    'location.map' => 'Mapa da Localização',
+    'location.current_location' => 'Localização',
+    'location.settings' => 'Configurações',
+    'location.detect_current' => 'Detectar Localização Atual',
+    'location.search_city' => 'Buscar por Cidade',
+    'location.city_placeholder' => 'Digite o nome da cidade...',
+    'location.info_title' => 'Informações de Localização:',
+    'location.latitude' => 'Latitude',
+    'location.longitude' => 'Longitude',
+    'location.clear_location' => 'Limpar Localização',
+
     // Footer
     'footer.connecting_people' => 'Conectando pessoas especiais através de relacionamentos autênticos e significativos.',
     'footer.legal_section' => 'Legal',

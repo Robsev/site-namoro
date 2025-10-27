@@ -1110,6 +1110,20 @@ return [
     'nav.likes_received' => 'Likes Received',
     'nav.photo_moderation' => 'Photo Moderation',
 
+    // Location
+    'location.title' => 'Location Settings',
+    'location.description' => 'Set your location to find people near you.',
+    'location.map' => 'Location Map',
+    'location.current_location' => 'Location',
+    'location.settings' => 'Settings',
+    'location.detect_current' => 'Detect Current Location',
+    'location.search_city' => 'Search by City',
+    'location.city_placeholder' => 'Enter city name...',
+    'location.info_title' => 'Location Information:',
+    'location.latitude' => 'Latitude',
+    'location.longitude' => 'Longitude',
+    'location.clear_location' => 'Clear Location',
+
     // Footer
     'footer.connecting_people' => 'Connecting special people through authentic and meaningful relationships.',
     'footer.legal_section' => 'Legal',
