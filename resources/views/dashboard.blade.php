@@ -174,22 +174,22 @@ $viewsCount = $likesReceivedCount + $matchesCount;
 
             <!-- Stats -->
             <div class="bg-white rounded-lg shadow-md p-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">Estatísticas</h3>
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">{{ __('messages.dashboard.statistics') }}</h3>
                 <div class="space-y-4">
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-600">Matches</span>
+                        <span class="text-gray-600">{{ __('messages.dashboard.matches') }}</span>
                         <span class="font-semibold text-pink-600">{{ $matchesCount }}</span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-600">Visualizações</span>
+                        <span class="text-gray-600">{{ __('messages.dashboard.views') }}</span>
                         <span class="font-semibold text-purple-600">{{ $viewsCount }}</span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-600">Likes Enviados</span>
+                        <span class="text-gray-600">{{ __('messages.dashboard.likes_sent') }}</span>
                         <span class="font-semibold text-blue-600">{{ $likesSentCount }}</span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-600">Likes Recebidos</span>
+                        <span class="text-gray-600">{{ __('messages.dashboard.likes_received') }}</span>
                         <span class="font-semibold text-green-600">{{ $likesReceivedCount }}</span>
                     </div>
                 </div>
@@ -198,11 +198,11 @@ $viewsCount = $likesReceivedCount + $matchesCount;
 
         <!-- Recent Activity -->
         <div class="mt-8 bg-white rounded-lg shadow-md p-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Atividade Recente</h3>
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">{{ __('messages.dashboard.recent_activity') }}</h3>
             <div class="text-center text-gray-500 py-8">
                 <i class="fas fa-heart text-4xl mb-4"></i>
-                <p>Nenhuma atividade recente</p>
-                <p class="text-sm">Complete seu perfil para começar a encontrar matches!</p>
+                <p>{{ __('messages.dashboard.no_recent_activity') }}</p>
+                <p class="text-sm">{{ __('messages.dashboard.complete_profile_to_start') }}</p>
             </div>
         </div>
     </div>
