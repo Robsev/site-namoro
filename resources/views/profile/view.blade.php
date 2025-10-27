@@ -153,35 +153,35 @@
                         @if($existingMatch->status === 'pending')
                             @if($existingMatch->user1_id === auth()->id())
                                 <div class="bg-yellow-100 text-yellow-800 px-4 py-3 rounded-lg text-center">
-                                    <i class="fas fa-clock mr-2"></i>Aguardando resposta
+                                    <i class="fas fa-clock mr-2"></i>{{ __('messages.matching.waiting_response') }}
                                 </div>
                             @else
                                 <div class="space-y-2">
                                     <button onclick="acceptLike({{ $user->id }})" 
                                             class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-200">
-                                        <i class="fas fa-check mr-2"></i>Aceitar Like
+                                        <i class="fas fa-check mr-2"></i>{{ __('messages.matching.accept_like') }}
                                     </button>
                                     <button onclick="rejectLike({{ $user->id }})" 
                                             class="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-200">
-                                        <i class="fas fa-times mr-2"></i>Recusar Like
+                                        <i class="fas fa-times mr-2"></i>{{ __('messages.matching.reject_like') }}
                                     </button>
                                 </div>
                             @endif
                         @elseif($existingMatch->status === 'accepted')
                             <a href="{{ route('conversations.show', $existingMatch->id) }}" 
                                class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200 text-center block">
-                                <i class="fas fa-comments mr-2"></i>Iniciar Conversa
+                                <i class="fas fa-comments mr-2"></i>{{ __('messages.matching.start_conversation') }}
                             </a>
                         @endif
                     @else
                         <div class="space-y-2">
                             <button onclick="likeUser({{ $user->id }})" 
                                     class="w-full bg-pink-500 text-white py-2 px-4 rounded-lg hover:bg-pink-600 transition duration-200">
-                                <i class="fas fa-heart mr-2"></i>Curtir
+                                <i class="fas fa-heart mr-2"></i>{{ __('messages.matching.like') }}
                             </button>
                             <button onclick="passUser({{ $user->id }})" 
                                     class="w-full bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 transition duration-200">
-                                <i class="fas fa-times mr-2"></i>Passar
+                                <i class="fas fa-times mr-2"></i>{{ __('messages.matching.pass') }}
                             </button>
                         </div>
                     @endif

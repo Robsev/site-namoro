@@ -344,6 +344,10 @@ return [
     'matching.start_discovering' => 'Comece a descobrir pessoas para encontrar seus matches!',
     'matching.discover_people' => 'Descobrir Pessoas',
     'matching.match_date' => 'Match em',
+    'matching.waiting_response' => 'Aguardando resposta',
+    'matching.accept_like' => 'Aceitar Like',
+    'matching.reject_like' => 'Recusar Like',
+    'matching.start_conversation' => 'Iniciar Conversa',
 
     // Chat
     'chat.title' => 'Conversas',

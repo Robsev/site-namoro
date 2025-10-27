@@ -252,6 +252,10 @@ return [
     'matching.start_discovering' => 'Start discovering people to find your matches!',
     'matching.discover_people' => 'Discover People',
     'matching.match_date' => 'Match on',
+    'matching.waiting_response' => 'Waiting for response',
+    'matching.accept_like' => 'Accept Like',
+    'matching.reject_like' => 'Reject Like',
+    'matching.start_conversation' => 'Start Conversation',
 
     // Chat
     'chat.title' => 'Conversations',
