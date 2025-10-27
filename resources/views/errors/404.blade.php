@@ -38,35 +38,35 @@
                     <!-- Title -->
                     <div>
                         <h1 class="text-3xl font-bold text-gray-900 mb-2">
-                            Página Não Encontrada
+                            {{ __('messages.errors.404.title') }}
                         </h1>
                         <p class="text-gray-600">
-                            A página que você está procurando não existe
+                            {{ __('messages.errors.404.description') }}
                         </p>
                     </div>
 
                     <!-- Error Code -->
                     <div class="bg-gray-100 rounded-lg p-4">
                         <p class="text-2xl font-bold text-gray-800">404</p>
-                        <p class="text-sm text-gray-600">Página Não Encontrada</p>
+                        <p class="text-sm text-gray-600">{{ __('messages.errors.404.title') }}</p>
                     </div>
 
                     <!-- Description -->
                     <div class="text-left bg-gray-50 rounded-lg p-4">
                         <h3 class="font-semibold text-gray-900 mb-2">
                             <i class="fas fa-info-circle text-blue-500 mr-2"></i>
-                            O que aconteceu?
+                            {{ __('messages.errors.404.what_happened') }}
                         </h3>
                         <p class="text-sm text-gray-600 mb-3">
-                            A página que você está tentando acessar pode ter sido movida, removida ou o endereço pode estar incorreto.
+                            {{ __('messages.errors.404.what_happened_desc') }}
                         </p>
                         
                         <h3 class="font-semibold text-gray-900 mb-2">
                             <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
-                            O que fazer?
+                            {{ __('messages.errors.404.what_to_do') }}
                         </h3>
                         <p class="text-sm text-gray-600">
-                            Verifique o endereço digitado ou use os links abaixo para navegar pelo site.
+                            {{ __('messages.errors.404.what_to_do_desc') }}
                         </p>
                     </div>
 
@@ -74,23 +74,23 @@
                     <div class="text-left">
                         <h3 class="font-semibold text-gray-900 mb-3 text-center">
                             <i class="fas fa-link text-purple-500 mr-2"></i>
-                            Links Úteis
+                            {{ __('messages.errors.404.useful_links') }}
                         </h3>
                         <div class="grid grid-cols-1 gap-2">
                             <a href="{{ url('/') }}" class="flex items-center text-sm text-gray-600 hover:text-pink-600 transition duration-200">
                                 <i class="fas fa-home text-gray-400 mr-2"></i>
-                                <span>Página Inicial</span>
+                                <span>{{ __('messages.errors.404.home') }}</span>
                             </a>
                             @if (Route::has('login'))
                             <a href="{{ route('login') }}" class="flex items-center text-sm text-gray-600 hover:text-pink-600 transition duration-200">
                                 <i class="fas fa-sign-in-alt text-gray-400 mr-2"></i>
-                                <span>Fazer Login</span>
+                                <span>{{ __('messages.errors.404.login') }}</span>
                             </a>
                             @endif
                             @if (Route::has('register'))
                             <a href="{{ route('register') }}" class="flex items-center text-sm text-gray-600 hover:text-pink-600 transition duration-200">
                                 <i class="fas fa-user-plus text-gray-400 mr-2"></i>
-                                <span>Criar Conta</span>
+                                <span>{{ __('messages.errors.404.register') }}</span>
                             </a>
                             @endif
                         </div>
@@ -107,7 +107,7 @@
                         <button onclick="window.location.href='{{ url('/') }}'" 
                                 class="w-full bg-pink-600 text-white py-3 px-6 rounded-lg hover:bg-pink-700 transition duration-200 font-medium">
                             <i class="fas fa-home mr-2"></i>
-                            Ir para o Início
+                            {{ __('messages.errors.404.go_home') }}
                         </button>
                     </div>
 
@@ -115,14 +115,14 @@
                     <div class="bg-pink-50 rounded-lg p-4">
                         <h3 class="font-semibold text-gray-900 mb-2">
                             <i class="fas fa-search text-pink-500 mr-2"></i>
-                            Procurar por algo?
+                            {{ __('messages.errors.404.search') }}
                         </h3>
                         <p class="text-sm text-gray-600 mb-3">
-                            Use nossa busca para encontrar o que você precisa:
+                            {{ __('messages.errors.404.search_desc') }}
                         </p>
                         <div class="flex">
                             <input type="text" 
-                                   placeholder="Digite sua busca..." 
+                                   placeholder="{{ __('messages.errors.404.search_placeholder') }}" 
                                    class="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
                             <button class="bg-pink-600 text-white px-4 py-2 rounded-r-lg hover:bg-pink-700 transition duration-200">
                                 <i class="fas fa-search"></i>
@@ -134,8 +134,8 @@
 
             <!-- Footer -->
             <div class="text-center text-gray-500 text-sm">
-                <p>&copy; {{ date('Y') }} Amigos Para Sempre. Todos os direitos reservados.</p>
-                <p class="mt-1">Conectando pessoas, criando amizades para sempre ❤️</p>
+                <p>&copy; {{ date('Y') }} Amigos Para Sempre. {{ __('messages.errors.404.footer') }}</p>
+                <p class="mt-1">{{ __('messages.errors.404.footer_tagline') }}</p>
             </div>
         </div>
     </div>
