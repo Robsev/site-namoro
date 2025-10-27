@@ -291,6 +291,12 @@ return [
     'matching.liked_you' => 'Liked you!',
     'matching.received_on' => 'Received on',
     'matching.confirm_reject_like' => 'Are you sure you want to reject this like?',
+    'matching.likes_sent_desc' => 'People you liked and are waiting for a response',
+    'matching.no_likes_sent' => 'No likes sent yet',
+    'matching.no_likes_sent_desc' => 'Start discovering amazing people!',
+    'matching.undo_like' => 'Undo',
+    'matching.confirm_undo_like' => 'Are you sure you want to undo this like?',
+    'matching.sent_on' => 'Sent on',
 
     // Psychological Traits
     'psychological.openness' => 'Openness',

@@ -8,16 +8,16 @@
         <div>
             <h1 class="text-3xl font-bold text-gray-900">
                 <i class="fas fa-heart text-pink-500 mr-3"></i>
-                Likes Enviados
+                {{ __('messages.dashboard.likes_sent') }}
             </h1>
-            <p class="mt-2 text-gray-600">Pessoas que você curtiu e está aguardando resposta</p>
+            <p class="mt-2 text-gray-600">{{ __('messages.matching.likes_sent_desc') }}</p>
         </div>
         <div class="flex space-x-3">
             <a href="{{ route('matching.discover') }}" class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-200">
-                <i class="fas fa-search mr-2"></i>Descobrir
+                <i class="fas fa-search mr-2"></i>{{ __('messages.nav.discover') }}
             </a>
             <a href="{{ route('matching.likes-received') }}" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200">
-                <i class="fas fa-heart-broken mr-2"></i>Likes Recebidos
+                <i class="fas fa-heart-broken mr-2"></i>{{ __('messages.nav.likes_received') }}
             </a>
         </div>
     </div>
@@ -25,10 +25,10 @@
     @if($likesSent->isEmpty())
         <div class="bg-white rounded-lg shadow p-8 text-center">
             <i class="fas fa-heart text-gray-400 text-6xl mb-4"></i>
-            <h3 class="text-xl font-semibold text-gray-900 mb-2">Nenhum like enviado ainda</h3>
-            <p class="text-gray-600 mb-6">Comece a descobrir pessoas incríveis!</p>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ __('messages.matching.no_likes_sent') }}</h3>
+            <p class="text-gray-600 mb-6">{{ __('messages.matching.no_likes_sent_desc') }}</p>
             <a href="{{ route('matching.discover') }}" class="bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition duration-200">
-                <i class="fas fa-search mr-2"></i>Começar a Descobrir
+                <i class="fas fa-search mr-2"></i>{{ __('messages.matching.start_discovering') }}
             </a>
         </div>
     @else
@@ -53,7 +53,7 @@
                         
                         <!-- Status Badge -->
                         <div class="absolute top-4 right-4 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold">
-                            <i class="fas fa-clock mr-1"></i>Pendente
+                            <i class="fas fa-clock mr-1"></i>{{ __('messages.status.pending') }}
                         </div>
 
                         <!-- Compatibility Score -->
@@ -89,18 +89,18 @@
                         <div class="flex space-x-2">
                             <button onclick="viewProfile({{ $like->user2->id }})" 
                                     class="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 transition duration-200">
-                                <i class="fas fa-eye mr-1"></i>Ver Perfil
+                                <i class="fas fa-eye mr-1"></i>{{ __('messages.common.view') }}
                             </button>
                             
                             <button onclick="undoLike({{ $like->user2->id }})" 
                                     class="flex-1 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-200">
-                                <i class="fas fa-undo mr-1"></i>Desfazer
+                                <i class="fas fa-undo mr-1"></i>{{ __('messages.matching.undo_like') }}
                             </button>
                         </div>
 
                         <!-- Sent Date -->
                         <p class="text-xs text-gray-500 mt-3 text-center">
-                            Enviado em {{ $like->matched_at->format('d/m/Y H:i') }}
+                            {{ __('messages.matching.sent_on') }} {{ $like->matched_at->format('d/m/Y H:i') }}
                         </p>
                     </div>
                 </div>
@@ -122,7 +122,7 @@ function viewProfile(userId) {
 }
 
 function undoLike(userId) {
-    if (!confirm('Tem certeza que deseja desfazer este like?')) {
+    if (!confirm('{{ __('messages.matching.confirm_undo_like') }}')) {
         return;
     }
 

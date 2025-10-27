@@ -291,6 +291,12 @@ return [
     'matching.liked_you' => '¡Te Ha Gustado!',
     'matching.received_on' => 'Recibido el',
     'matching.confirm_reject_like' => '¿Estás seguro de que deseas rechazar este me gusta?',
+    'matching.likes_sent_desc' => 'Personas a las que diste me gusta y estás esperando respuesta',
+    'matching.no_likes_sent' => 'No se han enviado me gusta todavía',
+    'matching.no_likes_sent_desc' => '¡Comienza a descubrir personas increíbles!',
+    'matching.undo_like' => 'Deshacer',
+    'matching.confirm_undo_like' => '¿Estás seguro de que deseas deshacer este me gusta?',
+    'matching.sent_on' => 'Enviado el',
 
     // Psychological Traits
     'psychological.openness' => 'Apertura',

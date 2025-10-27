@@ -356,6 +356,12 @@ return [
     'matching.liked_you' => 'Te Curtiu!',
     'matching.received_on' => 'Recebido em',
     'matching.confirm_reject_like' => 'Tem certeza que deseja recusar este like?',
+    'matching.likes_sent_desc' => 'Pessoas que você curtiu e está aguardando resposta',
+    'matching.no_likes_sent' => 'Nenhum like enviado ainda',
+    'matching.no_likes_sent_desc' => 'Comece a descobrir pessoas incríveis!',
+    'matching.undo_like' => 'Desfazer',
+    'matching.confirm_undo_like' => 'Tem certeza que deseja desfazer este like?',
+    'matching.sent_on' => 'Enviado em',
 
     // Psychological Traits
     'psychological.openness' => 'Abertura',
