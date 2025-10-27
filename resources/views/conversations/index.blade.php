@@ -11,15 +11,15 @@
                 <div>
                     <h1 class="text-3xl font-bold text-gray-900">
                         <i class="fas fa-comments text-blue-500 mr-3"></i>
-                        Conversas
+                        {{ __('messages.chat.title') }}
                     </h1>
-                    <p class="mt-2 text-gray-600">Suas conversas com outros usuários</p>
+                    <p class="mt-2 text-gray-600">{{ __('messages.chat.subtitle') }}</p>
                 </div>
                 <div class="flex space-x-4">
                     <a href="{{ route('matching.discover') }}" 
                        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
                         <i class="fas fa-search mr-2"></i>
-                        Descobrir Pessoas
+                        {{ __('messages.matching.discover_people') }}
                     </a>
                 </div>
             </div>
@@ -80,12 +80,12 @@
                                     @if($latestMessage)
                                         <p class="text-sm text-gray-600 truncate mt-1">
                                             @if($latestMessage->sender_id === auth()->id())
-                                                <span class="text-gray-500">Você:</span>
+                                                <span class="text-gray-500">{{ __('messages.chat.you') }}:</span>
                                             @endif
                                             {{ $latestMessage->message }}
                                         </p>
                                     @else
-                                        <p class="text-sm text-gray-500 italic">Nenhuma mensagem ainda</p>
+                                        <p class="text-sm text-gray-500 italic">{{ __('messages.chat.no_messages_yet') }}</p>
                                     @endif
                                 </div>
 
@@ -93,7 +93,7 @@
                                 <div class="flex items-center space-x-2">
                                     <button onclick="event.stopPropagation(); archiveConversation({{ $conversation->id }})"
                                             class="text-gray-400 hover:text-gray-600 transition duration-200"
-                                            title="Arquivar conversa">
+                                            title="{{ __('messages.chat.archive_chat') }}">
                                         <i class="fas fa-archive"></i>
                                     </button>
                                 </div>
@@ -109,12 +109,12 @@
             @else
                 <div class="text-center py-12">
                     <i class="fas fa-comments text-gray-400 text-6xl mb-4"></i>
-                    <h3 class="text-lg font-medium text-gray-900 mb-2">Nenhuma conversa ainda</h3>
-                    <p class="text-gray-500 mb-6">Comece a conversar com pessoas que você deu match!</p>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">{{ __('messages.chat.no_conversations_yet') }}</h3>
+                    <p class="text-gray-500 mb-6">{{ __('messages.chat.start_conversing') }}</p>
                     <a href="{{ route('matching.discover') }}" 
                        class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-200">
                         <i class="fas fa-search mr-2"></i>
-                        Descobrir Pessoas
+                        {{ __('messages.matching.discover_people') }}
                     </a>
                 </div>
             @endif
@@ -124,7 +124,7 @@
 
 <script>
 function archiveConversation(conversationId) {
-    if (confirm('Tem certeza que deseja arquivar esta conversa?')) {
+    if (confirm('{{ __('messages.chat.confirm_archive') }}')) {
         fetch(`/conversations/${conversationId}/archive`, {
             method: 'POST',
             headers: {

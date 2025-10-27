@@ -490,6 +490,12 @@ return [
     'chat.search_placeholder' => 'Ingresa el término para buscar mensajes:',
     'chat.search_results' => '¡:count mensaje(s) encontrado(s)!',
     'chat.no_results' => 'No se encontraron mensajes.',
+    'chat.subtitle' => 'Tus conversaciones con otros usuarios',
+    'chat.you' => 'Tú',
+    'chat.no_messages_yet' => 'Aún no hay mensajes',
+    'chat.no_conversations_yet' => 'Aún no hay conversaciones',
+    'chat.start_conversing' => '¡Comienza a chatear con personas con las que coincidiste!',
+    'chat.confirm_archive' => '¿Estás seguro de que deseas archivar esta conversación?',
 
     // Email Notifications
     'email.title' => 'Preferencias de Correo',

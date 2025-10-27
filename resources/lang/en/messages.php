@@ -490,6 +490,12 @@ return [
     'chat.search_placeholder' => 'Enter term to search messages:',
     'chat.search_results' => ':count message(s) found!',
     'chat.no_results' => 'No messages found.',
+    'chat.subtitle' => 'Your conversations with other users',
+    'chat.you' => 'You',
+    'chat.no_messages_yet' => 'No messages yet',
+    'chat.no_conversations_yet' => 'No conversations yet',
+    'chat.start_conversing' => 'Start chatting with people you matched with!',
+    'chat.confirm_archive' => 'Are you sure you want to archive this conversation?',
 
     // Email Notifications
     'email.title' => 'Email Preferences',
