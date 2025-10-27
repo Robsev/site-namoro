@@ -469,6 +469,9 @@ return [
     'language.info_1' => 'You can change the language at any time.',
     'language.info_2' => 'Your preferences are saved automatically.',
     'language.info_3' => 'The language will be applied throughout the interface.',
+    'language.portuguese' => 'Português',
+    'language.english' => 'English',
+    'language.spanish' => 'Español',
 
     // Chat Options
     'chat.options' => 'Chat Options',

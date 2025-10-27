@@ -188,21 +188,21 @@
                     @csrf
                     <input type="hidden" name="locale" value="pt_BR">
                     <button type="submit" class="text-sm {{ app()->getLocale() === 'pt_BR' ? 'text-pink-600 font-medium' : 'text-gray-500 hover:text-gray-700' }}">
-                        🇧🇷 Português
+                        🇧🇷 {{ __('messages.language.portuguese') }}
                     </button>
                 </form>
                 <form action="{{ route('language.change') }}" method="POST" class="inline">
                     @csrf
                     <input type="hidden" name="locale" value="en">
                     <button type="submit" class="text-sm {{ app()->getLocale() === 'en' ? 'text-pink-600 font-medium' : 'text-gray-500 hover:text-gray-700' }}">
-                        🇺🇸 English
+                        🇺🇸 {{ __('messages.language.english') }}
                     </button>
                 </form>
                 <form action="{{ route('language.change') }}" method="POST" class="inline">
                     @csrf
                     <input type="hidden" name="locale" value="es">
                     <button type="submit" class="text-sm {{ app()->getLocale() === 'es' ? 'text-pink-600 font-medium' : 'text-gray-500 hover:text-gray-700' }}">
-                        🇪🇸 Español
+                        🇪🇸 {{ __('messages.language.spanish') }}
                     </button>
                 </form>
             </div>
