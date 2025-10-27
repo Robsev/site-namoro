@@ -213,7 +213,7 @@
         <div class="bg-white rounded-lg shadow-sm border p-6">
             <h2 class="text-xl font-semibold text-gray-900 mb-4">
                 <i class="fas fa-shield-alt text-blue-500 mr-2"></i>
-                Estabilidade Emocional
+                {{ __('messages.psychological.neuroticism') }}
             </h2>
             <p class="text-gray-600 text-sm mb-6">{{ __("messages.psychological.neuroticism_desc") }}</p>
             
@@ -257,13 +257,13 @@
         <div class="bg-white rounded-lg shadow-sm border p-6">
             <h2 class="text-xl font-semibold text-gray-900 mb-4">
                 <i class="fas fa-lock text-gray-500 mr-2"></i>
-                Privacidade
+                {{ __('messages.psychological.privacy.title') }}
             </h2>
             
             <div class="flex items-center">
                 <input type="checkbox" id="is_public" name="is_public" value="1" class="mr-3">
                 <label for="is_public" class="text-gray-700">
-                    Tornar meu perfil psicológico visível para outros usuários (recomendado para melhor matching)
+                    {{ __('messages.psychological.privacy.description') }}
                 </label>
             </div>
         </div>
