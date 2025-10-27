@@ -1079,6 +1079,18 @@ return [
     'welcome.feature2_desc' => 'Sistema de verificación y moderación para garantizar un ambiente seguro y confiable.',
     'welcome.feature3_title' => 'Comunidad Activa',
     'welcome.feature3_desc' => 'Conéctate con personas reales que comparten tus intereses y valores.',
+    'welcome.how_it_works_title' => '¿Cómo Funciona?',
+    'welcome.step1_title' => 'Crea tu Perfil',
+    'welcome.step1_desc' => 'Cuéntanos sobre ti, tus intereses y lo que buscas en una amistad.',
+    'welcome.step2_title' => 'Descubre Matches',
+    'welcome.step2_desc' => 'Nuestro algoritmo encuentra personas compatibles basándose en personalidad e intereses.',
+    'welcome.step3_title' => 'Conéctate',
+    'welcome.step3_desc' => 'Interactúa con tus matches y descubre conexiones genuinas.',
+    'welcome.step4_title' => 'Construye Amistades',
+    'welcome.step4_desc' => 'Desarrolla relaciones duraderas y significativas.',
+    'welcome.cta_title' => '¿Listo para encontrar tus amigos ideales?',
+    'welcome.cta_subtitle' => 'Únete a miles de personas que ya han encontrado amistades verdaderas.',
+    'welcome.start_free' => 'Comenzar Gratis',
 
     // Navigation - Menu Items
     'nav.location' => 'Ubicación',

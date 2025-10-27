@@ -190,7 +190,7 @@
     <div class="bg-gradient-to-br from-pink-50 to-purple-50 py-16">
         <div class="max-w-7xl mx-auto px-4">
             <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">
-                Como Funciona?
+                {{ __('messages.welcome.how_it_works_title') }}
             </h2>
             
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -199,9 +199,9 @@
                     <div class="bg-pink-500 text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                         1
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Crie seu Perfil</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('messages.welcome.step1_title') }}</h3>
                     <p class="text-gray-600 text-sm">
-                        Conte-nos sobre você, seus interesses e o que procura em uma amizade.
+                        {{ __('messages.welcome.step1_desc') }}
                     </p>
                 </div>
 
@@ -210,9 +210,9 @@
                     <div class="bg-purple-500 text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                         2
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Descubra Matches</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('messages.welcome.step2_title') }}</h3>
                     <p class="text-gray-600 text-sm">
-                        Nosso algoritmo encontra pessoas compatíveis com base em personalidade e interesses.
+                        {{ __('messages.welcome.step2_desc') }}
                     </p>
                 </div>
 
@@ -221,9 +221,9 @@
                     <div class="bg-indigo-500 text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                         3
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Conecte-se</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('messages.welcome.step3_title') }}</h3>
                     <p class="text-gray-600 text-sm">
-                        Interaja com seus matches e descubra conexões genuínas.
+                        {{ __('messages.welcome.step3_desc') }}
                     </p>
                 </div>
 
@@ -232,9 +232,9 @@
                     <div class="bg-green-500 text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                         4
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Construa Amizades</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('messages.welcome.step4_title') }}</h3>
                     <p class="text-gray-600 text-sm">
-                        Desenvolva relacionamentos duradouros e significativos.
+                        {{ __('messages.welcome.step4_desc') }}
                     </p>
                 </div>
             </div>
@@ -245,16 +245,16 @@
     <div class="bg-pink-500 py-16">
         <div class="max-w-7xl mx-auto px-4 text-center">
             <h2 class="text-3xl font-bold text-white mb-4">
-                Pronto para encontrar seus amigos ideais?
+                {{ __('messages.welcome.cta_title') }}
             </h2>
             <p class="text-xl text-pink-100 mb-8">
-                Junte-se a milhares de pessoas que já encontraram amizades verdadeiras.
+                {{ __('messages.welcome.cta_subtitle') }}
             </p>
             
             @if (Route::has('login'))
                 @guest
                     <a href="{{ route('register') }}" class="bg-white text-pink-500 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition duration-200 shadow-lg">
-                        <i class="fas fa-heart mr-2"></i>Começar Gratuitamente
+                        <i class="fas fa-heart mr-2"></i>{{ __('messages.welcome.start_free') }}
                     </a>
                 @endguest
             @endif

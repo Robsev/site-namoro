@@ -1079,6 +1079,18 @@ return [
     'welcome.feature2_desc' => 'Verification and moderation system to ensure a safe and reliable environment.',
     'welcome.feature3_title' => 'Active Community',
     'welcome.feature3_desc' => 'Connect with real people who share your interests and values.',
+    'welcome.how_it_works_title' => 'How It Works?',
+    'welcome.step1_title' => 'Create Your Profile',
+    'welcome.step1_desc' => 'Tell us about yourself, your interests and what you look for in a friendship.',
+    'welcome.step2_title' => 'Discover Matches',
+    'welcome.step2_desc' => 'Our algorithm finds compatible people based on personality and interests.',
+    'welcome.step3_title' => 'Connect',
+    'welcome.step3_desc' => 'Interact with your matches and discover genuine connections.',
+    'welcome.step4_title' => 'Build Friendships',
+    'welcome.step4_desc' => 'Develop lasting and meaningful relationships.',
+    'welcome.cta_title' => 'Ready to find your ideal friends?',
+    'welcome.cta_subtitle' => 'Join thousands of people who have already found true friendships.',
+    'welcome.start_free' => 'Start for Free',
 
     // Navigation - Menu Items
     'nav.location' => 'Location',

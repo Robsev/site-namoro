@@ -1156,6 +1156,18 @@ return [
     'welcome.feature2_desc' => 'Sistema de verificação e moderação para garantir um ambiente seguro e confiável.',
     'welcome.feature3_title' => 'Comunidade Ativa',
     'welcome.feature3_desc' => 'Conecte-se com pessoas reais que compartilham seus interesses e valores.',
+    'welcome.how_it_works_title' => 'Como Funciona?',
+    'welcome.step1_title' => 'Crie seu Perfil',
+    'welcome.step1_desc' => 'Conte-nos sobre você, seus interesses e o que procura em uma amizade.',
+    'welcome.step2_title' => 'Descubra Matches',
+    'welcome.step2_desc' => 'Nosso algoritmo encontra pessoas compatíveis com base em personalidade e interesses.',
+    'welcome.step3_title' => 'Conecte-se',
+    'welcome.step3_desc' => 'Interaja com seus matches e descubra conexões genuínas.',
+    'welcome.step4_title' => 'Construa Amizades',
+    'welcome.step4_desc' => 'Desenvolva relacionamentos duradouros e significativos.',
+    'welcome.cta_title' => 'Pronto para encontrar seus amigos ideais?',
+    'welcome.cta_subtitle' => 'Junte-se a milhares de pessoas que já encontraram amizades verdadeiras.',
+    'welcome.start_free' => 'Começar Gratuitamente',
 
     // Interests - Categories
     'interests.category.music' => 'Música',
