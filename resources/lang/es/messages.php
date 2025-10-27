@@ -132,6 +132,7 @@ return [
     'profile.change_profile_photo' => 'Cambiar Foto de Perfil',
     'profile.choose_file' => 'Elegir archivo',
     'profile.no_file_chosen' => 'Ningún archivo elegido',
+    'profile.file_selected' => 'Archivo seleccionado',
     'profile.photo_recommendation' => 'PNG, JPG, GIF hasta 2MB. Recomendado: 400x400px',
     'profile.update_photo' => 'Actualizar Foto',
     'profile.confirm_remove_photo' => '¿Estás seguro de que deseas eliminar tu foto de perfil?',

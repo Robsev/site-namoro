@@ -59,13 +59,22 @@
                                     <label for="profile_photo" class="block text-sm font-medium text-gray-700 mb-2">
                                         {{ __('messages.profile.change_profile_photo') }}
                                     </label>
-                                    <input type="file" 
-                                           id="profile_photo" 
-                                           name="profile_photo" 
-                                           accept="image/*"
-                                           class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100"
-                                           data-label="{{ __('messages.profile.choose_file') }}"
-                                           data-no-file="{{ __('messages.profile.no_file_chosen') }}">
+                                    <div class="relative">
+                                        <input type="file" 
+                                               id="profile_photo" 
+                                               name="profile_photo" 
+                                               accept="image/*"
+                                               class="hidden"
+                                               data-label="{{ __('messages.profile.choose_file') }}"
+                                               data-no-file="{{ __('messages.profile.no_file_chosen') }}">
+                                        <button type="button" 
+                                                onclick="document.getElementById('profile_photo').click()"
+                                                class="block w-full text-sm font-semibold bg-pink-50 text-pink-700 py-2 px-4 rounded-full hover:bg-pink-100 transition duration-200 text-center cursor-pointer"
+                                                id="file-button">
+                                            <i class="fas fa-file mr-2"></i>{{ __('messages.profile.choose_file') }}
+                                        </button>
+                                        <p id="file-name" class="mt-2 text-sm text-gray-600 hidden">{{ __('messages.profile.no_file_chosen') }}</p>
+                                    </div>
                                     <p class="mt-1 text-xs text-gray-500">{{ __('messages.profile.photo_recommendation') }}</p>
                                     @error('profile_photo')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -614,11 +623,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Update file input label
+// Update file input custom button
 document.getElementById('profile_photo').addEventListener('change', function(e) {
     const file = e.target.files[0];
+    const fileNameElement = document.getElementById('file-name');
+    const fileButton = document.getElementById('file-button');
+    
     if (file) {
-        this.value = file.name;
+        fileNameElement.textContent = file.name;
+        fileNameElement.classList.remove('hidden');
+        fileButton.innerHTML = '<i class="fas fa-check mr-2"></i>' + '{{ __("messages.profile.file_selected") }}';
+        fileButton.classList.remove('bg-pink-50', 'text-pink-700');
+        fileButton.classList.add('bg-green-50', 'text-green-700');
+    } else {
+        fileNameElement.textContent = '{{ __("messages.profile.no_file_chosen") }}';
+        fileNameElement.classList.add('hidden');
+        fileButton.innerHTML = '<i class="fas fa-file mr-2"></i>' + '{{ __("messages.profile.choose_file") }}';
+        fileButton.classList.remove('bg-green-50', 'text-green-700');
+        fileButton.classList.add('bg-pink-50', 'text-pink-700');
     }
 });
 </script>
