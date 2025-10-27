@@ -512,6 +512,12 @@ return [
     'profile.photos_required' => 'Profile photos',
     'profile.more_photos' => 'More photos (recommended: 2-3)',
     'profile.photos_pending' => 'Note: Additional photos have not yet been approved by admin',
+    'profile.complete_profile' => 'Complete Profile',
+    'profile.tips_title' => 'Tips to improve your profile:',
+    'profile.tip_bio' => '• Add an interesting bio that tells your story',
+    'profile.tip_interests' => '• Select at least 3 interests you like',
+    'profile.tip_photos' => '• Add 2-3 good quality photos',
+    'profile.tip_psychological' => '• Complete the psychological questionnaire for better matching',
 
     // Matching Filters
     'filters.title' => 'Search Filters',

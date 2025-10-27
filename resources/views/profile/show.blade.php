@@ -31,7 +31,7 @@
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">
                     {{ $user->full_name }}
                     @if($user->age)
-                        <span class="text-xl text-gray-500">, {{ $user->age }} anos</span>
+                        <span class="text-xl text-gray-500">, {{ $user->age }} {{ __('messages.common.years') }}</span>
                     @endif
                 </h1>
                 
@@ -198,7 +198,7 @@
                         </form>
                         @endif
                         
-                        <form method="POST" action="{{ route('photos.destroy', $photo) }}" class="inline" onsubmit="return confirm('Tem certeza que deseja deletar esta foto?')">
+                        <form method="POST" action="{{ route('photos.destroy', $photo) }}" class="inline" onsubmit="return confirm('{{ __('messages.profile.confirm_delete_photo') }}')">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition duration-200">
