@@ -43,7 +43,7 @@
             
             <div class="space-y-4">
                 <div class="question">
-                    <p class="text-gray-700 mb-3">1. Eu gosto de experimentar coisas novas e diferentes</p>
+                    <p class="text-gray-700 mb-3">{{ __('messages.psychological.question1') }}</p>
                     <div class="flex flex-wrap gap-2 sm:gap-4">
                         <label class="flex items-center text-sm"><input type="radio" name="responses[1]" value="1" class="mr-1.5"> {{ __('messages.psychological.strongly_disagree') }}</label>
                         <label class="flex items-center text-sm"><input type="radio" name="responses[1]" value="2" class="mr-1.5"> {{ __('messages.psychological.disagree') }}</label>
@@ -54,7 +54,7 @@
                 </div>
                 
                 <div class="question">
-                    <p class="text-gray-700 mb-3">2. Eu tenho uma imaginação muito ativa</p>
+                    <p class="text-gray-700 mb-3">{{ __('messages.psychological.question2') }}</p>
                     <div class="flex flex-wrap gap-2 sm:gap-4">
                         <label class="flex items-center text-sm"><input type="radio" name="responses[2]" value="1" class="mr-1.5">{{ __("messages.psychological.strongly_disagree") }}</label>
                         <label class="flex items-center text-sm"><input type="radio" name="responses[2]" value="2" class="mr-1.5">{{ __("messages.psychological.disagree") }}</label>
@@ -65,7 +65,7 @@
                 </div>
                 
                 <div class="question">
-                    <p class="text-gray-700 mb-3">3. Eu gosto de arte e beleza</p>
+                    <p class="text-gray-700 mb-3">{{ __('messages.psychological.question3') }}</p>
                     <div class="flex flex-wrap gap-2 sm:gap-4">
                         <label class="flex items-center text-sm"><input type="radio" name="responses[3]" value="1" class="mr-1.5">{{ __("messages.psychological.strongly_disagree") }}</label>
                         <label class="flex items-center text-sm"><input type="radio" name="responses[3]" value="2" class="mr-1.5">{{ __("messages.psychological.disagree") }}</label>
@@ -87,7 +87,7 @@
             
             <div class="space-y-4">
                 <div class="question">
-                    <p class="text-gray-700 mb-3">4. Eu sempre termino o que começo</p>
+                    <p class="text-gray-700 mb-3">{{ __('messages.psychological.question4') }}</p>
                     <div class="flex flex-wrap gap-2 sm:gap-4">
                         <label class="flex items-center text-sm"><input type="radio" name="responses[4]" value="1" class="mr-1.5">{{ __("messages.psychological.strongly_disagree") }}</label>
                         <label class="flex items-center text-sm"><input type="radio" name="responses[4]" value="2" class="mr-1.5">{{ __("messages.psychological.disagree") }}</label>
@@ -98,7 +98,7 @@
                 </div>
                 
                 <div class="question">
-                    <p class="text-gray-700 mb-3">5. Eu sou muito organizado</p>
+                    <p class="text-gray-700 mb-3">{{ __('messages.psychological.question5') }}</p>
                     <div class="flex flex-wrap gap-2 sm:gap-4">
                         <label class="flex items-center text-sm"><input type="radio" name="responses[5]" value="1" class="mr-1.5">{{ __("messages.psychological.strongly_disagree") }}</label>
                         <label class="flex items-center text-sm"><input type="radio" name="responses[5]" value="2" class="mr-1.5">{{ __("messages.psychological.disagree") }}</label>
