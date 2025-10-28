@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Services\NotificationService;
 use Illuminate\Validation\Rules\Password;
 
 class RegisterController extends Controller
@@ -79,6 +80,9 @@ class RegisterController extends Controller
 
         // Send verification email
         $user->sendEmailVerificationNotification();
+
+        // Notify admins about new registration
+        app(NotificationService::class)->notifyAdminsOfNewUser($user);
 
         Auth::login($user);
 

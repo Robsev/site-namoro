@@ -6,6 +6,7 @@ use App\Models\Notification;
 use App\Models\User;
 use App\Models\UserMatch;
 use App\Models\Message;
+use App\Models\UserReport;
 
 class NotificationService
 {
@@ -111,6 +112,50 @@ class NotificationService
             'Sua conta foi criada com sucesso. Complete seu perfil para começar a encontrar pessoas!',
             ['user_id' => $user->id]
         );
+    }
+
+    /**
+     * Notify all admins that a new user has registered.
+     */
+    public function notifyAdminsOfNewUser(User $user): void
+    {
+        $admins = User::where('is_admin', true)->get();
+        foreach ($admins as $admin) {
+            Notification::createNotification(
+                $admin->id,
+                'admin_new_user',
+                'Novo usuário registrado',
+                "Novo usuário: {$user->name} ({$user->email})",
+                [
+                    'user_id' => $user->id,
+                    'user_name' => $user->name,
+                    'user_email' => $user->email,
+                ]
+            );
+        }
+    }
+
+    /**
+     * Notify all admins that a new report has been created.
+     */
+    public function notifyAdminsOfNewReport(UserReport $report): void
+    {
+        $report->loadMissing(['reporter', 'reportedUser']);
+        $admins = User::where('is_admin', true)->get();
+        foreach ($admins as $admin) {
+            Notification::createNotification(
+                $admin->id,
+                'admin_new_report',
+                'Nova denúncia registrada',
+                "Denúncia #{$report->id} por {$report->reporter->name} contra {$report->reportedUser->name}",
+                [
+                    'report_id' => $report->id,
+                    'reporter_id' => $report->reporter_id,
+                    'reported_user_id' => $report->reported_user_id,
+                    'status' => $report->status,
+                ]
+            );
+        }
     }
 
     /**

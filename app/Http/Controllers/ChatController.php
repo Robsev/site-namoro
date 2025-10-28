@@ -319,11 +319,14 @@ class ChatController extends Controller
         ]);
 
         // Create report record
-        $currentUser->reports()->create([
+        $report = $currentUser->reports()->create([
             'reported_user_id' => $user->id,
             'reason' => $request->reason,
             'status' => 'pending'
         ]);
+
+        // Notify admins about new report
+        app(\App\Services\NotificationService::class)->notifyAdminsOfNewReport($report);
 
         return response()->json(['success' => true]);
     }
