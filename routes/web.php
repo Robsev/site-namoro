@@ -213,4 +213,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/photos/bulk-approve', [App\Http\Controllers\AdminPhotoController::class, 'bulkApprove'])->name('photos.bulk-approve');
     Route::post('/photos/bulk-reject', [App\Http\Controllers\AdminPhotoController::class, 'bulkReject'])->name('photos.bulk-reject');
     Route::delete('/photos/{photo}', [App\Http\Controllers\AdminPhotoController::class, 'destroy'])->name('photos.destroy');
+
+    // Reports management
+    Route::get('/reports', [App\Http\Controllers\AdminReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/{report}', [App\Http\Controllers\AdminReportController::class, 'show'])->name('reports.show');
+    Route::post('/reports/{report}/status', [App\Http\Controllers\AdminReportController::class, 'updateStatus'])->name('reports.update-status');
+    Route::post('/reports/{report}/deactivate-user', [App\Http\Controllers\AdminReportController::class, 'deactivateReportedUser'])->name('reports.deactivate-user');
+    Route::post('/reports/{report}/activate-user', [App\Http\Controllers\AdminReportController::class, 'activateReportedUser'])->name('reports.activate-user');
 });
