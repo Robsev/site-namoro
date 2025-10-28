@@ -32,6 +32,13 @@
                         <a href="{{ route('admin.photos.index') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                             <i class="fas fa-images mr-1"></i>Moderação
                         </a>
+                        @php($pendingReportsCount = \App\Models\UserReport::where('status','pending')->count())
+                        <a href="{{ route('admin.reports.index') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium relative">
+                            <i class="fas fa-flag mr-1"></i>{{ __('messages.admin.reports') }}
+                            @if($pendingReportsCount > 0)
+                                <span class="absolute -top-1 -right-2 inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full">{{ $pendingReportsCount }}</span>
+                            @endif
+                        </a>
                         <a href="{{ route('admin.photos.statistics') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                             <i class="fas fa-chart-bar mr-1"></i>Estatísticas
                         </a>
