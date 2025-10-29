@@ -257,23 +257,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const buttonText = document.getElementById('button-text');
             const spinner = document.getElementById('spinner');
             
-            // Show loading state
-            if (submitButton) submitButton.disabled = true;
-            if (buttonText) buttonText.textContent = 'Processando...';
-            if (spinner) spinner.classList.remove('hidden');
-            
-            // Safety timeout to prevent eternal loading
-            const safetyTimeout = setTimeout(() => {
-                console.log('Safety timeout triggered - resetting button');
-                resetButtonState();
-            }, 10000); // 10 seconds timeout
+            // Don't show loading state immediately - only when actually processing
+            console.log('Form submitted, but not showing loading yet...');
             
             // Function to reset button state - SIMPLIFIED
             const resetButtonState = () => {
                 console.log('FORCE RESETTING BUTTON STATE');
                 
-                // Clear safety timeout
-                clearTimeout(safetyTimeout);
                 
                 // Force reset using direct DOM manipulation
                 const btn = document.getElementById('submit-button');
@@ -306,6 +296,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             try {
                 console.log('Creating payment method...');
+                
+                // Show loading state only when actually processing
+                if (submitButton) submitButton.disabled = true;
+                if (buttonText) buttonText.textContent = 'Processando...';
+                if (spinner) spinner.classList.remove('hidden');
                 
                 const {error, paymentMethod} = await stripe.createPaymentMethod({
                     type: 'card',
