@@ -264,12 +264,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     console.log('Localização aceita com precisão:', position.coords.accuracy + 'm');
                     
-                    // Atualizar mapa IMEDIATAMENTE
-                    updateMapWithLocation(lat, lng, 'Localização detectada (Precisão: ' + Math.round(position.coords.accuracy) + 'm)');
-                    
-                    // Update form fields
+                    // Update form fields primeiro
                     document.querySelector('input[name="latitude"]').value = lat;
                     document.querySelector('input[name="longitude"]').value = lng;
+                    
+                    // Tentar atualizar mapa (não crítico se falhar)
+                    try {
+                        updateMapWithLocation(lat, lng, 'Localização detectada (Precisão: ' + Math.round(position.coords.accuracy) + 'm)');
+                    } catch (mapError) {
+                        console.warn('Erro ao atualizar mapa, mas localização foi detectada:', mapError);
+                    }
                     
                     // Get location details
                     fetch('{{ route("location.current") }}', {
@@ -292,8 +296,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             if (data.location.country) document.querySelector('input[name="country"]').value = data.location.country;
                             if (data.location.neighborhood) document.querySelector('input[name="neighborhood"]').value = data.location.neighborhood;
                             
-                            // Atualizar mapa com endereço completo
-                            updateMapWithLocation(lat, lng, data.location.address || 'Localização detectada');
+                            // Tentar atualizar mapa com endereço completo (não crítico se falhar)
+                            try {
+                                updateMapWithLocation(lat, lng, data.location.address || 'Localização detectada');
+                            } catch (mapError) {
+                                console.warn('Erro ao atualizar mapa com endereço:', mapError);
+                            }
                             
                             // Mostrar mensagem de sucesso
                             showNotification('Localização detectada! Salvando automaticamente...', 'success');
@@ -432,11 +440,14 @@ function initMap() {
                 return;
             }
             
+            // Verificar se MapTypeId está disponível
+            const mapTypeId = (google.maps.MapTypeId && google.maps.MapTypeId.ROADMAP) ? google.maps.MapTypeId.ROADMAP : 'roadmap';
+            
             // Inicializar Google Maps
             map = new google.maps.Map(document.getElementById('map'), {
                 center: { lat: defaultLat, lng: defaultLng },
                 zoom: 15,
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                mapTypeId: mapTypeId,
                 styles: [
                     {
                         featureType: 'poi',
@@ -480,16 +491,9 @@ function addMarker(lat, lng, title = 'Localização') {
     }
     
     if (mapAPI === 'google') {
-        // Adicionar marcador do Google Maps (usando API moderna)
-        if (google.maps.marker && google.maps.marker.AdvancedMarkerElement) {
-            // Usar AdvancedMarkerElement (recomendado)
-            marker = new google.maps.marker.AdvancedMarkerElement({
-                position: { lat: lat, lng: lng },
-                map: map,
-                title: title
-            });
-        } else {
-            // Fallback para Marker clássico
+        try {
+            // Sempre usar Marker clássico (mais compatível)
+            // AdvancedMarkerElement requer biblioteca adicional e pode não estar disponível
             marker = new google.maps.Marker({
                 position: { lat: lat, lng: lng },
                 map: map,
@@ -500,27 +504,25 @@ function addMarker(lat, lng, title = 'Localização') {
                     scaledSize: new google.maps.Size(32, 32)
                 }
             });
-        }
-        
-        // Adicionar info window (compatível com ambos marcadores)
-        const infoWindow = new google.maps.InfoWindow({
-            content: `<div class="p-2"><strong>${title}</strong><br>${lat.toFixed(6)}, ${lng.toFixed(6)}</div>`
-        });
-        
-        // Usar addEventListener para compatibilidade com AdvancedMarkerElement
-        if (marker instanceof google.maps.marker.AdvancedMarkerElement) {
-            marker.element.addEventListener('click', () => {
-                infoWindow.open(map, marker);
+            
+            // Adicionar info window
+            const infoWindow = new google.maps.InfoWindow({
+                content: `<div class="p-2"><strong>${title}</strong><br>${lat.toFixed(6)}, ${lng.toFixed(6)}</div>`
             });
-        } else {
+            
             marker.addListener('click', () => {
                 infoWindow.open(map, marker);
             });
+            
+            // Centralizar mapa na nova localização
+            if (map && map.setCenter) {
+                map.setCenter({ lat: lat, lng: lng });
+                map.setZoom(15);
+            }
+        } catch (error) {
+            console.error('Erro ao adicionar marcador:', error);
+            // Não lançar erro para não quebrar o fluxo
         }
-        
-        // Centralizar mapa na nova localização
-        map.setCenter({ lat: lat, lng: lng });
-        map.setZoom(15);
         
     } else if (mapAPI === 'leaflet') {
         // Adicionar marcador do Leaflet
@@ -548,10 +550,29 @@ function updateMapInfo(lat, lng, address = '') {
 
 // Função para atualizar mapa quando localização for detectada
 function updateMapWithLocation(lat, lng, address = '') {
-    currentLat = lat;
-    currentLng = lng;
-    addMarker(lat, lng, 'Nova localização detectada');
-    updateMapInfo(lat, lng, address);
+    try {
+        currentLat = lat;
+        currentLng = lng;
+        
+        // Garantir que o mapa esteja inicializado
+        if (!map) {
+            initMap();
+        }
+        
+        // Se ainda não houver mapa, não tentar adicionar marcador
+        if (!map) {
+            console.warn('Mapa não disponível, apenas atualizando informações');
+            updateMapInfo(lat, lng, address);
+            return;
+        }
+        
+        addMarker(lat, lng, 'Nova localização detectada');
+        updateMapInfo(lat, lng, address);
+    } catch (error) {
+        console.error('Erro ao atualizar mapa com localização:', error);
+        // Pelo menos atualizar as informações textuais mesmo se o mapa falhar
+        updateMapInfo(lat, lng, address);
+    }
 }
 
 // Função para limpar localização
