@@ -50,7 +50,10 @@ class NewMatch extends Notification
             ->subject(__('messages.notifications.new_match_subject', ['name' => config('app.name')]))
             ->line(__('messages.notifications.new_match_message', ['name' => $this->matchUser->name]))
             ->line($this->matchData['match_reason'] ?? __('messages.matching.good_match'))
-            ->action(__('messages.notifications.view_conversation'), route('conversations.show', $this->matchData['conversation_id'] ?? ''))
+            ->action(__('messages.notifications.view_conversation'), 
+                !empty($this->matchData['conversation_id']) 
+                    ? route('conversations.show', $this->matchData['conversation_id'])
+                    : route('chat.show', $this->matchUser->id))
             ->line(__('messages.notifications.thanks'));
     }
 

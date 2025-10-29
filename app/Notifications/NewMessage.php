@@ -48,7 +48,9 @@ class NewMessage extends Notification
             ->subject(__('messages.notifications.new_message_subject', ['name' => $this->message->sender->name]))
             ->line(__('messages.notifications.new_message_from', ['name' => $this->message->sender->name]))
             ->line(__('messages.notifications.message') . ': ' . $this->message->message)
-            ->action(__('messages.notifications.view_conversation'), route('conversations.show', $this->message->conversation))
+            ->action(__('messages.notifications.view_conversation'), $this->message->conversation_id 
+                ? route('conversations.show', $this->message->conversation)
+                : route('chat.show', $this->message->sender_id))
             ->line(__('messages.notifications.thanks'));
     }
 

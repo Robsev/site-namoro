@@ -168,7 +168,7 @@
                                 </div>
                             @endif
                         @elseif($existingMatch->status === 'accepted')
-                            <a href="{{ route('conversations.show', $existingMatch->id) }}" 
+                            <a href="{{ route('chat.show', $user->id) }}" 
                                class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200 text-center block">
                                 <i class="fas fa-comments mr-2"></i>{{ __('messages.matching.start_conversation') }}
                             </a>
