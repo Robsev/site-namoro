@@ -13,6 +13,7 @@ return [
     'nav.likes' => 'Likes',
     'nav.more' => 'More',
     'nav.logout' => 'Logout',
+    'nav.dashboard' => 'Dashboard',
 
     // Authentication
     'auth.login' => 'Login',

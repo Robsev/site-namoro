@@ -497,6 +497,7 @@ return [
     'preferences.photos_only_desc' => 'Mostrar solo personas que tienen fotos en su perfil',
     'preferences.complete_profiles_only' => 'Solo perfiles completos',
     'preferences.complete_profiles_only_desc' => 'Mostrar solo personas con perfiles 100% completos',
+    'nav.dashboard' => 'Panel',
     'preferences.save' => 'Guardar Preferencias',
     'preferences.updated' => '¡Preferencias de matching actualizadas con éxito!',
     'preferences.male' => 'Masculino',
