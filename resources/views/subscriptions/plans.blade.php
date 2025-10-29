@@ -169,7 +169,7 @@
                     <label for="card-element" class="block text-sm font-medium text-gray-700 mb-2">
                         Informações do Cartão
                     </label>
-                    <div id="card-element" class="border border-gray-300 rounded-lg p-3 bg-white">
+                    <div id="card-element" class="border border-gray-300 rounded-lg p-4 bg-white min-h-[50px]">
                         <!-- Stripe Elements will create form elements here -->
                     </div>
                     <div id="card-errors" class="text-red-600 text-sm mt-2" role="alert"></div>
@@ -254,21 +254,30 @@ document.addEventListener('DOMContentLoaded', function() {
             if (spinner) spinner.classList.remove('hidden');
             
             try {
+                console.log('Creating payment method...');
+                
                 const {error, paymentMethod} = await stripe.createPaymentMethod({
                     type: 'card',
                     card: cardElement,
                 });
 
+                console.log('Payment method result:', {error, paymentMethod});
+
                 if (error) {
+                    console.error('Stripe error:', error);
                     // Show error message
                     const cardErrors = document.getElementById('card-errors');
-                    if (cardErrors) cardErrors.textContent = error.message;
+                    if (cardErrors) {
+                        cardErrors.textContent = error.message || 'Erro ao processar pagamento. Verifique os dados do cartão.';
+                    }
                     
                     // Reset button state
                     if (submitButton) submitButton.disabled = false;
                     if (buttonText) buttonText.textContent = 'Confirmar Pagamento';
                     if (spinner) spinner.classList.add('hidden');
-                } else {
+                } else if (paymentMethod) {
+                    console.log('Payment method created successfully:', paymentMethod.id);
+                    
                     // Submit form with payment method
                     const form = document.createElement('form');
                     form.method = 'POST';
@@ -295,11 +304,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     document.body.appendChild(form);
                     form.submit();
+                } else {
+                    console.error('No payment method created and no error');
+                    const cardErrors = document.getElementById('card-errors');
+                    if (cardErrors) {
+                        cardErrors.textContent = 'Erro ao processar pagamento. Tente novamente.';
+                    }
+                    
+                    // Reset button state
+                    if (submitButton) submitButton.disabled = false;
+                    if (buttonText) buttonText.textContent = 'Confirmar Pagamento';
+                    if (spinner) spinner.classList.add('hidden');
                 }
             } catch (err) {
-                console.error('Error:', err);
+                console.error('Unexpected error:', err);
                 const cardErrors = document.getElementById('card-errors');
-                if (cardErrors) cardErrors.textContent = 'Ocorreu um erro inesperado. Tente novamente.';
+                if (cardErrors) {
+                    cardErrors.textContent = 'Erro inesperado. Verifique sua conexão e tente novamente.';
+                }
                 
                 // Reset button state
                 if (submitButton) submitButton.disabled = false;
