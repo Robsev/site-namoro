@@ -176,22 +176,22 @@ $viewsCount = $likesReceivedCount + $matchesCount;
             <div class="bg-white rounded-lg shadow-md p-6">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">{{ __('messages.dashboard.statistics') }}</h3>
                 <div class="space-y-4">
-                    <div class="flex justify-between items-center">
+                    <a href="{{ route('matching.matches') }}" class="flex justify-between items-center hover:bg-gray-50 -mx-2 px-2 py-1 rounded transition duration-150">
                         <span class="text-gray-600">{{ __('messages.dashboard.matches') }}</span>
                         <span class="font-semibold text-pink-600">{{ $matchesCount }}</span>
-                    </div>
+                    </a>
                     <div class="flex justify-between items-center">
                         <span class="text-gray-600">{{ __('messages.dashboard.views') }}</span>
                         <span class="font-semibold text-purple-600">{{ $viewsCount }}</span>
                     </div>
-                    <div class="flex justify-between items-center">
+                    <a href="{{ route('matching.likes-sent') }}" class="flex justify-between items-center hover:bg-gray-50 -mx-2 px-2 py-1 rounded transition duration-150">
                         <span class="text-gray-600">{{ __('messages.dashboard.likes_sent') }}</span>
                         <span class="font-semibold text-blue-600">{{ $likesSentCount }}</span>
-                    </div>
-                    <div class="flex justify-between items-center">
+                    </a>
+                    <a href="{{ route('matching.likes-received') }}" class="flex justify-between items-center hover:bg-gray-50 -mx-2 px-2 py-1 rounded transition duration-150">
                         <span class="text-gray-600">{{ __('messages.dashboard.likes_received') }}</span>
                         <span class="font-semibold text-green-600">{{ $likesReceivedCount }}</span>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
