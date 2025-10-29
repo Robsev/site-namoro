@@ -183,7 +183,7 @@
                     </button>
                     <button type="submit" 
                             id="submit-button"
-                            class="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                            class="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200">
                         <span id="button-text">Confirmar Pagamento</span>
                         <div id="spinner" class="hidden inline-block ml-2">
                             <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -253,9 +253,17 @@ document.addEventListener('DOMContentLoaded', function() {
         paymentForm.addEventListener('submit', async function(event) {
             event.preventDefault();
             
+            console.log('=== FORM SUBMITTED ===');
+            
             const submitButton = document.getElementById('submit-button');
             const buttonText = document.getElementById('button-text');
             const spinner = document.getElementById('spinner');
+            
+            console.log('Elements found:', {
+                submitButton: !!submitButton,
+                buttonText: !!buttonText,
+                spinner: !!spinner
+            });
             
             // Don't show loading state immediately - only when actually processing
             console.log('Form submitted, but not showing loading yet...');
