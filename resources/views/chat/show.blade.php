@@ -668,11 +668,11 @@ async function toggleAudioRecording() {
                 // Show audio preview
                 const audioPreview = document.getElementById('audio-preview');
                 const audioElement = document.getElementById('recorded-audio');
-                const sendAudioButton = document.getElementById('send-audio');
+                const sendAudioButton = document.getElementById('send-audio-button');
                 
-                audioElement.src = audioUrl;
-                audioPreview.classList.remove('hidden');
-                sendAudioButton.disabled = false;
+                if (audioElement) audioElement.src = audioUrl;
+                if (audioPreview) audioPreview.classList.remove('hidden');
+                if (sendAudioButton) sendAudioButton.disabled = false;
                 
                 console.log('Audio preview shown, blob size:', recordedBlob.size);
                 
