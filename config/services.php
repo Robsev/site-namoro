@@ -45,4 +45,12 @@ return [
         'key' => env('GOOGLE_MAPS_API_KEY'),
     ],
 
+    'stripe' => [
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+        'premium_monthly_price_id' => env('STRIPE_PREMIUM_MONTHLY_PRICE_ID'),
+        'premium_yearly_price_id' => env('STRIPE_PREMIUM_YEARLY_PRICE_ID'),
+    ],
+
 ];

@@ -222,6 +222,44 @@ class NotificationService
     }
 
     /**
+     * Send notification for payment failed
+     */
+    public function notifyPaymentFailed(User $user, $invoice)
+    {
+        Notification::createNotification(
+            $user->id,
+            'payment_failed',
+            'Pagamento não processado',
+            'Houve um problema com o pagamento da sua assinatura. Por favor, atualize seus dados de pagamento.',
+            [
+                'invoice_id' => $invoice->id,
+                'amount' => $invoice->amount_due / 100,
+                'currency' => strtoupper($invoice->currency)
+            ]
+        );
+    }
+
+    /**
+     * Send notification for trial ending
+     */
+    public function notifyTrialEnding(User $user, $subscription)
+    {
+        $trialEnd = now()->createFromTimestamp($subscription->trial_end);
+        $daysLeft = now()->diffInDays($trialEnd);
+
+        Notification::createNotification(
+            $user->id,
+            'trial_ending',
+            'Seu período de teste está terminando',
+            "Seu período de teste termina em {$daysLeft} dias. Atualize seu método de pagamento para continuar aproveitando o Premium.",
+            [
+                'trial_end' => $trialEnd->toISOString(),
+                'days_left' => $daysLeft
+            ]
+        );
+    }
+
+    /**
      * Clean up old notifications (older than 30 days)
      */
     public function cleanupOldNotifications()

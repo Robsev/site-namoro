@@ -5,15 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Services\NotificationService;
+use App\Services\StripeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class SubscriptionController extends Controller
 {
-    public function __construct()
+    protected $stripeService;
+    protected $notificationService;
+
+    public function __construct(StripeService $stripeService, NotificationService $notificationService)
     {
-        // Middleware é aplicado nas rotas, não no controller
+        $this->stripeService = $stripeService;
+        $this->notificationService = $notificationService;
     }
 
     /**
@@ -102,7 +107,7 @@ class SubscriptionController extends Controller
     {
         $request->validate([
             'plan' => 'required|in:premium_monthly,premium_yearly',
-            'payment_method' => 'required|string'
+            'payment_method_id' => 'required|string'
         ]);
 
         $user = Auth::user();
@@ -114,39 +119,45 @@ class SubscriptionController extends Controller
             return redirect()->back()->with('error', 'Você já possui uma assinatura ativa.');
         }
 
-        // In a real implementation, you would integrate with Stripe here
-        // For now, we'll create a mock subscription
-        
-        $planDetails = $this->getPlanDetails($plan);
-        
-        $subscription = Subscription::create([
-            'user_id' => $user->id,
-            'stripe_subscription_id' => 'mock_sub_' . time(),
-            'stripe_customer_id' => 'mock_customer_' . $user->id,
-            'plan' => $plan,
-            'status' => 'active',
-            'amount' => $planDetails['price'],
-            'currency' => 'BRL',
-            'starts_at' => now(),
-            'ends_at' => $plan === 'premium_monthly' ? now()->addMonth() : now()->addYear(),
-            'metadata' => [
-                'payment_method' => $request->payment_method,
-                'created_via' => 'web'
-            ]
-        ]);
+        try {
+            // Get price ID for the plan
+            $priceIds = $this->stripeService->getPriceIds();
+            $priceId = $priceIds[$plan] ?? null;
 
-        // Update user subscription type
-        $user->update([
-            'subscription_type' => 'premium',
-            'subscription_expires_at' => $subscription->ends_at
-        ]);
+            if (!$priceId) {
+                return redirect()->back()->with('error', 'Plano não encontrado.');
+            }
 
-        // Send notification
-        $notificationService = new NotificationService();
-        $notificationService->notifySubscriptionChange($user, 'premium');
+            // Create Stripe subscription
+            $result = $this->stripeService->createSubscription($user, $priceId, $request->payment_method_id);
 
-        return redirect()->route('subscriptions.show')
-            ->with('success', 'Assinatura criada com sucesso! Bem-vindo ao Premium!');
+            // If subscription requires payment confirmation, redirect to payment page
+            if ($result['status'] === 'incomplete') {
+                return redirect()->route('subscriptions.payment', [
+                    'subscription_id' => $result['subscription']->id,
+                    'client_secret' => $result['client_secret']
+                ]);
+            }
+
+            // If subscription is active, create local record
+            if ($result['status'] === 'active') {
+                $this->createLocalSubscription($user, $result['subscription']);
+                
+                return redirect()->route('subscriptions.show')
+                    ->with('success', 'Assinatura criada com sucesso! Bem-vindo ao Premium!');
+            }
+
+            return redirect()->back()->with('error', 'Erro ao criar assinatura. Tente novamente.');
+
+        } catch (\Exception $e) {
+            Log::error('Subscription creation failed', [
+                'user_id' => $user->id,
+                'plan' => $plan,
+                'error' => $e->getMessage()
+            ]);
+
+            return redirect()->back()->with('error', 'Erro ao processar pagamento. Tente novamente.');
+        }
     }
 
     /**
@@ -161,20 +172,21 @@ class SubscriptionController extends Controller
             return redirect()->back()->with('error', 'Acesso negado.');
         }
 
-        // In a real implementation, you would cancel the Stripe subscription here
-        $subscription->update([
-            'status' => 'canceled',
-            'canceled_at' => now()
-        ]);
+        try {
+            // Cancel Stripe subscription
+            $this->stripeService->cancelSubscription($subscription->stripe_subscription_id);
 
-        // Update user subscription type
-        $user->update([
-            'subscription_type' => 'free',
-            'subscription_expires_at' => null
-        ]);
+            return redirect()->route('subscriptions.show')
+                ->with('success', 'Assinatura cancelada com sucesso.');
 
-        return redirect()->route('subscriptions.show')
-            ->with('success', 'Assinatura cancelada com sucesso.');
+        } catch (\Exception $e) {
+            Log::error('Subscription cancellation failed', [
+                'subscription_id' => $subscription->id,
+                'error' => $e->getMessage()
+            ]);
+
+            return redirect()->back()->with('error', 'Erro ao cancelar assinatura. Tente novamente.');
+        }
     }
 
     /**
@@ -189,24 +201,21 @@ class SubscriptionController extends Controller
             return redirect()->back()->with('error', 'Acesso negado.');
         }
 
-        if ($subscription->status !== 'canceled') {
-            return redirect()->back()->with('error', 'Esta assinatura não pode ser reativada.');
+        try {
+            // Resume Stripe subscription
+            $this->stripeService->resumeSubscription($subscription->stripe_subscription_id);
+
+            return redirect()->route('subscriptions.show')
+                ->with('success', 'Assinatura reativada com sucesso!');
+
+        } catch (\Exception $e) {
+            Log::error('Subscription resume failed', [
+                'subscription_id' => $subscription->id,
+                'error' => $e->getMessage()
+            ]);
+
+            return redirect()->back()->with('error', 'Erro ao reativar assinatura. Tente novamente.');
         }
-
-        // In a real implementation, you would resume the Stripe subscription here
-        $subscription->update([
-            'status' => 'active',
-            'canceled_at' => null
-        ]);
-
-        // Update user subscription type
-        $user->update([
-            'subscription_type' => 'premium',
-            'subscription_expires_at' => $subscription->ends_at
-        ]);
-
-        return redirect()->route('subscriptions.show')
-            ->with('success', 'Assinatura reativada com sucesso!');
     }
 
     /**
@@ -222,19 +231,123 @@ class SubscriptionController extends Controller
         }
 
         $request->validate([
-            'payment_method' => 'required|string'
+            'payment_method_id' => 'required|string'
         ]);
 
-        // In a real implementation, you would update the Stripe payment method here
-        $subscription->update([
-            'metadata' => array_merge($subscription->metadata ?? [], [
-                'payment_method' => $request->payment_method,
-                'updated_at' => now()->toISOString()
-            ])
+        try {
+            // Update Stripe payment method
+            $this->stripeService->updatePaymentMethod($subscription->stripe_subscription_id, $request->payment_method_id);
+
+            return redirect()->route('subscriptions.show')
+                ->with('success', 'Método de pagamento atualizado com sucesso.');
+
+        } catch (\Exception $e) {
+            Log::error('Payment method update failed', [
+                'subscription_id' => $subscription->id,
+                'error' => $e->getMessage()
+            ]);
+
+            return redirect()->back()->with('error', 'Erro ao atualizar método de pagamento. Tente novamente.');
+        }
+    }
+
+    /**
+     * Show payment confirmation page
+     */
+    public function payment(Request $request)
+    {
+        $subscriptionId = $request->get('subscription_id');
+        $clientSecret = $request->get('client_secret');
+
+        if (!$subscriptionId || !$clientSecret) {
+            return redirect()->route('subscriptions.plans')
+                ->with('error', 'Parâmetros de pagamento inválidos.');
+        }
+
+        return view('subscriptions.payment', compact('subscriptionId', 'clientSecret'));
+    }
+
+    /**
+     * Confirm payment and activate subscription
+     */
+    public function confirmPayment(Request $request)
+    {
+        $request->validate([
+            'subscription_id' => 'required|string'
         ]);
 
-        return redirect()->route('subscriptions.show')
-            ->with('success', 'Método de pagamento atualizado com sucesso.');
+        try {
+            $subscription = $this->stripeService->confirmSubscription($request->subscription_id);
+            
+            if ($subscription->status === 'active') {
+                $user = Auth::user();
+                $this->createLocalSubscription($user, $subscription);
+                
+                return redirect()->route('subscriptions.show')
+                    ->with('success', 'Pagamento confirmado! Bem-vindo ao Premium!');
+            }
+
+            return redirect()->back()->with('error', 'Pagamento ainda não foi processado.');
+
+        } catch (\Exception $e) {
+            Log::error('Payment confirmation failed', [
+                'subscription_id' => $request->subscription_id,
+                'error' => $e->getMessage()
+            ]);
+
+            return redirect()->back()->with('error', 'Erro ao confirmar pagamento. Tente novamente.');
+        }
+    }
+
+    /**
+     * Create local subscription record from Stripe subscription
+     */
+    private function createLocalSubscription(User $user, $stripeSubscription)
+    {
+        $subscription = Subscription::create([
+            'user_id' => $user->id,
+            'stripe_subscription_id' => $stripeSubscription->id,
+            'stripe_customer_id' => $stripeSubscription->customer,
+            'plan' => $this->getPlanFromPriceId($stripeSubscription->items->data[0]->price->id),
+            'status' => $stripeSubscription->status,
+            'amount' => $stripeSubscription->items->data[0]->price->unit_amount / 100,
+            'currency' => strtoupper($stripeSubscription->items->data[0]->price->currency),
+            'starts_at' => now()->createFromTimestamp($stripeSubscription->current_period_start),
+            'ends_at' => now()->createFromTimestamp($stripeSubscription->current_period_end),
+            'trial_ends_at' => $stripeSubscription->trial_end ? now()->createFromTimestamp($stripeSubscription->trial_end) : null,
+            'metadata' => [
+                'stripe_subscription_id' => $stripeSubscription->id,
+                'stripe_customer_id' => $stripeSubscription->customer,
+                'created_via' => 'web'
+            ]
+        ]);
+
+        // Update user subscription status
+        $user->update([
+            'subscription_type' => 'premium',
+            'subscription_expires_at' => $subscription->ends_at
+        ]);
+
+        // Send notification
+        $this->notificationService->notifySubscriptionChange($user, 'premium');
+
+        return $subscription;
+    }
+
+    /**
+     * Get plan name from Stripe price ID
+     */
+    private function getPlanFromPriceId($priceId): string
+    {
+        $priceIds = $this->stripeService->getPriceIds();
+        
+        foreach ($priceIds as $plan => $id) {
+            if ($id === $priceId) {
+                return $plan;
+            }
+        }
+
+        return 'unknown';
     }
 
     /**

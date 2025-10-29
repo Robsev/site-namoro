@@ -17,7 +17,7 @@
         </div>
         
         @if($compatibilityScore)
-            <div class="bg-pink-100 text-pink-800 px-4 py-2 rounded-lg">
+            <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg">
                 <i class="fas fa-heart mr-2"></i>{{ round($compatibilityScore) }}% {{ __('messages.matching.compatibility') }}
             </div>
         @endif
@@ -103,7 +103,7 @@
                     </h3>
                     <div class="flex flex-wrap gap-2">
                         @foreach($user->interests as $interest)
-                            <span class="bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-sm">
+                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
                                 {{ $interest->interest_value }}
                             </span>
                         @endforeach
@@ -134,7 +134,7 @@
                                     <span class="text-gray-900">{{ round($user->psychologicalProfile->$trait, 1) }}</span>
                                 </div>
                                 <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-pink-500 h-2 rounded-full" style="width: {{ ($user->psychologicalProfile->$trait / 5) * 100 }}%"></div>
+                                    <div class="bg-blue-500 h-2 rounded-full" style="width: {{ ($user->psychologicalProfile->$trait / 5) * 100 }}%"></div>
                                 </div>
                             </div>
                         @endforeach
@@ -176,7 +176,7 @@
                     @else
                         <div class="space-y-2">
                             <button onclick="likeUser({{ $user->id }})" 
-                                    class="w-full bg-pink-500 text-white py-2 px-4 rounded-lg hover:bg-pink-600 transition duration-200">
+                                    class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200">
                                 <i class="fas fa-heart mr-2"></i>{{ __('messages.matching.like') }}
                             </button>
                             <button onclick="passUser({{ $user->id }})" 

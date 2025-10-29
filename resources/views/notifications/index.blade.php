@@ -33,6 +33,13 @@
                                     'new_like', 'like' => 'fas fa-thumbs-up',
                                     'new_super_like', 'super_like' => 'fas fa-star',
                                     'photo_moderation' => 'fas fa-camera',
+                                    'admin_new_user' => 'fas fa-user-plus',
+                                    'admin_new_report' => 'fas fa-exclamation-triangle',
+                                    'subscription' => 'fas fa-crown',
+                                    'profile_complete' => 'fas fa-check-circle',
+                                    'daily_matches' => 'fas fa-calendar-heart',
+                                    'inactive' => 'fas fa-clock',
+                                    'welcome' => 'fas fa-hand-wave',
                                     default => 'fas fa-bell'
                                 };
                                 $color = match($notification->type) {
@@ -41,6 +48,13 @@
                                     'new_like', 'like' => 'text-green-500',
                                     'new_super_like', 'super_like' => 'text-yellow-500',
                                     'photo_moderation' => 'text-purple-500',
+                                    'admin_new_user' => 'text-indigo-500',
+                                    'admin_new_report' => 'text-orange-500',
+                                    'subscription' => 'text-yellow-600',
+                                    'profile_complete' => 'text-green-600',
+                                    'daily_matches' => 'text-pink-500',
+                                    'inactive' => 'text-gray-600',
+                                    'welcome' => 'text-blue-600',
                                     default => 'text-gray-500'
                                 };
                             @endphp

@@ -175,6 +175,13 @@ class Notification extends Model
             'like' => 'fas fa-thumbs-up',
             'super_like' => 'fas fa-star',
             'profile_view' => 'fas fa-eye',
+            'admin_new_user' => 'fas fa-user-plus',
+            'admin_new_report' => 'fas fa-exclamation-triangle',
+            'subscription' => 'fas fa-crown',
+            'profile_complete' => 'fas fa-check-circle',
+            'daily_matches' => 'fas fa-calendar-heart',
+            'inactive' => 'fas fa-clock',
+            'welcome' => 'fas fa-hand-wave',
             default => 'fas fa-bell'
         };
     }
@@ -190,6 +197,13 @@ class Notification extends Model
             'like' => 'text-green-500',
             'super_like' => 'text-yellow-500',
             'profile_view' => 'text-purple-500',
+            'admin_new_user' => 'text-indigo-500',
+            'admin_new_report' => 'text-orange-500',
+            'subscription' => 'text-yellow-600',
+            'profile_complete' => 'text-green-600',
+            'daily_matches' => 'text-pink-500',
+            'inactive' => 'text-gray-600',
+            'welcome' => 'text-blue-600',
             default => 'text-gray-500'
         };
     }

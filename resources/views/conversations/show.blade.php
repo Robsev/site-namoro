@@ -67,6 +67,12 @@
                                     @if($message->message)
                                         <p class="text-sm mt-2">{{ $message->message }}</p>
                                     @endif
+                                @elseif($message->message_type === 'audio')
+                                    <!-- Audio message display - download button removed for privacy -->
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fas fa-microphone text-2xl"></i>
+                                        <p class="text-sm">{{ $message->message ?: 'Mensagem de áudio' }}</p>
+                                    </div>
                                 @else
                                     <!-- Text Message -->
                                     <p class="text-sm">{{ $message->message }}</p>
@@ -318,6 +324,18 @@ document.addEventListener('DOMContentLoaded', function() {
                          class="max-w-full h-auto rounded cursor-pointer"
                          onclick="openImageModal('/storage/${message.attachment_path}')">
                     ${message.message ? `<p class="text-sm mt-2">${message.message}</p>` : ''}
+                </div>
+            `;
+        } else if (message.message_type === 'audio') {
+            // Audio message - no download button for privacy
+            messageContent = `
+                <div class="px-4 py-2 rounded-lg ${message.sender_id === currentUserId 
+                    ? 'bg-blue-500 text-white' 
+                    : 'bg-gray-200 text-gray-900'}">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-microphone text-2xl"></i>
+                        <p class="text-sm">${message.message ? message.message : 'Mensagem de áudio'}</p>
+                    </div>
                 </div>
             `;
         } else {

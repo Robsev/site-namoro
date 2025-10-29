@@ -29,10 +29,11 @@ class NotificationController extends Controller
             ->limit($perPage)
             ->get()
             ->map(function($notification) {
-                // Extract title and message from data field for Laravel notifications
+                // Use the actual title and message from the notification, not from data
+                // Only fallback to data if title/message are empty
                 $data = $notification->data ?? [];
-                $notification->title = $data['title'] ?? 'Notificação';
-                $notification->message = $data['message'] ?? 'Nova notificação';
+                $notification->title = $notification->title ?: ($data['title'] ?? 'Notificação');
+                $notification->message = $notification->message ?: ($data['message'] ?? 'Nova notificação');
                 $notification->type = $data['type'] ?? $notification->type;
                 return $notification;
             });
@@ -128,10 +129,11 @@ class NotificationController extends Controller
             ->recent(10)
             ->get()
             ->map(function($notification) {
-                // Extract title and message from data field for Laravel notifications
+                // Use the actual title and message from the notification, not from data
+                // Only fallback to data if title/message are empty
                 $data = $notification->data ?? [];
-                $title = $data['title'] ?? 'Notificação';
-                $message = $data['message'] ?? 'Nova notificação';
+                $title = $notification->title ?: ($data['title'] ?? 'Notificação');
+                $message = $notification->message ?: ($data['message'] ?? 'Nova notificação');
                 $type = $data['type'] ?? $notification->type;
                 
                 return [
@@ -181,6 +183,13 @@ class NotificationController extends Controller
             'like' => 'fas fa-thumbs-up',
             'super_like' => 'fas fa-star',
             'profile_view' => 'fas fa-eye',
+            'admin_new_user' => 'fas fa-user-plus',
+            'admin_new_report' => 'fas fa-exclamation-triangle',
+            'subscription' => 'fas fa-crown',
+            'profile_complete' => 'fas fa-check-circle',
+            'daily_matches' => 'fas fa-calendar-heart',
+            'inactive' => 'fas fa-clock',
+            'welcome' => 'fas fa-hand-wave',
             default => 'fas fa-bell'
         };
     }
@@ -197,6 +206,13 @@ class NotificationController extends Controller
             'new_super_like', 'super_like' => 'text-yellow-500',
             'photo_moderation' => 'text-purple-500',
             'profile_view' => 'text-purple-500',
+            'admin_new_user' => 'text-indigo-500',
+            'admin_new_report' => 'text-orange-500',
+            'subscription' => 'text-yellow-600',
+            'profile_complete' => 'text-green-600',
+            'daily_matches' => 'text-pink-500',
+            'inactive' => 'text-gray-600',
+            'welcome' => 'text-blue-600',
             default => 'text-gray-500'
         };
     }

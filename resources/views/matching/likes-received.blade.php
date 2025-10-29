@@ -13,7 +13,7 @@
             <p class="mt-2 text-gray-600">{{ __('messages.matching.likes_received_desc') }}</p>
         </div>
         <div class="flex space-x-3">
-            <a href="{{ route('matching.discover') }}" class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-200">
+            <a href="{{ route('matching.discover') }}" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200">
                 <i class="fas fa-search mr-2"></i>{{ __('messages.nav.discover') }}
             </a>
             <a href="{{ route('matching.likes-sent') }}" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition duration-200">
@@ -27,7 +27,7 @@
             <i class="fas fa-heart-broken text-gray-400 text-6xl mb-4"></i>
             <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ __('messages.matching.no_likes_received') }}</h3>
             <p class="text-gray-600 mb-6">{{ __('messages.matching.no_likes_received_desc') }}</p>
-            <a href="{{ route('profile.show') }}" class="bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition duration-200">
+            <a href="{{ route('profile.show') }}" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-200">
                 <i class="fas fa-user mr-2"></i>{{ __('messages.profile.complete_profile') }}
             </a>
         </div>

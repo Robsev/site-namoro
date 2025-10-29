@@ -19,14 +19,14 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         @foreach($plans as $planKey => $plan)
-            <div class="border border-gray-200 rounded-lg p-6 {{ $plan['popular'] ?? false ? 'border-pink-500 ring-2 ring-pink-500' : '' }} {{ $currentSubscription && $currentSubscription->plan === $planKey ? 'bg-green-50' : '' }}">
-                @if($plan['popular'] ?? false)
-                    <div class="text-center mb-4">
-                        <span class="bg-pink-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                            {{ __('messages.subscriptions.most_popular') }}
-                        </span>
-                    </div>
-                @endif
+            <div class="border border-gray-200 rounded-lg p-6 {{ $plan['popular'] ?? false ? 'border-blue-500 ring-2 ring-blue-500' : '' }} {{ $currentSubscription && $currentSubscription->plan === $planKey ? 'bg-green-50' : '' }}">
+                                @if($plan['popular'] ?? false)
+                                    <div class="text-center mb-4">
+                                        <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                            {{ __('messages.subscriptions.most_popular') }}
+                                        </span>
+                                    </div>
+                                @endif
 
                 @if($currentSubscription && $currentSubscription->plan === $planKey)
                     <div class="text-center mb-4">
@@ -85,15 +85,11 @@
                             <i class="fas fa-check mr-2"></i>{{ __('messages.subscriptions.current_plan') }}
                         </span>
                     @else
-                        <form action="{{ route('subscriptions.create') }}" method="POST" class="inline-block w-full">
-                            @csrf
-                            <input type="hidden" name="plan" value="{{ $planKey }}">
-                            <input type="hidden" name="payment_method" value="credit_card">
-                            <button type="submit" 
-                                    class="w-full bg-pink-500 text-white py-3 px-4 rounded-lg hover:bg-pink-600 transition duration-200">
-                                <i class="fas fa-credit-card mr-2"></i>{{ __('messages.subscriptions.subscribe_now') }}
-                            </button>
-                        </form>
+                        <button type="button" 
+                                onclick="openPaymentModal('{{ $planKey }}', '{{ $plan['name'] }}', {{ $plan['price'] }}, '{{ $plan['interval'] }}')"
+                                class="w-full bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 transition duration-200">
+                            <i class="fas fa-credit-card mr-2"></i>{{ __('messages.subscriptions.subscribe_now') }}
+                        </button>
                     @endif
                 </div>
             </div>
@@ -119,4 +115,198 @@
         </div>
     </div>
 </div>
+
+<!-- Payment Modal -->
+<div id="payment-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-medium text-gray-900" id="modal-title">Confirmar Assinatura</h3>
+                <button onclick="closePaymentModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Plan Info -->
+            <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h4 class="font-semibold text-gray-900" id="plan-name">Premium Mensal</h4>
+                        <p class="text-sm text-gray-600" id="plan-description">por mês</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xl font-bold text-gray-900" id="plan-price">R$ 29,90</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Form -->
+            <form id="payment-form">
+                @csrf
+                <input type="hidden" id="selected-plan" name="plan">
+                
+                <div class="mb-4">
+                    <label for="card-element" class="block text-sm font-medium text-gray-700 mb-2">
+                        Informações do Cartão
+                    </label>
+                    <div id="card-element" class="border border-gray-300 rounded-lg p-3 bg-white">
+                        <!-- Stripe Elements will create form elements here -->
+                    </div>
+                    <div id="card-errors" class="text-red-600 text-sm mt-2" role="alert"></div>
+                </div>
+
+                <div class="flex space-x-3">
+                    <button type="button" 
+                            onclick="closePaymentModal()"
+                            class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition duration-200">
+                        Cancelar
+                    </button>
+                    <button type="submit" 
+                            id="submit-button"
+                            class="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span id="button-text">Confirmar Pagamento</span>
+                        <div id="spinner" class="hidden inline-block ml-2">
+                            <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+let stripe, elements, cardElement;
+
+document.addEventListener('DOMContentLoaded', function() {
+    stripe = Stripe('{{ config("services.stripe.key") }}');
+    elements = stripe.elements();
+    
+    cardElement = elements.create('card', {
+        style: {
+            base: {
+                fontSize: '16px',
+                color: '#424770',
+                '::placeholder': {
+                    color: '#aab7c4',
+                },
+            },
+            invalid: {
+                color: '#9e2146',
+            },
+        },
+    });
+
+    // Handle form submission
+    document.getElementById('payment-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        
+        const submitButton = document.getElementById('submit-button');
+        const buttonText = document.getElementById('button-text');
+        const spinner = document.getElementById('spinner');
+        
+        // Show loading state
+        submitButton.disabled = true;
+        buttonText.textContent = 'Processando...';
+        spinner.classList.remove('hidden');
+        
+        try {
+            const {error, paymentMethod} = await stripe.createPaymentMethod({
+                type: 'card',
+                card: cardElement,
+            });
+
+            if (error) {
+                // Show error message
+                document.getElementById('card-errors').textContent = error.message;
+                
+                // Reset button state
+                submitButton.disabled = false;
+                buttonText.textContent = 'Confirmar Pagamento';
+                spinner.classList.add('hidden');
+            } else {
+                // Submit form with payment method
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route("subscriptions.create") }}';
+                
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}';
+                
+                const planInput = document.createElement('input');
+                planInput.type = 'hidden';
+                planInput.name = 'plan';
+                planInput.value = document.getElementById('selected-plan').value;
+                
+                const paymentMethodInput = document.createElement('input');
+                paymentMethodInput.type = 'hidden';
+                paymentMethodInput.name = 'payment_method_id';
+                paymentMethodInput.value = paymentMethod.id;
+                
+                form.appendChild(csrfToken);
+                form.appendChild(planInput);
+                form.appendChild(paymentMethodInput);
+                
+                document.body.appendChild(form);
+                form.submit();
+            }
+        } catch (err) {
+            console.error('Error:', err);
+            document.getElementById('card-errors').textContent = 'Ocorreu um erro inesperado. Tente novamente.';
+            
+            // Reset button state
+            submitButton.disabled = false;
+            buttonText.textContent = 'Confirmar Pagamento';
+            spinner.classList.add('hidden');
+        }
+    });
+
+    // Handle real-time validation errors from the card Element
+    cardElement.on('change', function(event) {
+        const displayError = document.getElementById('card-errors');
+        if (event.error) {
+            displayError.textContent = event.error.message;
+        } else {
+            displayError.textContent = '';
+        }
+    });
+});
+
+function openPaymentModal(planKey, planName, price, interval) {
+    document.getElementById('selected-plan').value = planKey;
+    document.getElementById('plan-name').textContent = planName;
+    document.getElementById('plan-price').textContent = `R$ ${price.toFixed(2).replace('.', ',')}`;
+    document.getElementById('plan-description').textContent = interval === 'month' ? 'por mês' : interval === 'year' ? 'por ano' : '';
+    
+    // Mount card element if not already mounted
+    if (!document.getElementById('card-element').hasChildNodes()) {
+        cardElement.mount('#card-element');
+    }
+    
+    document.getElementById('payment-modal').classList.remove('hidden');
+}
+
+function closePaymentModal() {
+    document.getElementById('payment-modal').classList.add('hidden');
+    document.getElementById('card-errors').textContent = '';
+    
+    // Reset button state
+    const submitButton = document.getElementById('submit-button');
+    const buttonText = document.getElementById('button-text');
+    const spinner = document.getElementById('spinner');
+    
+    submitButton.disabled = false;
+    buttonText.textContent = 'Confirmar Pagamento';
+    spinner.classList.add('hidden');
+}
+</script>
 @endsection
