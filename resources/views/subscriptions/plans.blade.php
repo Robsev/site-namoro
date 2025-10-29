@@ -193,6 +193,15 @@
                         </div>
                     </button>
                 </div>
+                
+                <!-- Emergency reset button -->
+                <div class="mt-2 text-center">
+                    <button type="button" 
+                            onclick="document.getElementById('submit-button').disabled = false; document.getElementById('button-text').textContent = 'Confirmar Pagamento'; document.getElementById('spinner').classList.add('hidden');"
+                            class="text-xs text-gray-500 hover:text-gray-700 underline">
+                        Resetar Botão (Emergência)
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -259,27 +268,39 @@ document.addEventListener('DOMContentLoaded', function() {
                 resetButtonState();
             }, 10000); // 10 seconds timeout
             
-            // Function to reset button state
+            // Function to reset button state - SIMPLIFIED
             const resetButtonState = () => {
-                console.log('Resetting button state...');
-                console.log('submitButton:', submitButton);
-                console.log('buttonText:', buttonText);
-                console.log('spinner:', spinner);
+                console.log('FORCE RESETTING BUTTON STATE');
                 
                 // Clear safety timeout
                 clearTimeout(safetyTimeout);
                 
-                if (submitButton) {
-                    submitButton.disabled = false;
-                    console.log('Button disabled set to false');
+                // Force reset using direct DOM manipulation
+                const btn = document.getElementById('submit-button');
+                const text = document.getElementById('button-text');
+                const spin = document.getElementById('spinner');
+                
+                if (btn) {
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'pointer';
+                    console.log('Button reset - disabled:', btn.disabled);
                 }
-                if (buttonText) {
-                    buttonText.textContent = 'Confirmar Pagamento';
-                    console.log('Button text reset to "Confirmar Pagamento"');
+                
+                if (text) {
+                    text.textContent = 'Confirmar Pagamento';
+                    console.log('Text reset to:', text.textContent);
                 }
-                if (spinner) {
-                    spinner.classList.add('hidden');
+                
+                if (spin) {
+                    spin.classList.add('hidden');
+                    spin.style.display = 'none';
                     console.log('Spinner hidden');
+                }
+                
+                // Also try to remove any loading classes
+                if (btn) {
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
                 }
             };
             
