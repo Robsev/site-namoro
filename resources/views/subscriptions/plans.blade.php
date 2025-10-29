@@ -206,24 +206,37 @@ document.addEventListener('DOMContentLoaded', function() {
     // Only initialize Stripe if the key is available
     const stripeKey = '{{ config("services.stripe.key") }}';
     
-    if (stripeKey && stripeKey.trim() !== '') {
-        stripe = Stripe(stripeKey);
-        elements = stripe.elements();
-        
-        cardElement = elements.create('card', {
-            style: {
-                base: {
-                    fontSize: '16px',
-                    color: '#424770',
-                    '::placeholder': {
-                        color: '#aab7c4',
+    if (stripeKey && stripeKey.trim() !== '' && stripeKey !== 'null') {
+        try {
+            stripe = Stripe(stripeKey);
+            elements = stripe.elements();
+            
+            cardElement = elements.create('card', {
+                style: {
+                    base: {
+                        fontSize: '16px',
+                        color: '#424770',
+                        '::placeholder': {
+                            color: '#aab7c4',
+                        },
+                    },
+                    invalid: {
+                        color: '#9e2146',
                     },
                 },
-                invalid: {
-                    color: '#9e2146',
-                },
-            },
-        });
+            });
+        } catch (error) {
+            console.error('Error initializing Stripe:', error);
+            stripe = null;
+            elements = null;
+            cardElement = null;
+        }
+    } else {
+        console.log('Stripe key not configured, payment modal will be disabled');
+        stripe = null;
+        elements = null;
+        cardElement = null;
+    }
 
         // Handle form submission
         const paymentForm = document.getElementById('payment-form');
@@ -340,17 +353,31 @@ function openPaymentModal(planKey, planName, price, interval) {
         modal.classList.remove('hidden');
     }
     
-    // Mount card element after modal is visible
-    setTimeout(() => {
-        const cardElementEl = document.getElementById('card-element');
-        if (cardElementEl && typeof cardElement !== 'undefined' && !cardElementEl.hasChildNodes()) {
-            try {
-                cardElement.mount('#card-element');
-            } catch (error) {
-                console.error('Error mounting Stripe element:', error);
+    // Only mount Stripe element if Stripe is properly initialized
+    if (typeof stripe !== 'undefined' && typeof cardElement !== 'undefined') {
+        setTimeout(() => {
+            const cardElementEl = document.getElementById('card-element');
+            if (cardElementEl && !cardElementEl.hasChildNodes()) {
+                try {
+                    cardElement.mount('#card-element');
+                } catch (error) {
+                    console.error('Error mounting Stripe element:', error);
+                    // Show error message
+                    if (cardErrors) {
+                        cardErrors.textContent = 'Erro ao carregar formulário de pagamento. Tente novamente.';
+                    }
+                }
             }
+        }, 100);
+    } else {
+        // Show error if Stripe is not available
+        if (cardErrors) {
+            cardErrors.textContent = 'Sistema de pagamentos não disponível no momento.';
         }
-    }, 100);
+        if (submitButton) {
+            submitButton.disabled = true;
+        }
+    }
 }
 
 function closePaymentModal() {
