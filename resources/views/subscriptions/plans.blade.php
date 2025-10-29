@@ -322,15 +322,35 @@ function openPaymentModal(planKey, planName, price, interval) {
     if (planPriceEl) planPriceEl.textContent = `R$ ${price.toFixed(2).replace('.', ',')}`;
     if (planDescEl) planDescEl.textContent = interval === 'month' ? 'por mês' : interval === 'year' ? 'por ano' : '';
     
-    // Mount card element if not already mounted
-    const cardElementEl = document.getElementById('card-element');
-    if (cardElementEl && !cardElementEl.hasChildNodes() && typeof cardElement !== 'undefined') {
-        cardElement.mount('#card-element');
-    }
+    // Reset button state
+    const submitButton = document.getElementById('submit-button');
+    const buttonText = document.getElementById('button-text');
+    const spinner = document.getElementById('spinner');
     
+    if (submitButton) submitButton.disabled = false;
+    if (buttonText) buttonText.textContent = 'Confirmar Pagamento';
+    if (spinner) spinner.classList.add('hidden');
+    
+    // Clear any previous errors
+    const cardErrors = document.getElementById('card-errors');
+    if (cardErrors) cardErrors.textContent = '';
+    
+    // Show modal first
     if (modal) {
         modal.classList.remove('hidden');
     }
+    
+    // Mount card element after modal is visible
+    setTimeout(() => {
+        const cardElementEl = document.getElementById('card-element');
+        if (cardElementEl && typeof cardElement !== 'undefined' && !cardElementEl.hasChildNodes()) {
+            try {
+                cardElement.mount('#card-element');
+            } catch (error) {
+                console.error('Error mounting Stripe element:', error);
+            }
+        }
+    }, 100);
 }
 
 function closePaymentModal() {
