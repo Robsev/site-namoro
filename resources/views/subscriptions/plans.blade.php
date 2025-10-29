@@ -6,6 +6,15 @@
         <i class="fas fa-crown text-yellow-500 mr-2"></i>{{ __('messages.subscriptions.subscription_plans') }}
     </h2>
 
+    @if(isset($warning))
+        <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-6">
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                <span class="font-semibold">{{ $warning }}</span>
+            </div>
+        </div>
+    @endif
+
     @if($currentSubscription)
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
             <div class="flex items-center">
@@ -83,6 +92,14 @@
                     @elseif($planKey === 'free')
                         <span class="w-full bg-gray-300 text-gray-600 py-3 px-4 rounded-lg cursor-not-allowed">
                             <i class="fas fa-check mr-2"></i>{{ __('messages.subscriptions.current_plan') }}
+                        </span>
+                    @elseif(isset($plan['disabled']) && $plan['disabled'])
+                        <span class="w-full bg-gray-300 text-gray-600 py-3 px-4 rounded-lg cursor-not-allowed">
+                            <i class="fas fa-tools mr-2"></i>{{ $plan['disabled_message'] ?? 'Indisponível' }}
+                        </span>
+                    @elseif(!isset($stripeConfigured) || !$stripeConfigured)
+                        <span class="w-full bg-gray-300 text-gray-600 py-3 px-4 rounded-lg cursor-not-allowed">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>Sistema em manutenção
                         </span>
                     @else
                         <button type="button" 

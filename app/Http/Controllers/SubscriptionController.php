@@ -29,7 +29,109 @@ class SubscriptionController extends Controller
         $user = Auth::user();
         $currentSubscription = $user->subscriptions()->active()->first();
         
-        $plans = [
+        // Check if Stripe is configured
+        $stripeConfigured = !empty(config('services.stripe.key')) && 
+                           !empty(config('services.stripe.secret')) &&
+                           !empty(config('services.stripe.premium_monthly_price_id')) &&
+                           !empty(config('services.stripe.premium_yearly_price_id'));
+
+        if (!$stripeConfigured) {
+            // Show warning that Stripe is not configured
+            return view('subscriptions.plans', [
+                'plans' => $this->getMockPlans(),
+                'currentSubscription' => $currentSubscription,
+                'stripeConfigured' => false,
+                'warning' => 'Sistema de pagamentos não configurado. Entre em contato com o administrador.'
+            ]);
+        }
+
+        try {
+            // Get real Stripe prices
+            $plans = $this->getStripePlans();
+        } catch (\Exception $e) {
+            Log::error('Failed to fetch Stripe plans', [
+                'error' => $e->getMessage()
+            ]);
+            
+            // Fallback to mock plans if Stripe fails
+            $plans = $this->getMockPlans();
+        }
+
+        return view('subscriptions.plans', compact('plans', 'currentSubscription', 'stripeConfigured'));
+    }
+
+    /**
+     * Get Stripe plans with real prices
+     */
+    private function getStripePlans()
+    {
+        $priceIds = $this->stripeService->getPriceIds();
+        
+        return [
+            'free' => [
+                'name' => __('messages.subscriptions.free'),
+                'price' => 0,
+                'currency' => 'BRL',
+                'interval' => 'forever',
+                'features' => [
+                    __('messages.subscriptions.feature_profile_photos', ['count' => 6]),
+                    __('messages.subscriptions.feature_likes_per_day', ['count' => 5]),
+                    __('messages.subscriptions.feature_super_likes', ['count' => 1]),
+                    __('messages.subscriptions.feature_basic_chat'),
+                    __('messages.subscriptions.feature_basic_matching')
+                ],
+                'limitations' => [
+                    __('messages.subscriptions.limitation_no_filters'),
+                    __('messages.subscriptions.limitation_no_who_liked'),
+                    __('messages.subscriptions.limitation_no_boost')
+                ]
+            ],
+            'premium_monthly' => [
+                'name' => __('messages.subscriptions.premium_monthly'),
+                'price' => 29.90,
+                'currency' => 'BRL',
+                'interval' => 'month',
+                'price_id' => $priceIds['premium_monthly'],
+                'features' => [
+                    __('messages.subscriptions.feature_profile_photos', ['count' => 20]),
+                    __('messages.subscriptions.feature_unlimited_likes'),
+                    __('messages.subscriptions.feature_super_likes', ['count' => 5]),
+                    __('messages.subscriptions.feature_advanced_chat'),
+                    __('messages.subscriptions.feature_advanced_filters'),
+                    __('messages.subscriptions.feature_see_who_liked'),
+                    __('messages.subscriptions.feature_profile_boost'),
+                    __('messages.subscriptions.feature_stealth_mode')
+                ],
+                'popular' => true
+            ],
+            'premium_yearly' => [
+                'name' => __('messages.subscriptions.premium_yearly'),
+                'price' => 299.90,
+                'currency' => 'BRL',
+                'interval' => 'year',
+                'price_id' => $priceIds['premium_yearly'],
+                'features' => [
+                    __('messages.subscriptions.feature_profile_photos', ['count' => 20]),
+                    __('messages.subscriptions.feature_unlimited_likes'),
+                    __('messages.subscriptions.feature_super_likes', ['count' => 5]),
+                    __('messages.subscriptions.feature_advanced_chat'),
+                    __('messages.subscriptions.feature_advanced_filters'),
+                    __('messages.subscriptions.feature_see_who_liked'),
+                    __('messages.subscriptions.feature_profile_boost'),
+                    __('messages.subscriptions.feature_stealth_mode'),
+                    __('messages.subscriptions.feature_priority_support')
+                ],
+                'savings' => __('messages.subscriptions.savings_two_months')
+            ]
+        ];
+    }
+
+    /**
+     * Get mock plans (fallback)
+     */
+    private function getMockPlans()
+    {
+        return [
             'free' => [
                 'name' => __('messages.subscriptions.free'),
                 'price' => 0,
@@ -63,7 +165,9 @@ class SubscriptionController extends Controller
                     __('messages.subscriptions.feature_profile_boost'),
                     __('messages.subscriptions.feature_stealth_mode')
                 ],
-                'popular' => true
+                'popular' => true,
+                'disabled' => true,
+                'disabled_message' => 'Sistema de pagamentos em manutenção'
             ],
             'premium_yearly' => [
                 'name' => __('messages.subscriptions.premium_yearly'),
@@ -81,11 +185,11 @@ class SubscriptionController extends Controller
                     __('messages.subscriptions.feature_stealth_mode'),
                     __('messages.subscriptions.feature_priority_support')
                 ],
-                'savings' => __('messages.subscriptions.savings_two_months')
+                'savings' => __('messages.subscriptions.savings_two_months'),
+                'disabled' => true,
+                'disabled_message' => 'Sistema de pagamentos em manutenção'
             ]
         ];
-
-        return view('subscriptions.plans', compact('plans', 'currentSubscription'));
     }
 
     /**
@@ -105,6 +209,16 @@ class SubscriptionController extends Controller
      */
     public function create(Request $request)
     {
+        // Check if Stripe is configured
+        $stripeConfigured = !empty(config('services.stripe.key')) && 
+                           !empty(config('services.stripe.secret')) &&
+                           !empty(config('services.stripe.premium_monthly_price_id')) &&
+                           !empty(config('services.stripe.premium_yearly_price_id'));
+
+        if (!$stripeConfigured) {
+            return redirect()->back()->with('error', 'Sistema de pagamentos não configurado. Entre em contato com o administrador.');
+        }
+
         $request->validate([
             'plan' => 'required|in:premium_monthly,premium_yearly',
             'payment_method_id' => 'required|string'
