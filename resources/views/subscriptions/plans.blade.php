@@ -253,11 +253,34 @@ document.addEventListener('DOMContentLoaded', function() {
             if (buttonText) buttonText.textContent = 'Processando...';
             if (spinner) spinner.classList.remove('hidden');
             
+            // Safety timeout to prevent eternal loading
+            const safetyTimeout = setTimeout(() => {
+                console.log('Safety timeout triggered - resetting button');
+                resetButtonState();
+            }, 10000); // 10 seconds timeout
+            
             // Function to reset button state
             const resetButtonState = () => {
-                if (submitButton) submitButton.disabled = false;
-                if (buttonText) buttonText.textContent = 'Confirmar Pagamento';
-                if (spinner) spinner.classList.add('hidden');
+                console.log('Resetting button state...');
+                console.log('submitButton:', submitButton);
+                console.log('buttonText:', buttonText);
+                console.log('spinner:', spinner);
+                
+                // Clear safety timeout
+                clearTimeout(safetyTimeout);
+                
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    console.log('Button disabled set to false');
+                }
+                if (buttonText) {
+                    buttonText.textContent = 'Confirmar Pagamento';
+                    console.log('Button text reset to "Confirmar Pagamento"');
+                }
+                if (spinner) {
+                    spinner.classList.add('hidden');
+                    console.log('Spinner hidden');
+                }
             };
             
             try {
