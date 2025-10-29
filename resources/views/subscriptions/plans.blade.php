@@ -181,7 +181,7 @@
                             class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition duration-200">
                         Cancelar
                     </button>
-                    <button type="submit" 
+                    <button type="button" 
                             id="submit-button"
                             class="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200">
                         <span id="button-text">Confirmar Pagamento</span>
@@ -247,15 +247,14 @@ document.addEventListener('DOMContentLoaded', function() {
         cardElement = null;
     }
 
-    // Handle form submission
-    const paymentForm = document.getElementById('payment-form');
-    if (paymentForm) {
-        paymentForm.addEventListener('submit', async function(event) {
+    // Handle button click directly
+    const submitButton = document.getElementById('submit-button');
+    if (submitButton) {
+        submitButton.addEventListener('click', async function(event) {
             event.preventDefault();
             
-            console.log('=== FORM SUBMITTED ===');
+            console.log('=== BUTTON CLICKED ===');
             
-            const submitButton = document.getElementById('submit-button');
             const buttonText = document.getElementById('button-text');
             const spinner = document.getElementById('spinner');
             
@@ -266,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             // Don't show loading state immediately - only when actually processing
-            console.log('Form submitted, but not showing loading yet...');
+            console.log('Button clicked, but not showing loading yet...');
             
             // Function to reset button state - SIMPLIFIED
             const resetButtonState = () => {
@@ -423,9 +422,21 @@ window.openPaymentModal = function(planKey, planName, price, interval) {
     const buttonText = document.getElementById('button-text');
     const spinner = document.getElementById('spinner');
     
+    console.log('Button state when modal opens:', {
+        disabled: submitButton?.disabled,
+        text: buttonText?.textContent,
+        spinnerHidden: spinner?.classList.contains('hidden')
+    });
+    
     if (submitButton) submitButton.disabled = false;
     if (buttonText) buttonText.textContent = 'Confirmar Pagamento';
     if (spinner) spinner.classList.add('hidden');
+    
+    console.log('Button state after reset:', {
+        disabled: submitButton?.disabled,
+        text: buttonText?.textContent,
+        spinnerHidden: spinner?.classList.contains('hidden')
+    });
     
     // Clear any previous errors
     const cardErrors = document.getElementById('card-errors');
