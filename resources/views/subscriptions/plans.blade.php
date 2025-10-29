@@ -238,78 +238,79 @@ document.addEventListener('DOMContentLoaded', function() {
         cardElement = null;
     }
 
-        // Handle form submission
-        const paymentForm = document.getElementById('payment-form');
-        if (paymentForm) {
-            paymentForm.addEventListener('submit', async function(event) {
-                event.preventDefault();
-                
-                const submitButton = document.getElementById('submit-button');
-                const buttonText = document.getElementById('button-text');
-                const spinner = document.getElementById('spinner');
-                
-                // Show loading state
-                if (submitButton) submitButton.disabled = true;
-                if (buttonText) buttonText.textContent = 'Processando...';
-                if (spinner) spinner.classList.remove('hidden');
-                
-                try {
-                    const {error, paymentMethod} = await stripe.createPaymentMethod({
-                        type: 'card',
-                        card: cardElement,
-                    });
+    // Handle form submission
+    const paymentForm = document.getElementById('payment-form');
+    if (paymentForm) {
+        paymentForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const submitButton = document.getElementById('submit-button');
+            const buttonText = document.getElementById('button-text');
+            const spinner = document.getElementById('spinner');
+            
+            // Show loading state
+            if (submitButton) submitButton.disabled = true;
+            if (buttonText) buttonText.textContent = 'Processando...';
+            if (spinner) spinner.classList.remove('hidden');
+            
+            try {
+                const {error, paymentMethod} = await stripe.createPaymentMethod({
+                    type: 'card',
+                    card: cardElement,
+                });
 
-                    if (error) {
-                        // Show error message
-                        const cardErrors = document.getElementById('card-errors');
-                        if (cardErrors) cardErrors.textContent = error.message;
-                        
-                        // Reset button state
-                        if (submitButton) submitButton.disabled = false;
-                        if (buttonText) buttonText.textContent = 'Confirmar Pagamento';
-                        if (spinner) spinner.classList.add('hidden');
-                    } else {
-                        // Submit form with payment method
-                        const form = document.createElement('form');
-                        form.method = 'POST';
-                        form.action = '{{ route("subscriptions.create") }}';
-                        
-                        const csrfToken = document.createElement('input');
-                        csrfToken.type = 'hidden';
-                        csrfToken.name = '_token';
-                        csrfToken.value = '{{ csrf_token() }}';
-                        
-                        const planInput = document.createElement('input');
-                        planInput.type = 'hidden';
-                        planInput.name = 'plan';
-                        planInput.value = document.getElementById('selected-plan').value;
-                        
-                        const paymentMethodInput = document.createElement('input');
-                        paymentMethodInput.type = 'hidden';
-                        paymentMethodInput.name = 'payment_method_id';
-                        paymentMethodInput.value = paymentMethod.id;
-                        
-                        form.appendChild(csrfToken);
-                        form.appendChild(planInput);
-                        form.appendChild(paymentMethodInput);
-                        
-                        document.body.appendChild(form);
-                        form.submit();
-                    }
-                } catch (err) {
-                    console.error('Error:', err);
+                if (error) {
+                    // Show error message
                     const cardErrors = document.getElementById('card-errors');
-                    if (cardErrors) cardErrors.textContent = 'Ocorreu um erro inesperado. Tente novamente.';
+                    if (cardErrors) cardErrors.textContent = error.message;
                     
                     // Reset button state
                     if (submitButton) submitButton.disabled = false;
                     if (buttonText) buttonText.textContent = 'Confirmar Pagamento';
                     if (spinner) spinner.classList.add('hidden');
+                } else {
+                    // Submit form with payment method
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '{{ route("subscriptions.create") }}';
+                    
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    
+                    const planInput = document.createElement('input');
+                    planInput.type = 'hidden';
+                    planInput.name = 'plan';
+                    planInput.value = document.getElementById('selected-plan').value;
+                    
+                    const paymentMethodInput = document.createElement('input');
+                    paymentMethodInput.type = 'hidden';
+                    paymentMethodInput.name = 'payment_method_id';
+                    paymentMethodInput.value = paymentMethod.id;
+                    
+                    form.appendChild(csrfToken);
+                    form.appendChild(planInput);
+                    form.appendChild(paymentMethodInput);
+                    
+                    document.body.appendChild(form);
+                    form.submit();
                 }
-            });
-        }
+            } catch (err) {
+                console.error('Error:', err);
+                const cardErrors = document.getElementById('card-errors');
+                if (cardErrors) cardErrors.textContent = 'Ocorreu um erro inesperado. Tente novamente.';
+                
+                // Reset button state
+                if (submitButton) submitButton.disabled = false;
+                if (buttonText) buttonText.textContent = 'Confirmar Pagamento';
+                if (spinner) spinner.classList.add('hidden');
+            }
+        });
+    }
 
-        // Handle real-time validation errors from the card Element
+    // Handle real-time validation errors from the card Element
+    if (cardElement) {
         cardElement.on('change', function(event) {
             const displayError = document.getElementById('card-errors');
             if (displayError) {
@@ -332,7 +333,7 @@ function openPaymentModal(planKey, planName, price, interval) {
     
     if (selectedPlan) selectedPlan.value = planKey;
     if (planNameEl) planNameEl.textContent = planName;
-    if (planPriceEl) planPriceEl.textContent = `R$ ${price.toFixed(2).replace('.', ',')}`;
+    if (planPriceEl) planPriceEl.textContent = 'R$ ' + price.toFixed(2).replace('.', ',');
     if (planDescEl) planDescEl.textContent = interval === 'month' ? 'por mês' : interval === 'year' ? 'por ano' : '';
     
     // Reset button state
@@ -355,7 +356,7 @@ function openPaymentModal(planKey, planName, price, interval) {
     
     // Only mount Stripe element if Stripe is properly initialized
     if (typeof stripe !== 'undefined' && typeof cardElement !== 'undefined') {
-        setTimeout(() => {
+        setTimeout(function() {
             const cardElementEl = document.getElementById('card-element');
             if (cardElementEl && !cardElementEl.hasChildNodes()) {
                 try {
