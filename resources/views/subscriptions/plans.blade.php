@@ -324,7 +324,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function openPaymentModal(planKey, planName, price, interval) {
+// Global functions for modal handling
+window.openPaymentModal = function(planKey, planName, price, interval) {
+    console.log('Opening payment modal for plan:', planKey);
+    
     const selectedPlan = document.getElementById('selected-plan');
     const planNameEl = document.getElementById('plan-name');
     const planPriceEl = document.getElementById('plan-price');
@@ -354,34 +357,36 @@ function openPaymentModal(planKey, planName, price, interval) {
         modal.classList.remove('hidden');
     }
     
-    // Only mount Stripe element if Stripe is properly initialized
-    if (typeof stripe !== 'undefined' && typeof cardElement !== 'undefined') {
-        setTimeout(function() {
-            const cardElementEl = document.getElementById('card-element');
-            if (cardElementEl && !cardElementEl.hasChildNodes()) {
-                try {
-                    cardElement.mount('#card-element');
-                } catch (error) {
-                    console.error('Error mounting Stripe element:', error);
-                    // Show error message
-                    if (cardErrors) {
-                        cardErrors.textContent = 'Erro ao carregar formulário de pagamento. Tente novamente.';
-                    }
+    // Mount Stripe element after modal is visible
+    setTimeout(function() {
+        const cardElementEl = document.getElementById('card-element');
+        if (cardElementEl && stripe && cardElement) {
+            try {
+                // Clear any existing content
+                cardElementEl.innerHTML = '';
+                
+                // Mount the card element
+                cardElement.mount('#card-element');
+                console.log('Stripe card element mounted successfully');
+            } catch (error) {
+                console.error('Error mounting Stripe element:', error);
+                if (cardErrors) {
+                    cardErrors.textContent = 'Erro ao carregar formulário de pagamento. Tente novamente.';
                 }
             }
-        }, 100);
-    } else {
-        // Show error if Stripe is not available
-        if (cardErrors) {
-            cardErrors.textContent = 'Sistema de pagamentos não disponível no momento.';
+        } else {
+            console.error('Stripe not initialized or card element not found');
+            if (cardErrors) {
+                cardErrors.textContent = 'Sistema de pagamentos não disponível no momento.';
+            }
+            if (submitButton) {
+                submitButton.disabled = true;
+            }
         }
-        if (submitButton) {
-            submitButton.disabled = true;
-        }
-    }
-}
+    }, 200);
+};
 
-function closePaymentModal() {
+window.closePaymentModal = function() {
     const modal = document.getElementById('payment-modal');
     if (modal) {
         modal.classList.add('hidden');
@@ -408,6 +413,6 @@ function closePaymentModal() {
     if (spinner) {
         spinner.classList.add('hidden');
     }
-}
+};
 </script>
 @endsection
