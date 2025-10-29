@@ -3,6 +3,15 @@
 @section('title', 'Perfil Psicológico')
 
 @section('content')
+@php
+    // Helper para verificar se uma resposta está marcada
+    $getResponse = function($questionNumber) use ($profile) {
+        if ($profile && $profile->questionnaire_responses && isset($profile->questionnaire_responses[$questionNumber])) {
+            return (int)$profile->questionnaire_responses[$questionNumber];
+        }
+        return null;
+    };
+@endphp
 <div class="max-w-4xl mx-auto">
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-gray-900">{{ __('messages.profile.psychological_title') }}</h1>
@@ -45,33 +54,33 @@
                 <div class="question">
                     <p class="text-gray-700 mb-3">{{ __('messages.psychological.question1') }}</p>
                     <div class="flex flex-wrap gap-2 sm:gap-4">
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[1]" value="1" class="mr-1.5"> {{ __('messages.psychological.strongly_disagree') }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[1]" value="2" class="mr-1.5"> {{ __('messages.psychological.disagree') }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[1]" value="3" class="mr-1.5"> {{ __('messages.psychological.neutral') }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[1]" value="4" class="mr-1.5"> {{ __('messages.psychological.agree') }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[1]" value="5" class="mr-1.5"> {{ __('messages.psychological.strongly_agree') }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[1]" value="1" class="mr-1.5" {{ $getResponse(1) == 1 ? 'checked' : '' }}> {{ __('messages.psychological.strongly_disagree') }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[1]" value="2" class="mr-1.5" {{ $getResponse(1) == 2 ? 'checked' : '' }}> {{ __('messages.psychological.disagree') }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[1]" value="3" class="mr-1.5" {{ $getResponse(1) == 3 ? 'checked' : '' }}> {{ __('messages.psychological.neutral') }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[1]" value="4" class="mr-1.5" {{ $getResponse(1) == 4 ? 'checked' : '' }}> {{ __('messages.psychological.agree') }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[1]" value="5" class="mr-1.5" {{ $getResponse(1) == 5 ? 'checked' : '' }}> {{ __('messages.psychological.strongly_agree') }}</label>
                     </div>
                 </div>
                 
                 <div class="question">
                     <p class="text-gray-700 mb-3">{{ __('messages.psychological.question2') }}</p>
                     <div class="flex flex-wrap gap-2 sm:gap-4">
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[2]" value="1" class="mr-1.5">{{ __("messages.psychological.strongly_disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[2]" value="2" class="mr-1.5">{{ __("messages.psychological.disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[2]" value="3" class="mr-1.5">{{ __("messages.psychological.neutral") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[2]" value="4" class="mr-1.5">{{ __("messages.psychological.agree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[2]" value="5" class="mr-1.5">{{ __("messages.psychological.agree") }} totalmente</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[2]" value="1" class="mr-1.5" {{ $getResponse(2) == 1 ? 'checked' : '' }}>{{ __("messages.psychological.strongly_disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[2]" value="2" class="mr-1.5" {{ $getResponse(2) == 2 ? 'checked' : '' }}>{{ __("messages.psychological.disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[2]" value="3" class="mr-1.5" {{ $getResponse(2) == 3 ? 'checked' : '' }}>{{ __("messages.psychological.neutral") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[2]" value="4" class="mr-1.5" {{ $getResponse(2) == 4 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[2]" value="5" class="mr-1.5" {{ $getResponse(2) == 5 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }} totalmente</label>
                     </div>
                 </div>
                 
                 <div class="question">
                     <p class="text-gray-700 mb-3">{{ __('messages.psychological.question3') }}</p>
                     <div class="flex flex-wrap gap-2 sm:gap-4">
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[3]" value="1" class="mr-1.5">{{ __("messages.psychological.strongly_disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[3]" value="2" class="mr-1.5">{{ __("messages.psychological.disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[3]" value="3" class="mr-1.5">{{ __("messages.psychological.neutral") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[3]" value="4" class="mr-1.5">{{ __("messages.psychological.agree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[3]" value="5" class="mr-1.5">{{ __("messages.psychological.agree") }} totalmente</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[3]" value="1" class="mr-1.5" {{ $getResponse(3) == 1 ? 'checked' : '' }}>{{ __("messages.psychological.strongly_disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[3]" value="2" class="mr-1.5" {{ $getResponse(3) == 2 ? 'checked' : '' }}>{{ __("messages.psychological.disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[3]" value="3" class="mr-1.5" {{ $getResponse(3) == 3 ? 'checked' : '' }}>{{ __("messages.psychological.neutral") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[3]" value="4" class="mr-1.5" {{ $getResponse(3) == 4 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[3]" value="5" class="mr-1.5" {{ $getResponse(3) == 5 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }} totalmente</label>
                     </div>
                 </div>
             </div>
@@ -89,33 +98,33 @@
                 <div class="question">
                     <p class="text-gray-700 mb-3">{{ __('messages.psychological.question4') }}</p>
                     <div class="flex flex-wrap gap-2 sm:gap-4">
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[4]" value="1" class="mr-1.5">{{ __("messages.psychological.strongly_disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[4]" value="2" class="mr-1.5">{{ __("messages.psychological.disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[4]" value="3" class="mr-1.5">{{ __("messages.psychological.neutral") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[4]" value="4" class="mr-1.5">{{ __("messages.psychological.agree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[4]" value="5" class="mr-1.5">{{ __("messages.psychological.agree") }} totalmente</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[4]" value="1" class="mr-1.5" {{ $getResponse(4) == 1 ? 'checked' : '' }}>{{ __("messages.psychological.strongly_disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[4]" value="2" class="mr-1.5" {{ $getResponse(4) == 2 ? 'checked' : '' }}>{{ __("messages.psychological.disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[4]" value="3" class="mr-1.5" {{ $getResponse(4) == 3 ? 'checked' : '' }}>{{ __("messages.psychological.neutral") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[4]" value="4" class="mr-1.5" {{ $getResponse(4) == 4 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[4]" value="5" class="mr-1.5" {{ $getResponse(4) == 5 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }} totalmente</label>
                     </div>
                 </div>
                 
                 <div class="question">
                     <p class="text-gray-700 mb-3">{{ __('messages.psychological.question5') }}</p>
                     <div class="flex flex-wrap gap-2 sm:gap-4">
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[5]" value="1" class="mr-1.5">{{ __("messages.psychological.strongly_disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[5]" value="2" class="mr-1.5">{{ __("messages.psychological.disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[5]" value="3" class="mr-1.5">{{ __("messages.psychological.neutral") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[5]" value="4" class="mr-1.5">{{ __("messages.psychological.agree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[5]" value="5" class="mr-1.5">{{ __("messages.psychological.agree") }} totalmente</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[5]" value="1" class="mr-1.5" {{ $getResponse(5) == 1 ? 'checked' : '' }}>{{ __("messages.psychological.strongly_disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[5]" value="2" class="mr-1.5" {{ $getResponse(5) == 2 ? 'checked' : '' }}>{{ __("messages.psychological.disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[5]" value="3" class="mr-1.5" {{ $getResponse(5) == 3 ? 'checked' : '' }}>{{ __("messages.psychological.neutral") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[5]" value="4" class="mr-1.5" {{ $getResponse(5) == 4 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[5]" value="5" class="mr-1.5" {{ $getResponse(5) == 5 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }} totalmente</label>
                     </div>
                 </div>
                 
                 <div class="question">
                     <p class="text-gray-700 mb-3">{{ __("messages.psychological.question6") }}</p>
                     <div class="flex flex-wrap gap-2 sm:gap-4">
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[6]" value="1" class="mr-1.5">{{ __("messages.psychological.strongly_disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[6]" value="2" class="mr-1.5">{{ __("messages.psychological.disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[6]" value="3" class="mr-1.5">{{ __("messages.psychological.neutral") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[6]" value="4" class="mr-1.5">{{ __("messages.psychological.agree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[6]" value="5" class="mr-1.5">{{ __("messages.psychological.agree") }} totalmente</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[6]" value="1" class="mr-1.5" {{ $getResponse(6) == 1 ? 'checked' : '' }}>{{ __("messages.psychological.strongly_disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[6]" value="2" class="mr-1.5" {{ $getResponse(6) == 2 ? 'checked' : '' }}>{{ __("messages.psychological.disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[6]" value="3" class="mr-1.5" {{ $getResponse(6) == 3 ? 'checked' : '' }}>{{ __("messages.psychological.neutral") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[6]" value="4" class="mr-1.5" {{ $getResponse(6) == 4 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[6]" value="5" class="mr-1.5" {{ $getResponse(6) == 5 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }} totalmente</label>
                     </div>
                 </div>
             </div>
@@ -133,33 +142,33 @@
                 <div class="question">
                     <p class="text-gray-700 mb-3">{{ __("messages.psychological.question7") }}</p>
                     <div class="flex flex-wrap gap-2 sm:gap-4">
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[7]" value="1" class="mr-1.5">{{ __("messages.psychological.strongly_disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[7]" value="2" class="mr-1.5">{{ __("messages.psychological.disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[7]" value="3" class="mr-1.5">{{ __("messages.psychological.neutral") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[7]" value="4" class="mr-1.5">{{ __("messages.psychological.agree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[7]" value="5" class="mr-1.5">{{ __("messages.psychological.agree") }} totalmente</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[7]" value="1" class="mr-1.5" {{ $getResponse(7) == 1 ? 'checked' : '' }}>{{ __("messages.psychological.strongly_disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[7]" value="2" class="mr-1.5" {{ $getResponse(7) == 2 ? 'checked' : '' }}>{{ __("messages.psychological.disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[7]" value="3" class="mr-1.5" {{ $getResponse(7) == 3 ? 'checked' : '' }}>{{ __("messages.psychological.neutral") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[7]" value="4" class="mr-1.5" {{ $getResponse(7) == 4 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[7]" value="5" class="mr-1.5" {{ $getResponse(7) == 5 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }} totalmente</label>
                     </div>
                 </div>
                 
                 <div class="question">
                     <p class="text-gray-700 mb-3">{{ __("messages.psychological.question8") }}</p>
                     <div class="flex flex-wrap gap-2 sm:gap-4">
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[8]" value="1" class="mr-1.5">{{ __("messages.psychological.strongly_disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[8]" value="2" class="mr-1.5">{{ __("messages.psychological.disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[8]" value="3" class="mr-1.5">{{ __("messages.psychological.neutral") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[8]" value="4" class="mr-1.5">{{ __("messages.psychological.agree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[8]" value="5" class="mr-1.5">{{ __("messages.psychological.agree") }} totalmente</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[8]" value="1" class="mr-1.5" {{ $getResponse(8) == 1 ? 'checked' : '' }}>{{ __("messages.psychological.strongly_disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[8]" value="2" class="mr-1.5" {{ $getResponse(8) == 2 ? 'checked' : '' }}>{{ __("messages.psychological.disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[8]" value="3" class="mr-1.5" {{ $getResponse(8) == 3 ? 'checked' : '' }}>{{ __("messages.psychological.neutral") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[8]" value="4" class="mr-1.5" {{ $getResponse(8) == 4 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[8]" value="5" class="mr-1.5" {{ $getResponse(8) == 5 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }} totalmente</label>
                     </div>
                 </div>
                 
                 <div class="question">
                     <p class="text-gray-700 mb-3">{{ __("messages.psychological.question9") }}</p>
                     <div class="flex flex-wrap gap-2 sm:gap-4">
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[9]" value="1" class="mr-1.5">{{ __("messages.psychological.strongly_disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[9]" value="2" class="mr-1.5">{{ __("messages.psychological.disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[9]" value="3" class="mr-1.5">{{ __("messages.psychological.neutral") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[9]" value="4" class="mr-1.5">{{ __("messages.psychological.agree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[9]" value="5" class="mr-1.5">{{ __("messages.psychological.agree") }} totalmente</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[9]" value="1" class="mr-1.5" {{ $getResponse(9) == 1 ? 'checked' : '' }}>{{ __("messages.psychological.strongly_disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[9]" value="2" class="mr-1.5" {{ $getResponse(9) == 2 ? 'checked' : '' }}>{{ __("messages.psychological.disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[9]" value="3" class="mr-1.5" {{ $getResponse(9) == 3 ? 'checked' : '' }}>{{ __("messages.psychological.neutral") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[9]" value="4" class="mr-1.5" {{ $getResponse(9) == 4 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[9]" value="5" class="mr-1.5" {{ $getResponse(9) == 5 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }} totalmente</label>
                     </div>
                 </div>
             </div>
@@ -177,33 +186,33 @@
                 <div class="question">
                     <p class="text-gray-700 mb-3">{{ __("messages.psychological.question10") }}</p>
                     <div class="flex flex-wrap gap-2 sm:gap-4">
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[10]" value="1" class="mr-1.5">{{ __("messages.psychological.strongly_disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[10]" value="2" class="mr-1.5">{{ __("messages.psychological.disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[10]" value="3" class="mr-1.5">{{ __("messages.psychological.neutral") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[10]" value="4" class="mr-1.5">{{ __("messages.psychological.agree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[10]" value="5" class="mr-1.5">{{ __("messages.psychological.agree") }} totalmente</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[10]" value="1" class="mr-1.5" {{ $getResponse(10) == 1 ? 'checked' : '' }}>{{ __("messages.psychological.strongly_disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[10]" value="2" class="mr-1.5" {{ $getResponse(10) == 2 ? 'checked' : '' }}>{{ __("messages.psychological.disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[10]" value="3" class="mr-1.5" {{ $getResponse(10) == 3 ? 'checked' : '' }}>{{ __("messages.psychological.neutral") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[10]" value="4" class="mr-1.5" {{ $getResponse(10) == 4 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[10]" value="5" class="mr-1.5" {{ $getResponse(10) == 5 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }} totalmente</label>
                     </div>
                 </div>
                 
                 <div class="question">
                     <p class="text-gray-700 mb-3">{{ __("messages.psychological.question11") }}</p>
                     <div class="flex flex-wrap gap-2 sm:gap-4">
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[11]" value="1" class="mr-1.5">{{ __("messages.psychological.strongly_disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[11]" value="2" class="mr-1.5">{{ __("messages.psychological.disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[11]" value="3" class="mr-1.5">{{ __("messages.psychological.neutral") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[11]" value="4" class="mr-1.5">{{ __("messages.psychological.agree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[11]" value="5" class="mr-1.5">{{ __("messages.psychological.agree") }} totalmente</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[11]" value="1" class="mr-1.5" {{ $getResponse(11) == 1 ? 'checked' : '' }}>{{ __("messages.psychological.strongly_disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[11]" value="2" class="mr-1.5" {{ $getResponse(11) == 2 ? 'checked' : '' }}>{{ __("messages.psychological.disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[11]" value="3" class="mr-1.5" {{ $getResponse(11) == 3 ? 'checked' : '' }}>{{ __("messages.psychological.neutral") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[11]" value="4" class="mr-1.5" {{ $getResponse(11) == 4 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[11]" value="5" class="mr-1.5" {{ $getResponse(11) == 5 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }} totalmente</label>
                     </div>
                 </div>
                 
                 <div class="question">
                     <p class="text-gray-700 mb-3">{{ __("messages.psychological.question12") }}</p>
                     <div class="flex flex-wrap gap-2 sm:gap-4">
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[12]" value="1" class="mr-1.5">{{ __("messages.psychological.strongly_disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[12]" value="2" class="mr-1.5">{{ __("messages.psychological.disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[12]" value="3" class="mr-1.5">{{ __("messages.psychological.neutral") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[12]" value="4" class="mr-1.5">{{ __("messages.psychological.agree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[12]" value="5" class="mr-1.5">{{ __("messages.psychological.agree") }} totalmente</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[12]" value="1" class="mr-1.5" {{ $getResponse(12) == 1 ? 'checked' : '' }}>{{ __("messages.psychological.strongly_disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[12]" value="2" class="mr-1.5" {{ $getResponse(12) == 2 ? 'checked' : '' }}>{{ __("messages.psychological.disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[12]" value="3" class="mr-1.5" {{ $getResponse(12) == 3 ? 'checked' : '' }}>{{ __("messages.psychological.neutral") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[12]" value="4" class="mr-1.5" {{ $getResponse(12) == 4 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[12]" value="5" class="mr-1.5" {{ $getResponse(12) == 5 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }} totalmente</label>
                     </div>
                 </div>
             </div>
@@ -221,33 +230,33 @@
                 <div class="question">
                     <p class="text-gray-700 mb-3">{{ __("messages.psychological.question13") }}</p>
                     <div class="flex flex-wrap gap-2 sm:gap-4">
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[13]" value="1" class="mr-1.5">{{ __("messages.psychological.strongly_disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[13]" value="2" class="mr-1.5">{{ __("messages.psychological.disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[13]" value="3" class="mr-1.5">{{ __("messages.psychological.neutral") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[13]" value="4" class="mr-1.5">{{ __("messages.psychological.agree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[13]" value="5" class="mr-1.5">{{ __("messages.psychological.agree") }} totalmente</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[13]" value="1" class="mr-1.5" {{ $getResponse(13) == 1 ? 'checked' : '' }}>{{ __("messages.psychological.strongly_disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[13]" value="2" class="mr-1.5" {{ $getResponse(13) == 2 ? 'checked' : '' }}>{{ __("messages.psychological.disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[13]" value="3" class="mr-1.5" {{ $getResponse(13) == 3 ? 'checked' : '' }}>{{ __("messages.psychological.neutral") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[13]" value="4" class="mr-1.5" {{ $getResponse(13) == 4 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[13]" value="5" class="mr-1.5" {{ $getResponse(13) == 5 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }} totalmente</label>
                     </div>
                 </div>
                 
                 <div class="question">
                     <p class="text-gray-700 mb-3">{{ __("messages.psychological.question14") }}</p>
                     <div class="flex flex-wrap gap-2 sm:gap-4">
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[14]" value="1" class="mr-1.5">{{ __("messages.psychological.strongly_disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[14]" value="2" class="mr-1.5">{{ __("messages.psychological.disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[14]" value="3" class="mr-1.5">{{ __("messages.psychological.neutral") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[14]" value="4" class="mr-1.5">{{ __("messages.psychological.agree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[14]" value="5" class="mr-1.5">{{ __("messages.psychological.agree") }} totalmente</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[14]" value="1" class="mr-1.5" {{ $getResponse(14) == 1 ? 'checked' : '' }}>{{ __("messages.psychological.strongly_disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[14]" value="2" class="mr-1.5" {{ $getResponse(14) == 2 ? 'checked' : '' }}>{{ __("messages.psychological.disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[14]" value="3" class="mr-1.5" {{ $getResponse(14) == 3 ? 'checked' : '' }}>{{ __("messages.psychological.neutral") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[14]" value="4" class="mr-1.5" {{ $getResponse(14) == 4 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[14]" value="5" class="mr-1.5" {{ $getResponse(14) == 5 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }} totalmente</label>
                     </div>
                 </div>
                 
                 <div class="question">
                     <p class="text-gray-700 mb-3">{{ __("messages.psychological.question15") }}</p>
                     <div class="flex flex-wrap gap-2 sm:gap-4">
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[15]" value="1" class="mr-1.5">{{ __("messages.psychological.strongly_disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[15]" value="2" class="mr-1.5">{{ __("messages.psychological.disagree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[15]" value="3" class="mr-1.5">{{ __("messages.psychological.neutral") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[15]" value="4" class="mr-1.5">{{ __("messages.psychological.agree") }}</label>
-                        <label class="flex items-center text-sm"><input type="radio" name="responses[15]" value="5" class="mr-1.5">{{ __("messages.psychological.agree") }} totalmente</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[15]" value="1" class="mr-1.5" {{ $getResponse(15) == 1 ? 'checked' : '' }}>{{ __("messages.psychological.strongly_disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[15]" value="2" class="mr-1.5" {{ $getResponse(15) == 2 ? 'checked' : '' }}>{{ __("messages.psychological.disagree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[15]" value="3" class="mr-1.5" {{ $getResponse(15) == 3 ? 'checked' : '' }}>{{ __("messages.psychological.neutral") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[15]" value="4" class="mr-1.5" {{ $getResponse(15) == 4 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }}</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="responses[15]" value="5" class="mr-1.5" {{ $getResponse(15) == 5 ? 'checked' : '' }}>{{ __("messages.psychological.agree") }} totalmente</label>
                     </div>
                 </div>
             </div>
@@ -261,7 +270,7 @@
             </h2>
             
             <div class="flex items-center">
-                <input type="checkbox" id="is_public" name="is_public" value="1" class="mr-3">
+                <input type="checkbox" id="is_public" name="is_public" value="1" class="mr-3" {{ $profile && $profile->is_public ? 'checked' : '' }}>
                 <label for="is_public" class="text-gray-700">
                     {{ __('messages.psychological.privacy.description') }}
                 </label>
