@@ -338,7 +338,6 @@ class User extends Authenticatable implements MustVerifyEmail
             'last_name' => 5,
             'birth_date' => 5,
             'gender' => 5,
-            'location' => 5,
             'profile_photo' => 5
         ];
 
@@ -347,6 +346,12 @@ class User extends Authenticatable implements MustVerifyEmail
             if (!empty($this->$field)) {
                 $earnedPoints += $points;
             }
+        }
+        
+        // Location: verificar location string OU latitude/longitude (geolocalização)
+        $totalPoints += 5;
+        if (!empty($this->location) || (!is_null($this->latitude) && !is_null($this->longitude))) {
+            $earnedPoints += 5;
         }
 
         // Profile Details (25 points)
@@ -403,7 +408,10 @@ class User extends Authenticatable implements MustVerifyEmail
         if (empty($this->last_name)) $missing[] = __('messages.profile.missing.last_name');
         if (empty($this->birth_date)) $missing[] = __('messages.profile.missing.birth_date');
         if (empty($this->gender)) $missing[] = __('messages.profile.missing.gender');
-        if (empty($this->location)) $missing[] = __('messages.profile.missing.location');
+        // Verificar location string OU latitude/longitude (geolocalização)
+        if (empty($this->location) && (is_null($this->latitude) || is_null($this->longitude))) {
+            $missing[] = __('messages.profile.missing.location');
+        }
         
         // Check if user has any photos before asking for profile photo
         $photoCount = $this->photos()->where('moderation_status', 'approved')->count();
