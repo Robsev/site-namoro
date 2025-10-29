@@ -193,15 +193,6 @@
                         </div>
                     </button>
                 </div>
-                
-                <!-- Emergency reset button -->
-                <div class="mt-2 text-center">
-                    <button type="button" 
-                            onclick="document.getElementById('submit-button').disabled = false; document.getElementById('button-text').textContent = 'Confirmar Pagamento'; document.getElementById('spinner').classList.add('hidden');"
-                            class="text-xs text-gray-500 hover:text-gray-700 underline">
-                        Resetar Botão (Emergência)
-                    </button>
-                </div>
             </form>
         </div>
     </div>
@@ -253,26 +244,11 @@ document.addEventListener('DOMContentLoaded', function() {
         submitButton.addEventListener('click', async function(event) {
             event.preventDefault();
             
-            console.log('=== BUTTON CLICKED ===');
-            
             const buttonText = document.getElementById('button-text');
             const spinner = document.getElementById('spinner');
             
-            console.log('Elements found:', {
-                submitButton: !!submitButton,
-                buttonText: !!buttonText,
-                spinner: !!spinner
-            });
-            
-            // Don't show loading state immediately - only when actually processing
-            console.log('Button clicked, but not showing loading yet...');
-            
-            // Function to reset button state - SIMPLIFIED
+            // Function to reset button state
             const resetButtonState = () => {
-                console.log('FORCE RESETTING BUTTON STATE');
-                
-                
-                // Force reset using direct DOM manipulation
                 const btn = document.getElementById('submit-button');
                 const text = document.getElementById('button-text');
                 const spin = document.getElementById('spinner');
@@ -281,30 +257,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     btn.disabled = false;
                     btn.style.opacity = '1';
                     btn.style.cursor = 'pointer';
-                    console.log('Button reset - disabled:', btn.disabled);
                 }
                 
                 if (text) {
                     text.textContent = 'Confirmar Pagamento';
-                    console.log('Text reset to:', text.textContent);
                 }
                 
                 if (spin) {
                     spin.classList.add('hidden');
                     spin.style.display = 'none !important';
                     spin.style.visibility = 'hidden';
-                    console.log('Spinner hidden');
                 }
                 
-                // Also try to remove any loading classes
                 if (btn) {
                     btn.classList.remove('opacity-50', 'cursor-not-allowed');
                 }
             };
             
             try {
-                console.log('Creating payment method...');
-                
                 // Show loading state only when actually processing
                 if (submitButton) submitButton.disabled = true;
                 if (buttonText) buttonText.textContent = 'Processando...';
@@ -315,11 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     card: cardElement,
                 });
 
-                console.log('Payment method result:', {error, paymentMethod});
-
                 if (error) {
-                    console.error('Stripe error:', error);
-                    
                     // Show error message in multiple places
                     const cardErrors = document.getElementById('card-errors');
                     if (cardErrors) {
@@ -335,8 +301,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Reset button state
                     resetButtonState();
                 } else if (paymentMethod) {
-                    console.log('Payment method created successfully:', paymentMethod.id);
-                    
                     // Submit form with payment method
                     const form = document.createElement('form');
                     form.method = 'POST';
@@ -364,7 +328,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.body.appendChild(form);
                     form.submit();
                 } else {
-                    console.error('No payment method created and no error');
                     const cardErrors = document.getElementById('card-errors');
                     if (cardErrors) {
                         cardErrors.textContent = 'Erro ao processar pagamento. Tente novamente.';
@@ -375,7 +338,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     resetButtonState();
                 }
             } catch (err) {
-                console.error('Unexpected error:', err);
                 const cardErrors = document.getElementById('card-errors');
                 if (cardErrors) {
                     cardErrors.textContent = 'Erro inesperado. Verifique sua conexão e tente novamente.';
@@ -405,8 +367,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Global functions for modal handling
 window.openPaymentModal = function(planKey, planName, price, interval) {
-    console.log('Opening payment modal for plan:', planKey);
-    
     const selectedPlan = document.getElementById('selected-plan');
     const planNameEl = document.getElementById('plan-name');
     const planPriceEl = document.getElementById('plan-price');
@@ -423,21 +383,9 @@ window.openPaymentModal = function(planKey, planName, price, interval) {
     const buttonText = document.getElementById('button-text');
     const spinner = document.getElementById('spinner');
     
-    console.log('Button state when modal opens:', {
-        disabled: submitButton?.disabled,
-        text: buttonText?.textContent,
-        spinnerHidden: spinner?.classList.contains('hidden')
-    });
-    
     if (submitButton) submitButton.disabled = false;
     if (buttonText) buttonText.textContent = 'Confirmar Pagamento';
     if (spinner) spinner.classList.add('hidden');
-    
-    console.log('Button state after reset:', {
-        disabled: submitButton?.disabled,
-        text: buttonText?.textContent,
-        spinnerHidden: spinner?.classList.contains('hidden')
-    });
     
     // Clear any previous errors
     const cardErrors = document.getElementById('card-errors');
