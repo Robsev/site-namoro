@@ -253,6 +253,13 @@ document.addEventListener('DOMContentLoaded', function() {
             if (buttonText) buttonText.textContent = 'Processando...';
             if (spinner) spinner.classList.remove('hidden');
             
+            // Function to reset button state
+            const resetButtonState = () => {
+                if (submitButton) submitButton.disabled = false;
+                if (buttonText) buttonText.textContent = 'Confirmar Pagamento';
+                if (spinner) spinner.classList.add('hidden');
+            };
+            
             try {
                 console.log('Creating payment method...');
                 
@@ -279,9 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     alert('Erro no pagamento: ' + (error.message || 'Cartão recusado. Verifique os dados e tente novamente.'));
                     
                     // Reset button state
-                    if (submitButton) submitButton.disabled = false;
-                    if (buttonText) buttonText.textContent = 'Confirmar Pagamento';
-                    if (spinner) spinner.classList.add('hidden');
+                    resetButtonState();
                 } else if (paymentMethod) {
                     console.log('Payment method created successfully:', paymentMethod.id);
                     
@@ -316,24 +321,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     const cardErrors = document.getElementById('card-errors');
                     if (cardErrors) {
                         cardErrors.textContent = 'Erro ao processar pagamento. Tente novamente.';
+                        cardErrors.style.display = 'block';
                     }
                     
                     // Reset button state
-                    if (submitButton) submitButton.disabled = false;
-                    if (buttonText) buttonText.textContent = 'Confirmar Pagamento';
-                    if (spinner) spinner.classList.add('hidden');
+                    resetButtonState();
                 }
             } catch (err) {
                 console.error('Unexpected error:', err);
                 const cardErrors = document.getElementById('card-errors');
                 if (cardErrors) {
                     cardErrors.textContent = 'Erro inesperado. Verifique sua conexão e tente novamente.';
+                    cardErrors.style.display = 'block';
                 }
                 
                 // Reset button state
-                if (submitButton) submitButton.disabled = false;
-                if (buttonText) buttonText.textContent = 'Confirmar Pagamento';
-                if (spinner) spinner.classList.add('hidden');
+                resetButtonState();
             }
         });
     }
