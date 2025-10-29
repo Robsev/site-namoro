@@ -172,7 +172,7 @@
                     <div id="card-element" class="border border-gray-300 rounded-lg p-4 bg-white min-h-[50px]">
                         <!-- Stripe Elements will create form elements here -->
                     </div>
-                    <div id="card-errors" class="text-red-600 text-sm mt-2" role="alert"></div>
+                    <div id="card-errors" class="text-red-600 text-sm mt-2 p-2 bg-red-50 border border-red-200 rounded" role="alert" style="display: none;"></div>
                 </div>
 
                 <div class="flex space-x-3">
@@ -265,11 +265,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (error) {
                     console.error('Stripe error:', error);
-                    // Show error message
+                    
+                    // Show error message in multiple places
                     const cardErrors = document.getElementById('card-errors');
                     if (cardErrors) {
                         cardErrors.textContent = error.message || 'Erro ao processar pagamento. Verifique os dados do cartão.';
+                        cardErrors.style.display = 'block';
+                        cardErrors.style.color = '#dc2626';
+                        cardErrors.style.fontWeight = 'bold';
                     }
+                    
+                    // Also show alert to user
+                    alert('Erro no pagamento: ' + (error.message || 'Cartão recusado. Verifique os dados e tente novamente.'));
                     
                     // Reset button state
                     if (submitButton) submitButton.disabled = false;
