@@ -53,4 +53,9 @@ return [
         'premium_yearly_price_id' => env('STRIPE_PREMIUM_YEARLY_PRICE_ID'),
     ],
 
+    // Subscription system mode: 'stripe' (default) or 'mock'
+    'subscriptions' => [
+        'mode' => env('SUBSCRIPTIONS_MODE', 'stripe'),
+    ],
+
 ];

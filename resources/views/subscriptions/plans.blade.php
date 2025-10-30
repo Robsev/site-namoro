@@ -15,6 +15,18 @@
         </div>
     @endif
 
+    @if(isset($mockMode) && $mockMode)
+        <div class="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded mb-6">
+            <div class="flex items-center">
+                <i class="fas fa-info-circle mr-2"></i>
+                <span>
+                    {{ __('messages.subscriptions.coming_soon') ?? 'Assinaturas em breve.' }}
+                    {{ __('messages.subscriptions.free_for_now') ?? 'O serviço é gratuito por enquanto.' }}
+                </span>
+            </div>
+        </div>
+    @endif
+
     @if($currentSubscription)
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
             <div class="flex items-center">
@@ -99,7 +111,12 @@
                         </span>
                     @elseif(!isset($stripeConfigured) || !$stripeConfigured)
                         <span class="w-full bg-gray-300 text-gray-600 py-3 px-4 rounded-lg cursor-not-allowed">
-                            <i class="fas fa-exclamation-triangle mr-2"></i>Sistema em manutenção
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            @if(isset($mockMode) && $mockMode)
+                                Grátis por enquanto (em breve)
+                            @else
+                                Sistema em manutenção
+                            @endif
                         </span>
                     @else
                         <button type="button" 
@@ -133,6 +150,7 @@
     </div>
 </div>
 
+@if(isset($stripeConfigured) && $stripeConfigured && !isset($mockMode))
 <!-- Payment Modal -->
 <div id="payment-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
     <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
@@ -454,4 +472,5 @@ window.closePaymentModal = function() {
     }
 };
 </script>
+@endif
 @endsection

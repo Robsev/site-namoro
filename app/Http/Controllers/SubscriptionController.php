@@ -14,11 +14,13 @@ class SubscriptionController extends Controller
 {
     protected $stripeService;
     protected $notificationService;
+    protected $mode;
 
     public function __construct(StripeService $stripeService, NotificationService $notificationService)
     {
         $this->stripeService = $stripeService;
         $this->notificationService = $notificationService;
+        $this->mode = config('services.subscriptions.mode', 'stripe');
     }
 
     /**
@@ -29,6 +31,17 @@ class SubscriptionController extends Controller
         $user = Auth::user();
         $currentSubscription = $user->subscriptions()->active()->first();
         
+        // MOCK mode: exibir planos desabilitados com aviso amigável
+        if ($this->mode === 'mock') {
+            return view('subscriptions.plans', [
+                'plans' => $this->getMockPlans(),
+                'currentSubscription' => $currentSubscription,
+                'stripeConfigured' => false,
+                'mockMode' => true,
+                'warning' => 'Assinaturas estarão disponíveis em breve. O serviço é gratuito por enquanto.'
+            ]);
+        }
+
         // Check if Stripe is configured
         $stripeConfigured = !empty(config('services.stripe.key')) && 
                            !empty(config('services.stripe.secret')) &&
@@ -209,6 +222,10 @@ class SubscriptionController extends Controller
      */
     public function create(Request $request)
     {
+        if ($this->mode === 'mock') {
+            return redirect()->route('subscriptions.plans')
+                ->with('info', 'Assinaturas em breve. O serviço é gratuito por enquanto.');
+        }
         // Check if Stripe is configured
         $stripeConfigured = !empty(config('services.stripe.key')) && 
                            !empty(config('services.stripe.secret')) &&
@@ -279,6 +296,10 @@ class SubscriptionController extends Controller
      */
     public function cancel(Subscription $subscription)
     {
+        if ($this->mode === 'mock') {
+            return redirect()->route('subscriptions.plans')
+                ->with('info', 'Assinaturas em breve. O serviço é gratuito por enquanto.');
+        }
         $user = Auth::user();
         
         // Ensure user can only cancel their own subscription
@@ -308,6 +329,10 @@ class SubscriptionController extends Controller
      */
     public function resume(Subscription $subscription)
     {
+        if ($this->mode === 'mock') {
+            return redirect()->route('subscriptions.plans')
+                ->with('info', 'Assinaturas em breve. O serviço é gratuito por enquanto.');
+        }
         $user = Auth::user();
         
         // Ensure user can only resume their own subscription
@@ -337,6 +362,10 @@ class SubscriptionController extends Controller
      */
     public function updatePaymentMethod(Request $request, Subscription $subscription)
     {
+        if ($this->mode === 'mock') {
+            return redirect()->route('subscriptions.plans')
+                ->with('info', 'Assinaturas em breve. O serviço é gratuito por enquanto.');
+        }
         $user = Auth::user();
         
         // Ensure user can only update their own subscription
@@ -370,6 +399,10 @@ class SubscriptionController extends Controller
      */
     public function payment(Request $request)
     {
+        if ($this->mode === 'mock') {
+            return redirect()->route('subscriptions.plans')
+                ->with('info', 'Assinaturas em breve. O serviço é gratuito por enquanto.');
+        }
         $subscriptionId = $request->get('subscription_id');
         $clientSecret = $request->get('client_secret');
 
@@ -386,6 +419,10 @@ class SubscriptionController extends Controller
      */
     public function confirmPayment(Request $request)
     {
+        if ($this->mode === 'mock') {
+            return redirect()->route('subscriptions.plans')
+                ->with('info', 'Assinaturas em breve. O serviço é gratuito por enquanto.');
+        }
         $request->validate([
             'subscription_id' => 'required|string'
         ]);
