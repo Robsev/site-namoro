@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use App\Models\User;
 
 class PurgeTestUsersSeeder extends Seeder
@@ -30,52 +31,85 @@ class PurgeTestUsersSeeder extends Seeder
             $userIds = $testUsers->pluck('id')->all();
             $this->command->warn('Usuários de teste encontrados: ' . count($userIds));
 
+            // Helper para deletar com verificação de tabela
+            $safeDelete = function (string $table, callable $callback) {
+                if (Schema::hasTable($table)) {
+                    $callback();
+                } else {
+                    $this->command->warn("Tabela ausente, pulando: {$table}");
+                }
+            };
+
             // Apagar dados relacionados em ordem segura para FKs
             // Mensagens (sender/receiver)
-            DB::table('messages')->whereIn('sender_id', $userIds)->delete();
-            DB::table('messages')->whereIn('receiver_id', $userIds)->delete();
+            $safeDelete('messages', function () use ($userIds) {
+                DB::table('messages')->whereIn('sender_id', $userIds)->delete();
+                DB::table('messages')->whereIn('receiver_id', $userIds)->delete();
+            });
 
             // Conversas (user1/user2) - mensagens já removidas acima
-            DB::table('conversations')->whereIn('user1_id', $userIds)->delete();
-            DB::table('conversations')->whereIn('user2_id', $userIds)->delete();
+            $safeDelete('conversations', function () use ($userIds) {
+                DB::table('conversations')->whereIn('user1_id', $userIds)->delete();
+                DB::table('conversations')->whereIn('user2_id', $userIds)->delete();
+            });
 
             // Matches (user1/user2)
-            DB::table('user_matches')->whereIn('user1_id', $userIds)->delete();
-            DB::table('user_matches')->whereIn('user2_id', $userIds)->delete();
+            $safeDelete('user_matches', function () use ($userIds) {
+                DB::table('user_matches')->whereIn('user1_id', $userIds)->delete();
+                DB::table('user_matches')->whereIn('user2_id', $userIds)->delete();
+            });
 
             // Fotos
-            DB::table('user_photos')->whereIn('user_id', $userIds)->delete();
+            $safeDelete('user_photos', function () use ($userIds) {
+                DB::table('user_photos')->whereIn('user_id', $userIds)->delete();
+            });
 
             // Interesses (pivot)
-            DB::table('user_interests')->whereIn('user_id', $userIds)->delete();
+            $safeDelete('user_interests', function () use ($userIds) {
+                DB::table('user_interests')->whereIn('user_id', $userIds)->delete();
+            });
 
             // Preferências de matching
-            DB::table('matching_preferences')->whereIn('user_id', $userIds)->delete();
+            $safeDelete('matching_preferences', function () use ($userIds) {
+                DB::table('matching_preferences')->whereIn('user_id', $userIds)->delete();
+            });
 
             // Perfil psicológico
-            DB::table('psychological_profiles')->whereIn('user_id', $userIds)->delete();
+            $safeDelete('psychological_profiles', function () use ($userIds) {
+                DB::table('psychological_profiles')->whereIn('user_id', $userIds)->delete();
+            });
 
             // Notificações
-            DB::table('notifications')->whereIn('user_id', $userIds)->delete();
+            $safeDelete('notifications', function () use ($userIds) {
+                DB::table('notifications')->whereIn('user_id', $userIds)->delete();
+            });
 
             // Relatórios (reporter / reported)
-            DB::table('user_reports')->whereIn('reporter_id', $userIds)->delete();
-            DB::table('user_reports')->whereIn('reported_user_id', $userIds)->delete();
+            $safeDelete('user_reports', function () use ($userIds) {
+                DB::table('user_reports')->whereIn('reporter_id', $userIds)->delete();
+                DB::table('user_reports')->whereIn('reported_user_id', $userIds)->delete();
+            });
 
             // Bloqueios (pivot user_blocks)
-            DB::table('user_blocks')->whereIn('user_id', $userIds)->delete();
-            DB::table('user_blocks')->whereIn('blocked_user_id', $userIds)->delete();
+            $safeDelete('user_blocks', function () use ($userIds) {
+                DB::table('user_blocks')->whereIn('user_id', $userIds)->delete();
+                DB::table('user_blocks')->whereIn('blocked_user_id', $userIds)->delete();
+            });
 
             // Assinaturas
-            DB::table('subscriptions')->whereIn('user_id', $userIds)->delete();
+            $safeDelete('subscriptions', function () use ($userIds) {
+                DB::table('subscriptions')->whereIn('user_id', $userIds)->delete();
+            });
 
             // Perfis de usuário (se houver tabela user_profiles)
-            if (DB::getSchemaBuilder()->hasTable('user_profiles')) {
+            $safeDelete('user_profiles', function () use ($userIds) {
                 DB::table('user_profiles')->whereIn('user_id', $userIds)->delete();
-            }
+            });
 
             // Sessões
-            DB::table('sessions')->whereIn('user_id', $userIds)->delete();
+            $safeDelete('sessions', function () use ($userIds) {
+                DB::table('sessions')->whereIn('user_id', $userIds)->delete();
+            });
 
             // Finalmente os usuários
             DB::table('users')->whereIn('id', $userIds)->delete();
