@@ -156,6 +156,11 @@ class ProfileController extends Controller
 
         $request->validate([
             'profile_photo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'], // 2MB max
+        ], [
+            'profile_photo.required' => 'É necessário selecionar uma foto de perfil.',
+            'profile_photo.image' => 'O arquivo deve ser uma imagem.',
+            'profile_photo.mimes' => 'A imagem deve ser do tipo: jpeg, png, jpg ou gif.',
+            'profile_photo.max' => 'A foto de perfil não pode ter mais de 2MB (2048 kilobytes).',
         ]);
 
         // Delete old photo if exists

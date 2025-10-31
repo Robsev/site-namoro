@@ -23,6 +23,11 @@ class PhotoController extends Controller
 
         $request->validate([
             'photo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:5120'], // 5MB max
+        ], [
+            'photo.required' => 'É necessário selecionar uma foto.',
+            'photo.image' => 'O arquivo deve ser uma imagem.',
+            'photo.mimes' => 'A imagem deve ser do tipo: jpeg, png, jpg ou gif.',
+            'photo.max' => 'A foto não pode ter mais de 5MB (5120 kilobytes).',
         ]);
 
         // Check photo limit (max 6 photos for free users, unlimited for premium)
