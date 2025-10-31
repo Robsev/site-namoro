@@ -19,7 +19,11 @@ class FixNotificationTitlesSeeder extends Seeder
         // Buscar notificações que tenham valores padrão incorretos
         $notifications = Notification::where(function($query) {
             $query->where('title', 'Notificação')
-                  ->orWhere('message', 'Nova notificação');
+                  ->orWhere('title', '')
+                  ->orWhereNull('title')
+                  ->orWhere('message', 'Nova notificação')
+                  ->orWhere('message', '')
+                  ->orWhereNull('message');
         })->get();
 
         $this->command->info("Encontradas {$notifications->count()} notificações para corrigir.");
@@ -33,31 +37,42 @@ class FixNotificationTitlesSeeder extends Seeder
             // Verificar se o data tem os valores corretos
             $correctTitle = $data['title'] ?? null;
             $correctMessage = $data['message'] ?? null;
+            $correctType = $data['type'] ?? null;
             
-            // Se tiver os valores corretos no data, atualizar os campos title e message
-            if ($correctTitle || $correctMessage) {
+            // Se tiver os valores corretos no data, atualizar os campos
+            if ($correctTitle || $correctMessage || $correctType) {
                 $updateData = [];
                 
-                if ($correctTitle && ($notification->title === 'Notificação' || empty($notification->title))) {
+                if ($correctTitle && ($notification->title === 'Notificação' || empty($notification->title) || is_null($notification->title))) {
                     $updateData['title'] = $correctTitle;
                 }
                 
-                if ($correctMessage && ($notification->message === 'Nova notificação' || empty($notification->message))) {
+                if ($correctMessage && ($notification->message === 'Nova notificação' || empty($notification->message) || is_null($notification->message))) {
                     $updateData['message'] = $correctMessage;
+                }
+                
+                // Atualizar type se necessário (especialmente para notificações do Laravel como App\Notifications\NewSuperLike)
+                if ($correctType && $notification->type !== $correctType) {
+                    // Se o type atual é uma classe (App\Notifications\NewSuperLike), substituir pelo tipo do data
+                    if (strpos($notification->type, 'App\\Notifications\\') === 0 || strpos($notification->type, 'App/Notifications/') === 0) {
+                        $updateData['type'] = $correctType;
+                    }
                 }
                 
                 if (!empty($updateData)) {
                     $notification->update($updateData);
                     $fixed++;
-                    $titleLog = isset($updateData['title']) ? $updateData['title'] : 'não alterado';
-                    $messageLog = isset($updateData['message']) ? $updateData['message'] : 'não alterado';
-                    $this->command->info("Corrigido ID {$notification->id}: title={$titleLog}, message={$messageLog}");
+                    $changes = [];
+                    if (isset($updateData['title'])) $changes[] = "title='{$updateData['title']}'";
+                    if (isset($updateData['message'])) $changes[] = "message='{$updateData['message']}'";
+                    if (isset($updateData['type'])) $changes[] = "type='{$updateData['type']}'";
+                    $this->command->info("Corrigido ID {$notification->id}: " . implode(', ', $changes));
                 } else {
                     $skipped++;
                 }
             } else {
                 $skipped++;
-                $this->command->warn("Notificação ID {$notification->id} não tem title/message no data, pulando...");
+                $this->command->warn("Notificação ID {$notification->id} não tem title/message/type no data, pulando...");
             }
         }
 
