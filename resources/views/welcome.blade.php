@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Amigos Para Sempre') }}</title>
@@ -16,16 +16,16 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="font-sans antialiased bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 min-h-screen">
+<body class="font-sans antialiased bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 min-h-screen overflow-x-hidden">
     <!-- Navigation -->
     <nav class="bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between items-center py-4">
-                <div class="flex items-center">
-                    <i class="fas fa-heart text-4xl text-pink-500 mr-3"></i>
-                    <h1 class="text-2xl font-bold text-gray-800">{{ config('app.name', 'Amigos Para Sempre') }}</h1>
+        <div class="max-w-7xl mx-auto px-2 sm:px-4">
+            <div class="flex justify-between items-center py-3 sm:py-4">
+                <div class="flex items-center flex-shrink-0 min-w-0">
+                    <i class="fas fa-heart text-2xl sm:text-4xl text-pink-500 mr-2 sm:mr-3 flex-shrink-0"></i>
+                    <h1 class="text-lg sm:text-2xl font-bold text-gray-800 truncate">{{ config('app.name', 'Amigos Para Sempre') }}</h1>
                 </div>
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-1 sm:space-x-4 flex-shrink-0 ml-2">
                     <!-- Language Selector -->
                     <div class="relative group">
                         <button class="text-gray-600 hover:text-gray-800 px-2 py-2 rounded-md text-sm font-medium flex items-center">
@@ -90,12 +90,12 @@
                                 </button>
                             </form>
                         @else
-                            <a href="{{ route('login') }}" class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-200">
-                                <i class="fas fa-sign-in-alt mr-2"></i>{{ __('messages.auth.login') }}
+                            <a href="{{ route('login') }}" class="bg-pink-500 text-white px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-pink-600 transition duration-200 text-xs sm:text-base whitespace-nowrap">
+                                <i class="fas fa-sign-in-alt mr-1 sm:mr-2"></i>{{ __('messages.auth.login') }}
                             </a>
                             @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition duration-200">
-                                    <i class="fas fa-user-plus mr-2"></i>{{ __('messages.auth.register') }}
+                                <a href="{{ route('register') }}" class="bg-purple-500 text-white px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-purple-600 transition duration-200 text-xs sm:text-base whitespace-nowrap">
+                                    <i class="fas fa-user-plus mr-1 sm:mr-2"></i>{{ __('messages.auth.register') }}
                                 </a>
                             @endif
                         @endauth
@@ -106,7 +106,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <div class="max-w-7xl mx-auto px-4 py-16">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 py-8 sm:py-16">
         <div class="text-center">
             <!-- Logo Grande e Central -->
             <div class="mb-8">
@@ -120,20 +120,20 @@
                 </div>
             </div>
             
-            <h2 class="text-3xl font-bold text-gray-900 mb-6 sm:text-4xl md:text-5xl">
+            <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 px-2">
                 {{ __('messages.welcome.title') }}
             </h2>
-            <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            <p class="text-base sm:text-lg md:text-xl text-gray-600 mb-6 sm:mb-8 max-w-3xl mx-auto px-3">
                 {{ __('messages.welcome.subtitle') }}
             </p>
             
             @if (Route::has('login'))
                 @guest
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                        <a href="{{ route('register') }}" class="bg-pink-500 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-pink-600 transition duration-200 shadow-lg">
+                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-3">
+                        <a href="{{ route('register') }}" class="bg-pink-500 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-semibold hover:bg-pink-600 transition duration-200 shadow-lg whitespace-nowrap">
                             <i class="fas fa-heart mr-2"></i>{{ __('messages.welcome.get_started') }}
                         </a>
-                        <a href="{{ route('login') }}" class="bg-white text-pink-500 px-8 py-4 rounded-lg text-lg font-semibold border-2 border-pink-500 hover:bg-pink-50 transition duration-200 shadow-lg">
+                        <a href="{{ route('login') }}" class="bg-white text-pink-500 px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-semibold border-2 border-pink-500 hover:bg-pink-50 transition duration-200 shadow-lg whitespace-nowrap">
                             <i class="fas fa-sign-in-alt mr-2"></i>{{ __('messages.welcome.have_account') }}
                         </a>
                     </div>
@@ -143,13 +143,13 @@
     </div>
 
     <!-- Features Section -->
-    <div class="bg-white py-16">
-        <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">
+    <div class="bg-white py-12 sm:py-16">
+        <div class="max-w-7xl mx-auto px-3 sm:px-4">
+            <h2 class="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-6 sm:mb-12">
                 {{ __('messages.welcome.why_choose') }}
             </h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
                 <!-- Feature 1 -->
                 <div class="text-center p-6">
                     <div class="bg-pink-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
@@ -187,13 +187,13 @@
     </div>
 
     <!-- How It Works Section -->
-    <div class="bg-gradient-to-br from-pink-50 to-purple-50 py-16">
-        <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">
+    <div class="bg-gradient-to-br from-pink-50 to-purple-50 py-12 sm:py-16">
+        <div class="max-w-7xl mx-auto px-3 sm:px-4">
+            <h2 class="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-6 sm:mb-12">
                 {{ __('messages.welcome.how_it_works_title') }}
             </h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
                 <!-- Step 1 -->
                 <div class="text-center">
                     <div class="bg-pink-500 text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4 text-xl font-bold">
@@ -242,18 +242,18 @@
     </div>
 
     <!-- CTA Section -->
-    <div class="bg-pink-500 py-16">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <h2 class="text-3xl font-bold text-white mb-4">
+    <div class="bg-pink-500 py-12 sm:py-16">
+        <div class="max-w-7xl mx-auto px-3 sm:px-4 text-center">
+            <h2 class="text-2xl sm:text-3xl font-bold text-white mb-3 sm:mb-4">
                 {{ __('messages.welcome.cta_title') }}
             </h2>
-            <p class="text-xl text-pink-100 mb-8">
+            <p class="text-base sm:text-lg md:text-xl text-pink-100 mb-6 sm:mb-8">
                 {{ __('messages.welcome.cta_subtitle') }}
             </p>
             
             @if (Route::has('login'))
                 @guest
-                    <a href="{{ route('register') }}" class="bg-white text-pink-500 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition duration-200 shadow-lg">
+                    <a href="{{ route('register') }}" class="bg-white text-pink-500 px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-semibold hover:bg-gray-100 transition duration-200 shadow-lg inline-block whitespace-nowrap">
                         <i class="fas fa-heart mr-2"></i>{{ __('messages.welcome.start_free') }}
                     </a>
                 @endguest
@@ -262,8 +262,8 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="max-w-7xl mx-auto px-4">
+    <footer class="bg-gray-900 text-white py-8 sm:py-12">
+        <div class="max-w-7xl mx-auto px-3 sm:px-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
                     <div class="flex items-center mb-4">

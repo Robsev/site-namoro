@@ -2,13 +2,13 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
     <title>{{ __('messages.auth.login') }} - {{ config('app.name') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-gradient-to-br from-pink-100 to-purple-100 min-h-screen flex items-center justify-center">
-    <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+<body class="bg-gradient-to-br from-pink-100 to-purple-100 min-h-screen flex items-center justify-center overflow-x-hidden px-3 py-4">
+    <div class="bg-white rounded-2xl shadow-2xl p-4 sm:p-8 w-full max-w-md">
         <div class="text-center mb-8">
             <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ config('app.name') }}</h1>
             <p class="text-gray-600">{{ __('messages.auth.login_subtitle') }}</p>
