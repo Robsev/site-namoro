@@ -313,7 +313,16 @@ class MatchingController extends Controller
         ]);
 
         // Send notification to the super liked user
-        $targetUser->notify(new \App\Notifications\NewSuperLike($user));
+        try {
+            $targetUser->notify(new \App\Notifications\NewSuperLike($user));
+        } catch (\Exception $e) {
+            \Log::warning('Failed to send super like notification', [
+                'error' => $e->getMessage(),
+                'user_id' => $user->id,
+                'target_user_id' => $targetUser->id
+            ]);
+            // Continue even if notification fails - the match was already created
+        }
 
         return response()->json([
             'success' => true,
