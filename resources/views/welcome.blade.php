@@ -20,23 +20,36 @@
     <!-- Navigation -->
     <nav class="bg-white shadow-lg">
         <div class="max-w-7xl mx-auto px-3 sm:px-4">
-            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 sm:py-4 gap-3 sm:gap-0">
-                <div class="flex items-center flex-shrink-0">
-                    <i class="fas fa-heart text-2xl sm:text-4xl text-pink-500 mr-2 sm:mr-3 flex-shrink-0"></i>
-                    <h1 class="text-base sm:text-2xl font-bold text-gray-800 break-words leading-tight">{{ config('app.name', 'Amigos Para Sempre') }}</h1>
+            <div class="flex items-center justify-between py-3 sm:py-4 gap-2 sm:gap-0">
+                <div class="flex items-center min-w-0 flex-shrink">
+                    <i class="fas fa-heart text-xl sm:text-4xl text-pink-500 mr-1.5 sm:mr-3 flex-shrink-0"></i>
+                    <h1 class="text-xs sm:text-2xl font-bold text-gray-800 break-words leading-tight max-w-[120px] sm:max-w-none">
+                        <span class="sm:hidden">APS</span>
+                        <span class="hidden sm:inline">{{ config('app.name', 'Amigos Para Sempre') }}</span>
+                    </h1>
                 </div>
-                <div class="flex items-center justify-end space-x-2 sm:space-x-4 flex-shrink-0">
+                <div class="flex items-center justify-end space-x-1.5 sm:space-x-4 flex-shrink-0">
                     <!-- Language Selector -->
                     <div class="relative group">
-                        <button class="text-gray-600 hover:text-gray-800 px-2 py-2 rounded-md text-sm font-medium flex items-center">
-                            <i class="fas fa-globe mr-1"></i>
-                            @switch(app()->getLocale())
-                                @case('pt_BR') 🇧🇷 @break
-                                @case('en') 🇺🇸 @break
-                                @case('es') 🇪🇸 @break
-                                @default 🇧🇷
-                            @endswitch
-                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        <button class="text-gray-600 hover:text-gray-800 px-1.5 sm:px-2 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-medium flex items-center">
+                            <i class="fas fa-globe sm:mr-1"></i>
+                            <span class="hidden sm:inline">
+                                @switch(app()->getLocale())
+                                    @case('pt_BR') 🇧🇷 @break
+                                    @case('en') 🇺🇸 @break
+                                    @case('es') 🇪🇸 @break
+                                    @default 🇧🇷
+                                @endswitch
+                            </span>
+                            <span class="sm:hidden">
+                                @switch(app()->getLocale())
+                                    @case('pt_BR') 🇧🇷 @break
+                                    @case('en') 🇺🇸 @break
+                                    @case('es') 🇪🇸 @break
+                                    @default 🇧🇷
+                                @endswitch
+                            </span>
+                            <i class="fas fa-chevron-down ml-0.5 sm:ml-1 text-xs hidden sm:inline"></i>
                         </button>
                         <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                             <div class="py-1">
@@ -80,22 +93,22 @@
                     
                     @if (Route::has('login'))
                         @auth
-                            <a href="{{ url('/dashboard') }}" class="text-gray-600 hover:text-gray-800">
-                                <i class="fas fa-tachometer-alt mr-2"></i>{{ __('messages.nav.dashboard') }}
+                            <a href="{{ url('/dashboard') }}" class="text-gray-600 hover:text-gray-800 text-sm">
+                                <i class="fas fa-tachometer-alt sm:mr-2"></i><span class="hidden sm:inline">{{ __('messages.nav.dashboard') }}</span>
                             </a>
                             <form method="POST" action="{{ route('logout') }}" class="inline">
                                 @csrf
-                                <button type="submit" class="text-gray-600 hover:text-gray-800">
-                                    <i class="fas fa-sign-out-alt mr-2"></i>{{ __('messages.nav.logout') }}
+                                <button type="submit" class="text-gray-600 hover:text-gray-800 text-sm">
+                                    <i class="fas fa-sign-out-alt sm:mr-2"></i><span class="hidden sm:inline">{{ __('messages.nav.logout') }}</span>
                                 </button>
                             </form>
                         @else
-                            <a href="{{ route('login') }}" class="bg-pink-500 text-white px-3 sm:px-4 py-2 sm:py-2 rounded-lg hover:bg-pink-600 transition duration-200 text-sm sm:text-base whitespace-nowrap">
-                                <i class="fas fa-sign-in-alt mr-1 sm:mr-2"></i>{{ __('messages.auth.login') }}
+                            <a href="{{ route('login') }}" class="bg-pink-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-pink-600 transition duration-200 text-xs sm:text-base whitespace-nowrap">
+                                <i class="fas fa-sign-in-alt sm:mr-2"></i>{{ __('messages.auth.login') }}
                             </a>
                             @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="bg-purple-500 text-white px-3 sm:px-4 py-2 sm:py-2 rounded-lg hover:bg-purple-600 transition duration-200 text-sm sm:text-base whitespace-nowrap">
-                                    <i class="fas fa-user-plus mr-1 sm:mr-2"></i>{{ __('messages.auth.register') }}
+                                <a href="{{ route('register') }}" class="bg-purple-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-purple-600 transition duration-200 text-xs sm:text-base whitespace-nowrap">
+                                    <i class="fas fa-user-plus sm:mr-2"></i>{{ __('messages.auth.register') }}
                                 </a>
                             @endif
                         @endauth
