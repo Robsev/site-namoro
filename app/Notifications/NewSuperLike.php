@@ -59,11 +59,17 @@ class NewSuperLike extends Notification
      */
     public function toArray(object $notifiable): array
     {
+        $title = __('messages.notifications.super_like_title', [], app()->getLocale());
+        $message = __('messages.notifications.super_like_you', ['name' => $this->liker->name], app()->getLocale());
+        
         return [
             'type' => 'new_super_like',
-            'title' => __('messages.notifications.super_like_title'),
-            'message' => __('messages.notifications.super_like_you', ['name' => $this->liker->name]),
+            'title' => $title ?: '⭐ Super Like!',
+            'message' => $message ?: ($this->liker->name . ' te deu um Super Like!'),
             'data' => [
+                'type' => 'new_super_like',
+                'title' => $title ?: '⭐ Super Like!',
+                'message' => $message ?: ($this->liker->name . ' te deu um Super Like!'),
                 'liker_id' => $this->liker->id,
                 'liker_name' => $this->liker->name,
                 'liker_photo' => $this->liker->profile_photo,

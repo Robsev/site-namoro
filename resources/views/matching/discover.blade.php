@@ -122,7 +122,15 @@ function superLikeUser(userId) {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         }
     })
-    .then(response => response.json())
+    .then(response => {
+        // Check if response is ok before parsing JSON
+        if (!response.ok) {
+            return response.json().then(data => {
+                throw new Error(data.error || translations.error_super_liking);
+            });
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.success) {
             showNotification(translations.super_like_sent, 'success');
@@ -134,7 +142,14 @@ function superLikeUser(userId) {
     })
     .catch(error => {
         console.error('Error:', error);
-        showNotification(translations.error_super_liking_user, 'error');
+        // Only show error if it's a real error, not a success message
+        const errorMessage = error.message || translations.error_super_liking_user;
+        // Check if error message indicates success (super like was actually sent)
+        if (errorMessage.includes('limite') || errorMessage.includes('disponíveis')) {
+            showNotification(errorMessage, 'warning');
+        } else {
+            showNotification(errorMessage, 'error');
+        }
     });
 }
 
