@@ -19,13 +19,13 @@
 <body class="font-sans antialiased bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 min-h-screen overflow-x-hidden">
     <!-- Navigation -->
     <nav class="bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-2 sm:px-4">
-            <div class="flex justify-between items-center py-3 sm:py-4">
-                <div class="flex items-center flex-shrink-0 min-w-0">
+        <div class="max-w-7xl mx-auto px-3 sm:px-4">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 sm:py-4 gap-3 sm:gap-0">
+                <div class="flex items-center flex-shrink-0">
                     <i class="fas fa-heart text-2xl sm:text-4xl text-pink-500 mr-2 sm:mr-3 flex-shrink-0"></i>
-                    <h1 class="text-lg sm:text-2xl font-bold text-gray-800 truncate">{{ config('app.name', 'Amigos Para Sempre') }}</h1>
+                    <h1 class="text-base sm:text-2xl font-bold text-gray-800 break-words leading-tight">{{ config('app.name', 'Amigos Para Sempre') }}</h1>
                 </div>
-                <div class="flex items-center space-x-1 sm:space-x-4 flex-shrink-0 ml-2">
+                <div class="flex items-center justify-end space-x-2 sm:space-x-4 flex-shrink-0">
                     <!-- Language Selector -->
                     <div class="relative group">
                         <button class="text-gray-600 hover:text-gray-800 px-2 py-2 rounded-md text-sm font-medium flex items-center">
@@ -90,11 +90,11 @@
                                 </button>
                             </form>
                         @else
-                            <a href="{{ route('login') }}" class="bg-pink-500 text-white px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-pink-600 transition duration-200 text-xs sm:text-base whitespace-nowrap">
+                            <a href="{{ route('login') }}" class="bg-pink-500 text-white px-3 sm:px-4 py-2 sm:py-2 rounded-lg hover:bg-pink-600 transition duration-200 text-sm sm:text-base whitespace-nowrap">
                                 <i class="fas fa-sign-in-alt mr-1 sm:mr-2"></i>{{ __('messages.auth.login') }}
                             </a>
                             @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="bg-purple-500 text-white px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-purple-600 transition duration-200 text-xs sm:text-base whitespace-nowrap">
+                                <a href="{{ route('register') }}" class="bg-purple-500 text-white px-3 sm:px-4 py-2 sm:py-2 rounded-lg hover:bg-purple-600 transition duration-200 text-sm sm:text-base whitespace-nowrap">
                                     <i class="fas fa-user-plus mr-1 sm:mr-2"></i>{{ __('messages.auth.register') }}
                                 </a>
                             @endif
