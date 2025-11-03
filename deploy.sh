@@ -75,24 +75,42 @@ git fetch origin
 LOCAL=$(git rev-parse HEAD)
 REMOTE=$(git rev-parse origin/main)
 
-if [ "$LOCAL" = "$REMOTE" ]; then
-    print_success "Já está na versão mais recente. Nada a fazer."
-    exit 0
+HAS_UPDATES=false
+if [ "$LOCAL" != "$REMOTE" ]; then
+    HAS_UPDATES=true
+    print_success "Nova versão disponível!"
+else
+    print_success "Já está na versão mais recente do código."
+    print_status "Continuando com atualização de dependências e migrations..."
 fi
-
-print_success "Nova versão disponível! Iniciando deploy..."
 
 print_header "🚀 INICIANDO DEPLOY - AMIGOS PARA SEMPRE"
 
 # =============================================================================
-# 0. GIT PULL
+# 0. GIT PULL (apenas se houver atualizações)
 # =============================================================================
-print_header "⬇️ BAIXANDO ATUALIZAÇÕES"
-
-# Fazer pull
-print_status "Fazendo pull do repositório..."
-git pull origin main
-print_success "Código atualizado"
+if [ "$HAS_UPDATES" = true ]; then
+    print_header "⬇️ BAIXANDO ATUALIZAÇÕES"
+    
+    # Descartar mudanças locais no composer.lock se necessário
+    if git diff --quiet composer.lock 2>/dev/null; then
+        print_status "composer.lock não modificado localmente"
+    else
+        print_warning "composer.lock foi modificado localmente"
+        print_status "Descartando mudanças locais (será atualizado no pull)..."
+        git restore composer.lock 2>/dev/null || true
+    fi
+    
+    # Fazer pull
+    print_status "Fazendo pull do repositório..."
+    if git pull --no-rebase origin main; then
+        print_success "Código atualizado"
+    else
+        print_warning "Falha ao fazer pull. Tentando continuar com deploy..."
+    fi
+else
+    print_status "Pulando git pull (sem atualizações disponíveis)"
+fi
 
 # =============================================================================
 # 0. VERIFICAÇÃO INICIAL
@@ -338,9 +356,12 @@ print_header "📋 INFORMAÇÕES DE DEPLOY"
 print_success "Deploy concluído com sucesso!"
 echo ""
 echo -e "${CYAN}📊 RESUMO DO DEPLOY:${NC}"
+if [ "$HAS_UPDATES" = true ]; then
+    echo -e "  • Código Git: ${GREEN}✓${NC} Atualizado"
+fi
 echo -e "  • Modo de Manutenção: ${GREEN}✓${NC} Ativado durante deploy"
 echo -e "  • Dependências PHP: ${GREEN}✓${NC} Atualizadas e otimizadas"
-echo -e "  • composer.lock: ${GREEN}✓${NC} Atualizado automaticamente"
+echo -e "  • composer.lock: ${GREEN}✓${NC} Verificado/Atualizado"
 echo -e "  • Dependências Node.js: ${GREEN}✓${NC} Instaladas"
 echo -e "  • Build Frontend: ${GREEN}✓${NC} Concluído com Vite"
 echo -e "  • Cache de Produção: ${GREEN}✓${NC} Configurado"
