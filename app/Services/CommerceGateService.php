@@ -176,6 +176,8 @@ class CommerceGateService
                     'merchantWebsiteId' => $this->websiteId,
                     'userName' => (string) $user->id,
                     'externalId' => 'sub_' . $user->id . '_' . time(),
+                    'websitePublicUrl' => config('app.url'),
+                    'refererUrl' => url()->previous() ?? config('app.url'),
                 ],
                 'CustomerInfo' => [
                     'ipAddress' => request()->ip() ?? '8.8.8.8',
