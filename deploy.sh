@@ -151,10 +151,36 @@ fi
 # =============================================================================
 print_header "📚 ATUALIZAÇÃO DE DEPENDÊNCIAS"
 
+# Limpar cache do Composer antes de atualizar
+print_status "Limpando cache do Composer..."
+composer clear-cache --no-interaction || true
+print_success "Cache do Composer limpo"
+
 # Atualizar dependências PHP
+# Se composer update falhar, tentar composer install como fallback
 print_status "Atualizando dependências PHP e composer.lock..."
-composer update --no-dev --optimize-autoloader --no-interaction
-print_success "Dependências PHP atualizadas"
+if composer update --no-dev --optimize-autoloader --no-interaction; then
+    print_success "Dependências PHP atualizadas"
+else
+    print_warning "composer update falhou, tentando recuperação..."
+    # Verificar se vendor está corrompido (falta autoload.php)
+    if [ ! -f "vendor/autoload.php" ]; then
+        print_status "Diretório vendor parece corrompido, removendo..."
+        rm -rf vendor/ || true
+        print_success "Diretório vendor removido"
+    fi
+    # Tentar instalar baseado no composer.lock (mais seguro)
+    print_status "Tentando instalar via composer install (preserva composer.lock)..."
+    if composer install --no-dev --optimize-autoloader --no-interaction; then
+        print_success "Dependências PHP instaladas via composer install"
+        print_warning "NOTA: composer.lock não foi atualizado. Execute composer update manualmente se necessário."
+    else
+        print_error "Falha crítica ao instalar dependências PHP"
+        print_error "Verifique os logs do Composer e tente executar manualmente:"
+        print_error "  composer install --no-dev --optimize-autoloader"
+        exit 1
+    fi
+fi
 
 # Instalar dependências Node.js
 print_status "Instalando dependências Node.js..."
