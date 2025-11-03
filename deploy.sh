@@ -147,14 +147,14 @@ if [ -f ".env" ]; then
 fi
 
 # =============================================================================
-# 3. INSTALAÇÃO DE DEPENDÊNCIAS
+# 3. ATUALIZAÇÃO DE DEPENDÊNCIAS
 # =============================================================================
-print_header "📚 INSTALAÇÃO DE DEPENDÊNCIAS"
+print_header "📚 ATUALIZAÇÃO DE DEPENDÊNCIAS"
 
-# Instalar dependências PHP
-print_status "Instalando dependências PHP..."
-composer install --no-dev --optimize-autoloader --no-interaction
-print_success "Dependências PHP instaladas"
+# Atualizar dependências PHP
+print_status "Atualizando dependências PHP e composer.lock..."
+composer update --no-dev --optimize-autoloader --no-interaction
+print_success "Dependências PHP atualizadas"
 
 # Instalar dependências Node.js
 print_status "Instalando dependências Node.js..."
@@ -220,10 +220,10 @@ print_success "Cache de views otimizado"
 # =============================================================================
 print_header "🗄️ BANCO DE DADOS"
 
-# Executar migrations
-print_status "Executando migrations..."
+# Executar migrations pendentes
+print_status "Executando migrations pendentes..."
 php artisan migrate --force
-print_success "Migrations executadas"
+print_success "Migrations pendentes executadas com sucesso"
 
 # Seeders removidos do deploy automático
 # Para executar seeders manualmente: php artisan db:seed
@@ -313,11 +313,12 @@ print_success "Deploy concluído com sucesso!"
 echo ""
 echo -e "${CYAN}📊 RESUMO DO DEPLOY:${NC}"
 echo -e "  • Modo de Manutenção: ${GREEN}✓${NC} Ativado durante deploy"
-echo -e "  • Dependências PHP: ${GREEN}✓${NC} Instaladas e otimizadas"
+echo -e "  • Dependências PHP: ${GREEN}✓${NC} Atualizadas e otimizadas"
+echo -e "  • composer.lock: ${GREEN}✓${NC} Atualizado automaticamente"
 echo -e "  • Dependências Node.js: ${GREEN}✓${NC} Instaladas"
 echo -e "  • Build Frontend: ${GREEN}✓${NC} Concluído com Vite"
 echo -e "  • Cache de Produção: ${GREEN}✓${NC} Configurado"
-echo -e "  • Banco de Dados: ${GREEN}✓${NC} Migrations executadas"
+echo -e "  • Banco de Dados: ${GREEN}✓${NC} Migrations pendentes executadas"
 echo -e "  • Storage: ${GREEN}✓${NC} Link simbólico criado"
 echo -e "  • Permissões: ${GREEN}✓${NC} Configuradas"
 echo -e "  • Site Online: ${GREEN}✓${NC} Modo de manutenção desativado"
