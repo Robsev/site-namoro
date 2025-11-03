@@ -92,21 +92,58 @@ print_header "🚀 INICIANDO DEPLOY - AMIGOS PARA SEMPRE"
 if [ "$HAS_UPDATES" = true ]; then
     print_header "⬇️ BAIXANDO ATUALIZAÇÕES"
     
-    # Descartar mudanças locais no composer.lock se necessário
-    if git diff --quiet composer.lock 2>/dev/null; then
-        print_status "composer.lock não modificado localmente"
-    else
+    # Verificar e descartar mudanças locais que impedem o pull
+    print_status "Verificando mudanças locais..."
+    
+    # Descartar mudanças em composer.lock (será atualizado no pull)
+    if ! git diff --quiet composer.lock 2>/dev/null || ! git diff --cached --quiet composer.lock 2>/dev/null; then
         print_warning "composer.lock foi modificado localmente"
-        print_status "Descartando mudanças locais (será atualizado no pull)..."
+        print_status "Descartando mudanças locais no composer.lock (staged e unstaged)..."
+        git restore --staged composer.lock 2>/dev/null || true
         git restore composer.lock 2>/dev/null || true
+        print_success "Mudanças no composer.lock descartadas"
+    fi
+    
+    # Verificar se ainda há mudanças staged ou unstaged que impedem o pull
+    # (arquivos untracked que estão no .gitignore não impedem o pull)
+    if ! git diff --quiet HEAD 2>/dev/null || ! git diff --cached --quiet 2>/dev/null; then
+        print_warning "Há mudanças locais em arquivos tracked que impedem o pull"
+        print_status "Fazendo stash das mudanças locais (apenas arquivos tracked)..."
+        
+        # Fazer stash apenas de arquivos tracked modificados
+        # Arquivos untracked no .gitignore (storage/, bootstrap/cache/) não precisam ser stashed
+        if git stash push -m "Deploy auto-stash $(date +%Y%m%d_%H%M%S)" 2>/dev/null; then
+            print_success "Mudanças locais guardadas em stash"
+            STASH_APPLIED=true
+        else
+            print_warning "Falha ao fazer stash. Tentando pull mesmo assim..."
+            STASH_APPLIED=false
+        fi
+    else
+        STASH_APPLIED=false
     fi
     
     # Fazer pull
     print_status "Fazendo pull do repositório..."
     if git pull --no-rebase origin main; then
         print_success "Código atualizado"
+        
+        # Se fizemos stash, tentar aplicar novamente (mas não falhar se não conseguir)
+        if [ "$STASH_APPLIED" = true ]; then
+            print_status "Tentando aplicar mudanças locais novamente..."
+            if git stash pop 2>/dev/null; then
+                print_success "Mudanças locais aplicadas novamente"
+            else
+                print_warning "Algumas mudanças locais entraram em conflito. Verifique manualmente: git stash list"
+            fi
+        fi
     else
-        print_warning "Falha ao fazer pull. Tentando continuar com deploy..."
+        print_error "Falha ao fazer pull!"
+        if [ "$STASH_APPLIED" = true ]; then
+            print_warning "Tentando restaurar mudanças locais do stash..."
+            git stash pop 2>/dev/null || true
+        fi
+        exit 1
     fi
 else
     print_status "Pulando git pull (sem atualizações disponíveis)"
