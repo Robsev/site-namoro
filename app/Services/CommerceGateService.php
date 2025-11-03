@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Subscription;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 class CommerceGateService
 {
@@ -14,7 +15,6 @@ class CommerceGateService
     protected $authLogin;
     protected $authPassword;
     protected $baseUrl;
-    protected $hostedPaymentUrl;
     protected $testMode;
 
     public function __construct()
@@ -25,57 +25,121 @@ class CommerceGateService
         $this->authPassword = config('services.commercegate.auth_password');
         $this->testMode = config('services.commercegate.test_mode', true);
         
-        // CommerceGate URLs - configuráveis via .env ou usar padrões
+        // URL base do CommerceGate API conforme Swagger
+        // Produção: https://gw.cgpaytech.com
         $this->baseUrl = $this->testMode 
-            ? config('services.commercegate.api_url_test', 'https://secure.commercegate.com')
-            : config('services.commercegate.api_url_production', 'https://secure.commercegate.com');
-        
-        $this->hostedPaymentUrl = $this->testMode
-            ? config('services.commercegate.hosted_payment_url_test', 'https://secure.commercegate.com/payment')
-            : config('services.commercegate.hosted_payment_url_production', 'https://secure.commercegate.com/payment');
+            ? config('services.commercegate.api_url_test', 'https://gw.cgpaytech.com')
+            : config('services.commercegate.api_url_production', 'https://gw.cgpaytech.com');
     }
 
     /**
-     * Create a subscription using CommerceGate API
-     * CommerceGate usa formulários hospedados ou API direta
+     * Obter token de autenticação Bearer
+     * POST /v1/token
+     */
+    protected function getAuthToken(): string
+    {
+        // Cache token por 24 horas (expira em expiresIn segundos)
+        $cacheKey = 'commercegate_auth_token';
+        
+        return Cache::remember($cacheKey, 86400, function () {
+            $response = Http::post($this->baseUrl . '/v1/token', [
+                'login' => $this->authLogin,
+                'password' => $this->authPassword,
+            ]);
+
+            if (!$response->successful()) {
+                Log::error('CommerceGate Auth Token Failed', [
+                    'response' => $response->body(),
+                    'status' => $response->status()
+                ]);
+                throw new \Exception('Falha ao obter token de autenticação: ' . $response->body());
+            }
+
+            $result = $response->json();
+            $token = $result['token'] ?? null;
+            $expiresIn = $result['expiresIn'] ?? 86400;
+
+            if (!$token) {
+                throw new \Exception('Token não retornado na resposta');
+            }
+
+            // Cache pelo tempo de expiração
+            Cache::put($cacheKey, $token, $expiresIn - 60); // -60 segundos de margem
+
+            return $token;
+        });
+    }
+
+    /**
+     * Criar request HTTP autenticado
+     */
+    protected function authenticatedRequest()
+    {
+        $token = $this->getAuthToken();
+        return Http::withToken($token);
+    }
+
+    /**
+     * Criar subscription usando CommerceGate API
+     * PUT /v1/api/subscription
      */
     public function createSubscription(User $user, array $planData): array
     {
         try {
-            // CommerceGate requer dados do cliente e do plano
+            // Montar estrutura conforme Swagger
             $subscriptionData = [
-                'merchantId' => $this->merchantId,
-                'websiteId' => $this->websiteId,
-                'customerId' => $user->id,
-                'customerEmail' => $user->email,
-                'customerName' => $user->name,
-                'amount' => $planData['amount'], // em centavos
-                'currency' => $planData['currency'] ?? 'BRL',
-                'planCode' => $planData['plan_code'],
-                'billingFrequency' => $planData['interval'] === 'month' ? 'monthly' : 'yearly',
-                'description' => $planData['description'] ?? 'Assinatura Premium',
-                'returnUrl' => route('subscriptions.success'),
-                'cancelUrl' => route('subscriptions.payment-cancel'),
-                'notificationUrl' => route('commercegate.webhook'),
+                'MerchantInfo' => [
+                    'merchantId' => $this->merchantId,
+                    'merchantWebsiteId' => $this->websiteId,
+                    'userName' => (string) $user->id, // Identificador único do usuário
+                    'externalId' => 'sub_' . $user->id . '_' . time(),
+                ],
+                'CustomerInfo' => [
+                    'ipAddress' => request()->ip() ?? '8.8.8.8',
+                    'userLanguage' => app()->getLocale(),
+                    'email' => $user->email,
+                ],
+                'TransactionInfo' => [
+                    'description' => $planData['description'] ?? 'Assinatura Premium',
+                    'amount' => $planData['amount'], // Em centavos (minor units)
+                    'currency' => $planData['currency'] ?? 'BRL',
+                    'amountRecurring' => $planData['amount'], // Valor do pagamento recorrente
+                ],
+                'SubscriptionPeriod' => [
+                    'name' => $planData['interval'] === 'month' ? 'month' : 'day',
+                    'amount' => $planData['interval'] === 'month' ? 1 : ($planData['interval'] === 'year' ? 365 : 1),
+                ],
+                'SubscriptionConfig' => [
+                    'amountOfRetries' => '10',
+                    'amountOfDaysToShiftFirstRecurring' => '0',
+                ],
+                'ThreeDInfo' => [
+                    'redirectUrl' => route('subscriptions.success'),
+                ],
+                'Callbacks' => [
+                    'onSuccessUrl' => route('subscriptions.success'),
+                    'onFailUrl' => route('subscriptions.payment-cancel'),
+                    'onSubscriptionRecurringSuccessUrl' => route('commercegate.webhook'),
+                    'onSubscriptionRecurringFailUrl' => route('commercegate.webhook'),
+                    'onSubscriptionCanceledUrl' => route('commercegate.webhook'),
+                    'onSubscriptionClosedUrl' => route('commercegate.webhook'),
+                ],
+                'ConfigurationOptions' => [
+                    'paymentMethod' => 'credit-card',
+                ],
             ];
 
-            // Autenticação básica HTTP
-            // NOTA: Verificar na documentação oficial do CommerceGate o endpoint correto da API
-            // Pode ser necessário usar um endpoint diferente ou método de integração alternativo
-            $apiEndpoint = $this->baseUrl . '/api/subscriptions/create';
-            
-            $response = Http::withBasicAuth($this->authLogin, $this->authPassword)
-                ->post($apiEndpoint, $subscriptionData);
+            $response = $this->authenticatedRequest()
+                ->put($this->baseUrl . '/v1/api/subscription', $subscriptionData);
 
             if ($response->successful()) {
                 $result = $response->json();
                 
                 return [
                     'success' => true,
-                    'subscription_id' => $result['subscriptionId'] ?? null,
-                    'payment_url' => $result['paymentUrl'] ?? null,
-                    'redirect_url' => $result['redirectUrl'] ?? null,
-                    'status' => $result['status'] ?? 'pending'
+                    'orderId' => $result['orderId'] ?? null,
+                    'status' => $result['status'] ?? 'pending',
+                    'acsServerUrl' => $result['ThreeDInfo']['acsServerUrl'] ?? null, // URL para 3DS se necessário
                 ];
             }
 
@@ -85,7 +149,7 @@ class CommerceGateService
                 'status' => $response->status()
             ]);
 
-            throw new \Exception('Falha ao criar assinatura no CommerceGate: ' . $response->body());
+            throw new \Exception('Falha ao criar assinatura: ' . $response->body());
 
         } catch (\Exception $e) {
             Log::error('CommerceGate Subscription Creation Error', [
@@ -97,28 +161,105 @@ class CommerceGateService
     }
 
     /**
-     * Get subscription details
+     * Configurar Payment Form (Hosted Payment Form)
+     * POST /v1/api/payment_form/configure
+     * 
+     * Retorna URL do formulário hospedado para redirecionar o usuário
      */
-    public function getSubscription(string $subscriptionId): array
+    public function generateHostedPaymentForm(User $user, array $planData): array
     {
         try {
-            // NOTA: Verificar endpoint correto na documentação oficial
-            $apiEndpoint = $this->baseUrl . '/api/subscriptions/' . $subscriptionId;
-            
-            $response = Http::withBasicAuth($this->authLogin, $this->authPassword)
-                ->get($apiEndpoint, [
-                    'merchantId' => $this->merchantId
-                ]);
+            // Montar estrutura conforme Swagger para Payment Form Configuration
+            $formData = [
+                'MerchantInfo' => [
+                    'merchantId' => $this->merchantId,
+                    'merchantWebsiteId' => $this->websiteId,
+                    'userName' => (string) $user->id,
+                    'externalId' => 'sub_' . $user->id . '_' . time(),
+                ],
+                'CustomerInfo' => [
+                    'ipAddress' => request()->ip() ?? '8.8.8.8',
+                    'userLanguage' => app()->getLocale(),
+                    'email' => $user->email,
+                ],
+                'TransactionInfo' => [
+                    'description' => $planData['description'] ?? 'Assinatura Premium',
+                    'amount' => $planData['amount'],
+                    'currency' => $planData['currency'] ?? 'BRL',
+                    'amountRecurring' => $planData['amount'],
+                ],
+                'Offers' => [
+                    [
+                        'selected' => true,
+                        'TransactionInfo' => [
+                            'description' => $planData['description'] ?? 'Assinatura Premium',
+                            'amount' => $planData['amount'],
+                            'currency' => $planData['currency'] ?? 'BRL',
+                            'amountRecurring' => $planData['amount'],
+                        ],
+                        'SubscriptionPeriod' => [
+                            'name' => $planData['interval'] === 'month' ? 'month' : 'day',
+                            'amount' => $planData['interval'] === 'month' ? 1 : ($planData['interval'] === 'year' ? 365 : 1),
+                        ],
+                        'SubscriptionConfig' => [
+                            'amountOfRetries' => '10',
+                            'amountOfDaysToShiftFirstRecurring' => '0',
+                        ],
+                    ],
+                ],
+                'ThreeDInfo' => [
+                    'redirectUrl' => route('subscriptions.success'),
+                ],
+                'Callbacks' => [
+                    'onSuccessUrl' => route('subscriptions.success'),
+                    'onFailUrl' => route('subscriptions.payment-cancel'),
+                    'onSubscriptionRecurringSuccessUrl' => route('commercegate.webhook'),
+                    'onSubscriptionRecurringFailUrl' => route('commercegate.webhook'),
+                    'onSubscriptionCanceledUrl' => route('commercegate.webhook'),
+                    'onSubscriptionClosedUrl' => route('commercegate.webhook'),
+                ],
+                'ConfigurationOptions' => [
+                    'paymentMethod' => 'credit-card',
+                ],
+            ];
+
+            $response = $this->authenticatedRequest()
+                ->post($this->baseUrl . '/v1/api/payment_form/configure', $formData);
 
             if ($response->successful()) {
-                return $response->json();
+                $result = $response->json();
+                
+                $forwardUrl = $result['forwardUrl'] ?? null;
+                
+                // Log para debug
+                Log::info('CommerceGate Payment Form Response', [
+                    'user_id' => $user->id,
+                    'payment_form_id' => $result['paymentFormId'] ?? null,
+                    'forward_url' => $forwardUrl,
+                    'status' => $result['status'] ?? null,
+                    'full_response' => $result,
+                ]);
+                
+                return [
+                    'success' => true,
+                    'paymentFormId' => $result['paymentFormId'] ?? null,
+                    'forwardUrl' => $forwardUrl, // URL para redirecionar o usuário
+                    'qrUrl' => $result['qrUrl'] ?? null,
+                    'status' => $result['status'] ?? 'redirect',
+                ];
             }
 
-            throw new \Exception('Falha ao obter detalhes da assinatura');
+            Log::error('CommerceGate Payment Form Configuration Failed', [
+                'user_id' => $user->id,
+                'response' => $response->body(),
+                'status' => $response->status()
+            ]);
+
+            throw new \Exception('Falha ao configurar formulário de pagamento: ' . $response->body());
 
         } catch (\Exception $e) {
-            Log::error('CommerceGate Get Subscription Error', [
-                'subscription_id' => $subscriptionId,
+            Log::error('CommerceGate Payment Form Configuration Error', [
+                'user_id' => $user->id,
                 'error' => $e->getMessage()
             ]);
             throw $e;
@@ -126,28 +267,60 @@ class CommerceGateService
     }
 
     /**
-     * Cancel subscription
+     * Obter detalhes de uma ordem/subscription
+     * POST /v1/api/reporting/order/{orderId}
      */
-    public function cancelSubscription(string $subscriptionId, bool $immediately = false): array
+    public function getOrder(string $orderId): array
     {
         try {
-            $apiEndpoint = $this->baseUrl . '/api/subscriptions/' . $subscriptionId . '/cancel';
-            
-            $response = Http::withBasicAuth($this->authLogin, $this->authPassword)
-                ->post($apiEndpoint, [
-                    'merchantId' => $this->merchantId,
-                    'immediate' => $immediately
+            $response = $this->authenticatedRequest()
+                ->post($this->baseUrl . '/v1/api/reporting/order/' . $orderId, [
+                    'MerchantInfo' => [
+                        'merchantId' => $this->merchantId,
+                        'merchantWebsiteId' => $this->websiteId,
+                    ],
                 ]);
 
             if ($response->successful()) {
                 return $response->json();
             }
 
-            throw new \Exception('Falha ao cancelar assinatura');
+            throw new \Exception('Falha ao obter detalhes da ordem: ' . $response->body());
+
+        } catch (\Exception $e) {
+            Log::error('CommerceGate Get Order Error', [
+                'order_id' => $orderId,
+                'error' => $e->getMessage()
+            ]);
+            throw $e;
+        }
+    }
+
+    /**
+     * Cancelar subscription
+     * POST /v1/api/subscription/{orderId}
+     */
+    public function cancelSubscription(string $orderId, string $cancellationReason = 'Initiated by Customer request.'): array
+    {
+        try {
+            $response = $this->authenticatedRequest()
+                ->post($this->baseUrl . '/v1/api/subscription/' . $orderId, [
+                    'MerchantInfo' => [
+                        'merchantId' => $this->merchantId,
+                        'merchantWebsiteId' => $this->websiteId,
+                    ],
+                    'cancellationReason' => $cancellationReason,
+                ]);
+
+            if ($response->successful()) {
+                return $response->json();
+            }
+
+            throw new \Exception('Falha ao cancelar assinatura: ' . $response->body());
 
         } catch (\Exception $e) {
             Log::error('CommerceGate Cancel Subscription Error', [
-                'subscription_id' => $subscriptionId,
+                'order_id' => $orderId,
                 'error' => $e->getMessage()
             ]);
             throw $e;
@@ -155,86 +328,79 @@ class CommerceGateService
     }
 
     /**
-     * Resume subscription
+     * Verificar assinatura do webhook
+     * CommerceGate usa AES-256-CBC para assinatura de webhooks
      */
-    public function resumeSubscription(string $subscriptionId): array
+    public function verifyWebhook(array $data, string $signature, string $signatureInitVector): bool
     {
         try {
-            $apiEndpoint = $this->baseUrl . '/api/subscriptions/' . $subscriptionId . '/resume';
+            // Obter securityKey (gerar uma vez e reutilizar)
+            $securityKey = $this->getSecurityKey();
             
-            $response = Http::withBasicAuth($this->authLogin, $this->authPassword)
-                ->post($apiEndpoint, [
-                    'merchantId' => $this->merchantId
+            // Decriptar assinatura
+            $decryptedSignature = openssl_decrypt(
+                hex2bin($signature),
+                'AES-256-CBC',
+                hex2bin($securityKey),
+                OPENSSL_RAW_DATA,
+                hex2bin($signatureInitVector)
+            );
+
+            // Calcular MD5 do body
+            $bodyMd5 = md5(json_encode($data, JSON_UNESCAPED_SLASHES));
+
+            return hash_equals($bodyMd5, $decryptedSignature);
+
+        } catch (\Exception $e) {
+            Log::error('CommerceGate Webhook Verification Error', [
+                'error' => $e->getMessage()
+            ]);
+            return false;
+        }
+    }
+
+    /**
+     * Obter securityKey para verificação de webhook
+     * POST /v1/api/signature
+     */
+    protected function getSecurityKey(): string
+    {
+        $cacheKey = 'commercegate_security_key';
+        
+        return Cache::rememberForever($cacheKey, function () {
+            $response = $this->authenticatedRequest()
+                ->post($this->baseUrl . '/v1/api/signature', [
+                    'MerchantInfo' => [
+                        'merchantId' => $this->merchantId,
+                        'merchantWebsiteId' => $this->websiteId,
+                    ],
                 ]);
 
-            if ($response->successful()) {
-                return $response->json();
+            if (!$response->successful()) {
+                throw new \Exception('Falha ao obter security key: ' . $response->body());
             }
 
-            throw new \Exception('Falha ao reativar assinatura');
-
-        } catch (\Exception $e) {
-            Log::error('CommerceGate Resume Subscription Error', [
-                'subscription_id' => $subscriptionId,
-                'error' => $e->getMessage()
-            ]);
-            throw $e;
-        }
+            $result = $response->json();
+            return $result['securityKey'] ?? '';
+        });
     }
 
     /**
-     * Update payment method
-     * CommerceGate pode requerer uma nova autorização
-     */
-    public function updatePaymentMethod(string $subscriptionId, array $paymentData): array
-    {
-        try {
-            $apiEndpoint = $this->baseUrl . '/api/subscriptions/' . $subscriptionId . '/update-payment';
-            
-            $response = Http::withBasicAuth($this->authLogin, $this->authPassword)
-                ->post($apiEndpoint, array_merge([
-                    'merchantId' => $this->merchantId
-                ], $paymentData));
-
-            if ($response->successful()) {
-                return $response->json();
-            }
-
-            throw new \Exception('Falha ao atualizar método de pagamento');
-
-        } catch (\Exception $e) {
-            Log::error('CommerceGate Update Payment Method Error', [
-                'subscription_id' => $subscriptionId,
-                'error' => $e->getMessage()
-            ]);
-            throw $e;
-        }
-    }
-
-    /**
-     * Verify webhook signature
-     */
-    public function verifyWebhook(array $data, string $signature): bool
-    {
-        // CommerceGate geralmente usa HMAC SHA256
-        $expectedSignature = hash_hmac('sha256', json_encode($data), $this->authPassword);
-        return hash_equals($expectedSignature, $signature);
-    }
-
-    /**
-     * Handle webhook event
+     * Processar webhook do CommerceGate
      */
     public function handleWebhook(array $payload): array
     {
         try {
-            $eventType = $payload['eventType'] ?? $payload['type'] ?? null;
-            $data = $payload['data'] ?? $payload;
+            // Extrair informações do webhook
+            $orderId = $payload['orderId'] ?? null;
+            $type = $payload['type'] ?? null;
+            $status = $payload['status'] ?? null;
 
             return [
-                'type' => $eventType,
-                'data' => $data,
-                'subscription_id' => $data['subscriptionId'] ?? $data['subscription_id'] ?? null,
-                'transaction_id' => $data['transactionId'] ?? $data['transaction_id'] ?? null,
+                'orderId' => $orderId,
+                'type' => $type, // 'subscription', 'subscriptionRecurringPayment', etc.
+                'status' => $status, // 'success', 'failed', etc.
+                'data' => $payload,
             ];
         } catch (\Exception $e) {
             Log::error('CommerceGate Webhook Processing Error', [
@@ -246,7 +412,37 @@ class CommerceGateService
     }
 
     /**
-     * Get plan codes for our plans
+     * Obter ordem por PaymentFormId
+     * POST /v1/api/reporting/orderByPaymentFormId/{paymentFormId}
+     */
+    public function getOrderByPaymentFormId(string $paymentFormId): array
+    {
+        try {
+            $response = $this->authenticatedRequest()
+                ->post($this->baseUrl . '/v1/api/reporting/orderByPaymentFormId/' . $paymentFormId, [
+                    'MerchantInfo' => [
+                        'merchantId' => $this->merchantId,
+                        'merchantWebsiteId' => $this->websiteId,
+                    ],
+                ]);
+
+            if ($response->successful()) {
+                return $response->json();
+            }
+
+            throw new \Exception('Falha ao obter ordem por PaymentFormId: ' . $response->body());
+
+        } catch (\Exception $e) {
+            Log::error('CommerceGate Get Order By PaymentFormId Error', [
+                'payment_form_id' => $paymentFormId,
+                'error' => $e->getMessage()
+            ]);
+            throw $e;
+        }
+    }
+
+    /**
+     * Obter códigos de planos (se necessário)
      */
     public function getPlanCodes(): array
     {
@@ -255,55 +451,4 @@ class CommerceGateService
             'premium_yearly' => 'PREMIUM_YEARLY',
         ];
     }
-
-    /**
-     * Generate payment form data for hosted payment page
-     * CommerceGate oferece formulários hospedados que são mais seguros
-     */
-    public function generateHostedPaymentForm(User $user, array $planData): array
-    {
-        // Dados para o formulário hospedado
-        $formData = [
-            'merchantId' => $this->merchantId,
-            'websiteId' => $this->websiteId,
-            'customerId' => $user->id,
-            'customerEmail' => $user->email,
-            'customerName' => $user->name,
-            'amount' => $planData['amount'],
-            'currency' => $planData['currency'] ?? 'BRL',
-            'planCode' => $planData['plan_code'],
-            'billingFrequency' => $planData['interval'] === 'month' ? 'monthly' : 'yearly',
-            'description' => $planData['description'] ?? 'Assinatura Premium',
-            'returnUrl' => route('subscriptions.success'),
-            'cancelUrl' => route('subscriptions.payment-cancel'),
-            'notificationUrl' => route('commercegate.webhook'),
-            'subscription' => true,
-        ];
-
-        // Gerar assinatura HMAC para segurança
-        $signature = $this->generateSignature($formData);
-
-        $formData['signature'] = $signature;
-        // URL do formulário hospedado - deve ser fornecido pelo CommerceGate no portal do merchant
-        $formData['actionUrl'] = $this->hostedPaymentUrl;
-
-        return $formData;
-    }
-
-    /**
-     * Generate HMAC signature for payment form
-     */
-    protected function generateSignature(array $data): string
-    {
-        // Ordenar campos para assinatura consistente
-        ksort($data);
-        
-        // Criar string de dados (excluir signature se existir)
-        unset($data['signature']);
-        $signatureString = http_build_query($data);
-        
-        // Gerar HMAC
-        return hash_hmac('sha256', $signatureString, $this->authPassword);
-    }
 }
-

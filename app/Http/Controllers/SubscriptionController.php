@@ -248,9 +248,34 @@ class SubscriptionController extends Controller
                     'description' => $planDetails['name'],
                 ]);
 
-                // Redirecionar para página de pagamento hospedada do CommerceGate
+                // Validar e redirecionar se houver forwardUrl válida
+                if (!empty($paymentForm['forwardUrl'])) {
+                    $forwardUrl = $paymentForm['forwardUrl'];
+                    
+                    // Garantir que a URL tenha protocolo
+                    if (!preg_match('/^https?:\/\//', $forwardUrl)) {
+                        $forwardUrl = 'https://' . ltrim($forwardUrl, '/');
+                    }
+                    
+                    // Validar URL
+                    if (filter_var($forwardUrl, FILTER_VALIDATE_URL) !== false) {
+                        Log::info('CommerceGate redirect URL', [
+                            'user_id' => $user->id,
+                            'forward_url' => $forwardUrl
+                        ]);
+                        return redirect($forwardUrl);
+                    } else {
+                        Log::warning('CommerceGate invalid forwardUrl', [
+                            'user_id' => $user->id,
+                            'forward_url' => $forwardUrl,
+                            'original_url' => $paymentForm['forwardUrl']
+                        ]);
+                    }
+                }
+
+                // Fallback: exibir página com informações
                 return view('subscriptions.commercegate-payment', [
-                    'formData' => $paymentForm,
+                    'paymentForm' => $paymentForm,
                     'plan' => $plan,
                     'planName' => $planDetails['name'],
                 ]);
@@ -287,8 +312,11 @@ class SubscriptionController extends Controller
 
         try {
             if ($this->mode === 'commercegate' && $subscription->commercegate_subscription_id) {
-                // Cancel CommerceGate subscription
-                $this->commerceGateService->cancelSubscription($subscription->commercegate_subscription_id, false);
+                // Cancel CommerceGate subscription (usa orderId)
+                $this->commerceGateService->cancelSubscription(
+                    $subscription->commercegate_subscription_id,
+                    'Cancelado por solicitação do cliente.'
+                );
             }
 
             // Update local subscription
@@ -416,32 +444,55 @@ class SubscriptionController extends Controller
                 ->with('info', 'Assinaturas em breve. O serviço é gratuito por enquanto.');
         }
 
-        $subscriptionId = $request->get('subscriptionId') ?? $request->get('subscription_id');
-        $transactionId = $request->get('transactionId') ?? $request->get('transaction_id');
+        // CommerceGate retorna orderId e paymentFormId nos parâmetros
+        $orderId = $request->get('orderId') ?? $request->get('order_id');
+        $paymentFormId = $request->get('paymentFormId') ?? $request->get('paymentForm_id');
 
-        if (!$subscriptionId) {
+        // Se não tiver orderId mas tiver paymentFormId, obter orderId via API
+        if (!$orderId && $paymentFormId) {
+            try {
+                $orderData = $this->commerceGateService->getOrderByPaymentFormId($paymentFormId);
+                $orderId = $orderData['Order']['orderId'] ?? null;
+            } catch (\Exception $e) {
+                Log::error('Failed to get order by PaymentFormId', [
+                    'payment_form_id' => $paymentFormId,
+                    'error' => $e->getMessage()
+                ]);
+            }
+        }
+
+        if (!$orderId) {
             return redirect()->route('subscriptions.plans')
                 ->with('error', 'Parâmetros de pagamento inválidos.');
         }
 
         try {
-            // Get subscription details from CommerceGate
-            $cgSubscription = $this->commerceGateService->getSubscription($subscriptionId);
+            // Obter detalhes da ordem do CommerceGate
+            $cgOrder = $this->commerceGateService->getOrder($orderId);
             
-            if ($cgSubscription && ($cgSubscription['status'] ?? '') === 'active') {
+            // Verificar se é uma subscription e está com status success
+            $orderType = $cgOrder['type'] ?? '';
+            $status = $cgOrder['status'] ?? '';
+            
+            if ($orderType === 'subscription' && $status === 'success') {
                 $user = Auth::user();
-                $this->createLocalSubscriptionFromCommerceGate($user, $cgSubscription);
+                $this->createLocalSubscriptionFromCommerceGate($user, $cgOrder);
                 
                 return redirect()->route('subscriptions.show')
                     ->with('success', 'Pagamento confirmado! Bem-vindo ao Premium!');
             }
 
+            if ($status === 'pending') {
+                return redirect()->route('subscriptions.plans')
+                    ->with('info', 'Pagamento em processamento. Você receberá uma confirmação em breve.');
+            }
+
             return redirect()->route('subscriptions.plans')
-                ->with('error', 'Pagamento ainda não foi processado.');
+                ->with('error', 'Pagamento ainda não foi processado completamente.');
 
         } catch (\Exception $e) {
             Log::error('Payment success processing failed', [
-                'subscription_id' => $subscriptionId,
+                'order_id' => $orderId,
                 'error' => $e->getMessage()
             ]);
 
@@ -466,56 +517,83 @@ class SubscriptionController extends Controller
     {
         try {
             $payload = $request->all();
-            $signature = $request->header('X-CommerceGate-Signature') ?? '';
+            $signature = $request->header('signature') ?? '';
+            $signatureInitVector = $request->header('signature-init-vector') ?? '';
 
-            // Verify webhook signature
-            if (!$this->commerceGateService->verifyWebhook($payload, $signature)) {
-                Log::warning('CommerceGate webhook signature verification failed');
-                return response()->json(['error' => 'Invalid signature'], 401);
+            // Verify webhook signature (CommerceGate usa AES-256-CBC)
+            if (!empty($signature) && !empty($signatureInitVector)) {
+                if (!$this->commerceGateService->verifyWebhook($payload, $signature, $signatureInitVector)) {
+                    Log::warning('CommerceGate webhook signature verification failed');
+                    return response()->json(['error' => 'Invalid signature'], 401);
+                }
             }
 
             // Process webhook
             $event = $this->commerceGateService->handleWebhook($payload);
-            $subscriptionId = $event['subscription_id'] ?? null;
+            $orderId = $event['orderId'] ?? null;
+            $type = $event['type'] ?? '';
+            $status = $event['status'] ?? '';
 
-            if (!$subscriptionId) {
-                return response()->json(['error' => 'Missing subscription_id'], 400);
+            if (!$orderId) {
+                return response()->json(['error' => 'Missing orderId'], 400);
             }
 
-            // Find local subscription
-            $subscription = Subscription::where('commercegate_subscription_id', $subscriptionId)->first();
+            // Obter detalhes da ordem para verificar se é subscription
+            try {
+                $order = $this->commerceGateService->getOrder($orderId);
+                
+                // Se for subscription, encontrar ou criar subscription local
+                if ($order['type'] === 'subscription') {
+                    $subscription = Subscription::where('commercegate_subscription_id', $orderId)->first();
+                    
+                    if (!$subscription && $status === 'success') {
+                        // Criar subscription local se não existir
+                        $user = User::where('email', $order['CustomerInfo']['email'] ?? '')->first();
+                        if ($user) {
+                            $this->createLocalSubscriptionFromCommerceGate($user, $order);
+                            return response()->json(['status' => 'ok'], 200);
+                        }
+                    }
 
-            if (!$subscription) {
-                Log::warning('CommerceGate webhook: subscription not found', ['subscription_id' => $subscriptionId]);
-                return response()->json(['error' => 'Subscription not found'], 404);
-            }
-
-            // Handle different event types
-            switch ($event['type']) {
-                case 'subscription.activated':
-                case 'subscription.renewed':
-                    $subscription->update([
-                        'status' => 'active',
-                        'ends_at' => isset($event['data']['next_billing_date']) 
-                            ? now()->parse($event['data']['next_billing_date'])
-                            : $subscription->ends_at->addMonth()
-                    ]);
-                    break;
-
-                case 'subscription.canceled':
-                    $subscription->update([
-                        'status' => 'canceled',
-                        'canceled_at' => now()
-                    ]);
-                    break;
-
-                case 'subscription.failed':
-                    $subscription->update(['status' => 'past_due']);
-                    break;
-
-                case 'subscription.expired':
-                    $subscription->update(['status' => 'canceled']);
-                    break;
+                    if ($subscription) {
+                        // Atualizar status baseado no tipo de evento
+                        if ($type === 'subscriptionRecurringPayment' && $status === 'success') {
+                            $subscriptionState = $order['SubscriptionStateReport'] ?? [];
+                            $nextRecurringAt = $subscriptionState['nextRecurringAt'] ?? null;
+                            
+                            $subscription->update([
+                                'status' => 'active',
+                                'ends_at' => $nextRecurringAt ? now()->parse($nextRecurringAt) : $subscription->ends_at->addMonth(),
+                            ]);
+                        } elseif ($status === 'failed') {
+                            // Se pagamento recorrente falhar, manter ativo mas pode ser cancelado depois
+                            Log::warning('CommerceGate recurring payment failed', [
+                                'order_id' => $orderId,
+                                'subscription_id' => $subscription->id
+                            ]);
+                        }
+                    }
+                } elseif ($order['type'] === 'subscriptionRecurringPayment') {
+                    // Processar pagamento recorrente de subscription
+                    $referenceOrderId = $order['referenceOrderId'] ?? null;
+                    if ($referenceOrderId) {
+                        $subscription = Subscription::where('commercegate_subscription_id', $referenceOrderId)->first();
+                        if ($subscription && $status === 'success') {
+                            $subscriptionState = $order['SubscriptionStateReport'] ?? [];
+                            $nextRecurringAt = $subscriptionState['nextRecurringAt'] ?? null;
+                            
+                            $subscription->update([
+                                'status' => 'active',
+                                'ends_at' => $nextRecurringAt ? now()->parse($nextRecurringAt) : $subscription->ends_at->addMonth(),
+                            ]);
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                Log::error('Failed to process order in webhook', [
+                    'order_id' => $orderId,
+                    'error' => $e->getMessage()
+                ]);
             }
 
             return response()->json(['success' => true]);
@@ -533,35 +611,63 @@ class SubscriptionController extends Controller
     /**
      * Create local subscription record from CommerceGate subscription
      */
-    private function createLocalSubscriptionFromCommerceGate(User $user, array $cgSubscription)
+    private function createLocalSubscriptionFromCommerceGate(User $user, array $cgOrder)
     {
-        $plan = $this->getPlanFromCommerceGateCode($cgSubscription['planCode'] ?? '');
+        // Extrair informações da ordem do CommerceGate
+        $orderId = $cgOrder['orderId'] ?? null;
+        $status = $cgOrder['status'] ?? 'pending';
+        $transactionInfo = $cgOrder['TransactionInfo'] ?? [];
+        $subscriptionState = $cgOrder['SubscriptionStateReport'] ?? [];
         
+        // Determinar o plano baseado no TransactionInfo
+        $amount = $transactionInfo['amount'] ?? 0;
+        $plan = $amount >= 29990 ? 'premium_yearly' : 'premium_monthly'; // 299.90 em centavos
+        
+        // Calcular datas
+        $nextRecurringAt = $subscriptionState['nextRecurringAt'] ?? null;
+        $endsAt = $nextRecurringAt ? now()->parse($nextRecurringAt) : now()->addMonth();
+        
+        // Verificar se já existe subscription
+        $existingSubscription = Subscription::where('commercegate_subscription_id', $orderId)->first();
+        
+        if ($existingSubscription) {
+            // Atualizar subscription existente
+            $existingSubscription->update([
+                'status' => $status === 'success' ? 'active' : 'pending',
+                'ends_at' => $endsAt,
+                'amount' => $amount / 100, // Converter de centavos
+                'currency' => strtoupper($transactionInfo['currency'] ?? 'BRL'),
+            ]);
+            return $existingSubscription;
+        }
+        
+        // Criar nova subscription
         $subscription = Subscription::create([
             'user_id' => $user->id,
-            'commercegate_subscription_id' => $cgSubscription['subscriptionId'] ?? null,
+            'commercegate_subscription_id' => $orderId,
             'plan' => $plan,
-            'status' => $cgSubscription['status'] ?? 'active',
-            'amount' => ($cgSubscription['amount'] ?? 0) / 100, // Convert from cents
-            'currency' => strtoupper($cgSubscription['currency'] ?? 'BRL'),
-            'starts_at' => now(),
-            'ends_at' => isset($cgSubscription['nextBillingDate']) 
-                ? now()->parse($cgSubscription['nextBillingDate'])
-                : now()->addMonth(),
+            'status' => $status === 'success' ? 'active' : 'pending',
+            'amount' => $amount / 100, // Converter de centavos
+            'currency' => strtoupper($transactionInfo['currency'] ?? 'BRL'),
+            'starts_at' => $subscriptionState['activatedAt'] ? now()->parse($subscriptionState['activatedAt']) : now(),
+            'ends_at' => $endsAt,
             'metadata' => [
-                'commercegate_subscription_id' => $cgSubscription['subscriptionId'] ?? null,
-                'created_via' => 'web'
+                'commercegate_order_id' => $orderId,
+                'created_via' => 'payment_form',
+                'subscription_state' => $subscriptionState,
             ]
         ]);
 
         // Update user subscription status
-        $user->update([
-            'subscription_type' => 'premium',
-            'subscription_expires_at' => $subscription->ends_at
-        ]);
+        if ($status === 'success') {
+            $user->update([
+                'subscription_type' => 'premium',
+                'subscription_expires_at' => $subscription->ends_at
+            ]);
 
-        // Send notification
-        $this->notificationService->notifySubscriptionChange($user, 'premium');
+            // Send notification
+            $this->notificationService->notifySubscriptionChange($user, 'premium');
+        }
 
         return $subscription;
     }

@@ -104,24 +104,26 @@ Após configurar, você pode verificar se está funcionando:
 
 ## URLs do CommerceGate
 
-⚠️ **IMPORTANTE**: As URLs exatas devem ser obtidas da documentação oficial do CommerceGate ou através do portal do merchant.
+### URL Base da API
 
-### Configuração de URLs (Opcional - se não configuradas, serão usadas URLs padrão)
+Conforme a documentação Swagger do CommerceGate, a URL base da API é:
+
+- **Produção**: `https://gw.cgpaytech.com`
+- **Teste/Sandbox**: `https://gw.cgpaytech.com` (mesma URL, diferença é nas credenciais)
+
+### Configuração de URLs (Opcional - se não configuradas, será usada a URL padrão)
 
 ```env
-# URLs da API (para chamadas de API)
-COMMERCEGATE_API_URL_TEST=https://secure.commercegate.com
-COMMERCEGATE_API_URL_PRODUCTION=https://secure.commercegate.com
-
-# URL do formulário de pagamento hospedado (normalmente fornecido no portal do merchant)
-COMMERCEGATE_HOSTED_PAYMENT_URL_TEST=https://secure.commercegate.com/payment
-COMMERCEGATE_HOSTED_PAYMENT_URL_PRODUCTION=https://secure.commercegate.com/payment
+# URL da API CommerceGate (conforme Swagger)
+# NOTA: Teste e produção usam a mesma URL base, a diferença está nas credenciais
+COMMERCEGATE_API_URL_TEST=https://gw.cgpaytech.com
+COMMERCEGATE_API_URL_PRODUCTION=https://gw.cgpaytech.com
 ```
 
-**NOTA**: A URL do formulário hospedado (`hosted_payment_url`) geralmente é específica para cada merchant e deve ser obtida:
-1. No portal do merchant do CommerceGate
-2. Na documentação oficial da API
-3. Através do suporte técnico do CommerceGate
+**IMPORTANTE**: 
+- O CommerceGate usa **Bearer Token** para autenticação (obtido via `/v1/token`)
+- O sistema automaticamente obtém o token quando necessário
+- Não é necessário configurar URL de formulário hospedado, pois o endpoint `/v1/api/payment_form/configure` retorna a `forwardUrl` automaticamente
 
 ### Como obter as URLs corretas
 

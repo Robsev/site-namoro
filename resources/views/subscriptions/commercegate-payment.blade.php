@@ -23,52 +23,61 @@
     </div>
 
     <!-- CommerceGate Hosted Payment Form -->
-    @if(empty($formData['actionUrl']))
+    @if(empty($paymentForm['forwardUrl']))
         <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
             <div class="flex items-start">
                 <i class="fas fa-exclamation-triangle text-red-500 mr-3 mt-1"></i>
                 <div>
-                    <h3 class="font-semibold text-red-800 mb-2">URL de Pagamento Não Configurada</h3>
+                    <h3 class="font-semibold text-red-800 mb-2">Erro ao Configurar Pagamento</h3>
                     <p class="text-red-700 text-sm">
-                        A URL do formulário de pagamento hospedado não está configurada. 
-                        Por favor, configure a variável <code>COMMERCEGATE_HOSTED_PAYMENT_URL_TEST</code> 
-                        (ou <code>COMMERCEGATE_HOSTED_PAYMENT_URL_PRODUCTION</code>) no arquivo <code>.env</code>
-                        com a URL correta fornecida pelo CommerceGate.
+                        Não foi possível obter a URL do formulário de pagamento. 
+                        Por favor, tente novamente ou entre em contato com o suporte.
                     </p>
+                    @if(!empty($paymentForm['error']))
+                        <p class="text-red-600 text-xs mt-2">Detalhes: {{ $paymentForm['error'] }}</p>
+                    @endif
                 </div>
             </div>
         </div>
-    @endif
-    
-    <form id="commercegate-payment-form" method="POST" action="{{ $formData['actionUrl'] ?? '#' }}">
-        @foreach($formData as $key => $value)
-            @if($key !== 'actionUrl')
-                <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-            @endif
-        @endforeach
-        
-        <div class="text-center">
-            <button type="submit" class="bg-blue-500 text-white py-3 px-6 rounded-lg hover:bg-blue-600 transition duration-200">
-                <i class="fas fa-lock mr-2"></i>
-                {{ __('messages.subscriptions.proceed_to_payment') ?? 'Prosseguir para o Pagamento' }}
-            </button>
+        <div class="text-center mt-4">
+            <a href="{{ route('subscriptions.plans') }}" class="bg-blue-500 text-white py-3 px-6 rounded-lg hover:bg-blue-600 transition duration-200 inline-block">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Voltar aos Planos
+            </a>
         </div>
-    </form>
-
-    <!-- Auto-submit form after page load -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('commercegate-payment-form');
-            const actionUrl = form.getAttribute('action');
-            
-            // Só auto-submit se a URL estiver configurada
-            if (actionUrl && actionUrl !== '#' && actionUrl.trim() !== '') {
-                setTimeout(function() {
-                    form.submit();
-                }, 1000);
-            }
-        });
-    </script>
+    @else
+        <div class="text-center">
+            <p class="text-gray-600 mb-4">Redirecionando para o pagamento seguro...</p>
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+        </div>
+        <script>
+            // Validar e redirecionar automaticamente para o formulário hospedado
+            (function() {
+                var forwardUrl = '{{ $paymentForm['forwardUrl'] }}';
+                
+                // Garantir que a URL tenha protocolo
+                if (!forwardUrl.match(/^https?:\/\//)) {
+                    forwardUrl = 'https://' + forwardUrl.replace(/^\/+/, '');
+                }
+                
+                // Validar URL antes de redirecionar
+                try {
+                    var url = new URL(forwardUrl);
+                    if (url.protocol === 'http:' || url.protocol === 'https:') {
+                        window.location.href = forwardUrl;
+                    } else {
+                        console.error('Invalid URL protocol:', forwardUrl);
+                        alert('Erro: URL de pagamento inválida. Por favor, entre em contato com o suporte.');
+                    }
+                } catch (e) {
+                    console.error('Invalid URL:', forwardUrl, e);
+                    alert('Erro: URL de pagamento inválida. Por favor, entre em contato com o suporte.');
+                }
+            })();
+        </script>
+    @endif
 </div>
 @endsection
+
+
 
