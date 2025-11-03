@@ -188,6 +188,10 @@ class CommerceGateService
                     'currency' => $planData['currency'] ?? 'BRL',
                     'amountRecurring' => $planData['amount'],
                 ],
+                'SubscriptionPeriod' => [
+                    'name' => $planData['interval'] === 'month' ? 'month' : ($planData['interval'] === 'year' ? 'month' : 'day'),
+                    'amount' => $planData['interval'] === 'month' ? 1 : ($planData['interval'] === 'year' ? 12 : 1),
+                ],
                 'Offers' => [
                     [
                         'selected' => true,
@@ -198,8 +202,8 @@ class CommerceGateService
                             'amountRecurring' => $planData['amount'],
                         ],
                         'SubscriptionPeriod' => [
-                            'name' => $planData['interval'] === 'month' ? 'month' : 'day',
-                            'amount' => $planData['interval'] === 'month' ? 1 : ($planData['interval'] === 'year' ? 365 : 1),
+                            'name' => $planData['interval'] === 'month' ? 'month' : ($planData['interval'] === 'year' ? 'month' : 'day'),
+                            'amount' => $planData['interval'] === 'month' ? 1 : ($planData['interval'] === 'year' ? 12 : 1),
                         ],
                         'SubscriptionConfig' => [
                             'amountOfRetries' => '10',
