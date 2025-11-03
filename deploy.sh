@@ -44,11 +44,15 @@ print_header() {
 # Função para limpeza em caso de erro
 cleanup() {
     print_error "Erro detectado! Desativando modo de manutenção..."
-    if [ "$MAINTENANCE_AVAILABLE" = true ]; then
-        php artisan up 2>/dev/null || true
-        print_warning "Modo de manutenção desativado devido a erro"
+    if [ "$MAINTENANCE_AVAILABLE" = true ] && [ "$VENDOR_INTEGRITY_CHECK" = true ]; then
+        # Só tenta desativar manutenção se vendor estiver íntegro
+        if php artisan up 2>/dev/null; then
+            print_warning "Modo de manutenção desativado devido a erro"
+        else
+            print_warning "Não foi possível desativar modo de manutenção automaticamente"
+        fi
     else
-        print_warning "Modo de manutenção não estava ativo"
+        print_warning "Modo de manutenção não estava ativo ou vendor não está íntegro"
     fi
     exit 1
 }
@@ -150,7 +154,7 @@ else
 fi
 
 # =============================================================================
-# 0. VERIFICAÇÃO INICIAL
+# 0. VERIFICAÇÃO INICIAL E RESTAURAÇÃO DO VENDOR
 # =============================================================================
 print_header "🔍 VERIFICAÇÃO INICIAL"
 
@@ -165,13 +169,64 @@ else
     exit 1
 fi
 
+# Verificar integridade do vendor ANTES de tentar usar php artisan
+print_status "Verificando integridade do diretório vendor..."
+VENDOR_INTEGRITY_CHECK=false
+if [ -f "vendor/autoload.php" ]; then
+    # Tentar carregar o autoloader para verificar se está funcional
+    if php -r "require 'vendor/autoload.php';" 2>/dev/null; then
+        print_success "Diretório vendor íntegro"
+        VENDOR_INTEGRITY_CHECK=true
+    else
+        print_warning "Diretório vendor parece corrompido (autoload.php falhou ao carregar)"
+        VENDOR_INTEGRITY_CHECK=false
+    fi
+else
+    print_warning "vendor/autoload.php não encontrado"
+    VENDOR_INTEGRITY_CHECK=false
+fi
+
+# Se vendor não estiver íntegro, restaurá-lo ANTES de usar artisan
+VENDOR_RESTORED=""
+if [ "$VENDOR_INTEGRITY_CHECK" = false ]; then
+    print_header "🔧 RESTAURANDO DEPENDÊNCIAS PHP"
+    print_status "Restaurando diretório vendor..."
+    
+    # Limpar cache do Composer primeiro
+    composer clear-cache --no-interaction || true
+    
+    # Remover vendor corrompido
+    if [ -d "vendor" ]; then
+        print_status "Removendo diretório vendor corrompido..."
+        rm -rf vendor/
+        print_success "Diretório vendor removido"
+    fi
+    
+    # Tentar instalar via composer install (mais seguro que update)
+    print_status "Instalando dependências via composer install..."
+    if composer install --no-dev --optimize-autoloader --no-interaction; then
+        print_success "Dependências PHP restauradas"
+        VENDOR_INTEGRITY_CHECK=true
+        VENDOR_RESTORED="yes"
+    else
+        print_error "Falha crítica ao restaurar dependências PHP"
+        print_error "Verifique os logs do Composer e tente executar manualmente:"
+        print_error "  composer install --no-dev --optimize-autoloader"
+        exit 1
+    fi
+fi
+
 # Verificar se pode criar arquivo de manutenção
 print_status "Verificando permissão para modo de manutenção..."
-if [ -w "storage/framework" ]; then
+if [ -w "storage/framework" ] && [ "$VENDOR_INTEGRITY_CHECK" = true ]; then
     print_success "Modo de manutenção disponível"
     MAINTENANCE_AVAILABLE=true
 else
-    print_warning "Modo de manutenção não disponível - continuando sem ele"
+    if [ "$VENDOR_INTEGRITY_CHECK" = false ]; then
+        print_warning "Modo de manutenção não disponível - vendor não está íntegro"
+    else
+        print_warning "Modo de manutenção não disponível - permissões insuficientes"
+    fi
     MAINTENANCE_AVAILABLE=false
 fi
 
@@ -183,10 +238,14 @@ if [ "$MAINTENANCE_AVAILABLE" = true ]; then
     
     # Ativar modo de manutenção
     print_status "Ativando modo de manutenção..."
-    php artisan down
-    print_success "Modo de manutenção ativado"
+    if php artisan down 2>/dev/null; then
+        print_success "Modo de manutenção ativado"
+    else
+        print_warning "Falha ao ativar modo de manutenção - continuando sem ele"
+        MAINTENANCE_AVAILABLE=false
+    fi
 else
-    print_warning "Pulando modo de manutenção - permissões insuficientes"
+    print_warning "Pulando modo de manutenção"
 fi
 
 # =============================================================================
@@ -207,33 +266,51 @@ fi
 print_header "📚 ATUALIZAÇÃO DE DEPENDÊNCIAS"
 
 # Limpar cache do Composer antes de atualizar
-print_status "Limpando cache do Composer..."
-composer clear-cache --no-interaction || true
-print_success "Cache do Composer limpo"
+if [ -z "$VENDOR_RESTORED" ]; then
+    print_status "Limpando cache do Composer..."
+    composer clear-cache --no-interaction || true
+    print_success "Cache do Composer limpo"
+fi
 
 # Atualizar dependências PHP
-# Se composer update falhar, tentar composer install como fallback
-print_status "Atualizando dependências PHP e composer.lock..."
-if composer update --no-dev --optimize-autoloader --no-interaction; then
-    print_success "Dependências PHP atualizadas"
-else
-    print_warning "composer update falhou, tentando recuperação..."
-    # Verificar se vendor está corrompido (falta autoload.php)
-    if [ ! -f "vendor/autoload.php" ]; then
-        print_status "Diretório vendor parece corrompido, removendo..."
-        rm -rf vendor/ || true
-        print_success "Diretório vendor removido"
-    fi
-    # Tentar instalar baseado no composer.lock (mais seguro)
-    print_status "Tentando instalar via composer install (preserva composer.lock)..."
-    if composer install --no-dev --optimize-autoloader --no-interaction; then
-        print_success "Dependências PHP instaladas via composer install"
-        print_warning "NOTA: composer.lock não foi atualizado. Execute composer update manualmente se necessário."
+# Se o vendor foi restaurado anteriormente, já está instalado via composer install
+# Podemos tentar atualizar o composer.lock se necessário
+if [ -n "$VENDOR_RESTORED" ]; then
+    # Vendor foi restaurado, tentar atualizar composer.lock se necessário
+    print_status "Vendor já foi restaurado. Verificando se composer.lock precisa ser atualizado..."
+    if composer update --no-dev --optimize-autoloader --no-interaction; then
+        print_success "Dependências PHP e composer.lock atualizados"
     else
-        print_error "Falha crítica ao instalar dependências PHP"
-        print_error "Verifique os logs do Composer e tente executar manualmente:"
-        print_error "  composer install --no-dev --optimize-autoloader"
-        exit 1
+        print_warning "composer update falhou, mas vendor está funcional com composer.lock atual"
+        print_warning "NOTA: Continuando com as dependências instaladas. Execute composer update manualmente se necessário."
+    fi
+else
+    # Vendor estava íntegro desde o início, fazer update normalmente
+    print_status "Atualizando dependências PHP e composer.lock..."
+    if composer update --no-dev --optimize-autoloader --no-interaction; then
+        print_success "Dependências PHP atualizadas"
+    else
+        print_warning "composer update falhou, tentando recuperação..."
+        # Verificar se vendor ficou corrompido após o update
+        if [ ! -f "vendor/autoload.php" ] || ! php -r "require 'vendor/autoload.php';" 2>/dev/null; then
+            print_status "Diretório vendor ficou corrompido após update, removendo..."
+            rm -rf vendor/ || true
+            print_success "Diretório vendor removido"
+            # Tentar instalar baseado no composer.lock (mais seguro)
+            print_status "Tentando instalar via composer install (preserva composer.lock)..."
+            if composer install --no-dev --optimize-autoloader --no-interaction; then
+                print_success "Dependências PHP instaladas via composer install"
+                print_warning "NOTA: composer.lock não foi atualizado. Execute composer update manualmente se necessário."
+            else
+                print_error "Falha crítica ao instalar dependências PHP"
+                print_error "Verifique os logs do Composer e tente executar manualmente:"
+                print_error "  composer install --no-dev --optimize-autoloader"
+                exit 1
+            fi
+        else
+            print_warning "Vendor ainda está íntegro, mas composer update falhou"
+            print_warning "NOTA: Continuando com as dependências atuais. Execute composer update manualmente se necessário."
+        fi
     fi
 fi
 
