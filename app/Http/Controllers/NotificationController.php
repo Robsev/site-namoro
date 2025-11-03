@@ -23,6 +23,7 @@ class NotificationController extends Controller
         $perPage = 10;
         $offset = ($page - 1) * $perPage;
         
+        // Buscar todas as notificações (não filtrar por lidas/não lidas)
         $notifications = $user->notifications()
             ->orderBy('created_at', 'desc')
             ->offset($offset)
@@ -35,11 +36,30 @@ class NotificationController extends Controller
                 $notification->title = $notification->title ?: ($data['title'] ?? 'Notificação');
                 $notification->message = $notification->message ?: ($data['message'] ?? 'Nova notificação');
                 $notification->type = $data['type'] ?? $notification->type;
+                
+                // Garantir que is_read seja calculado corretamente
+                // Se for NULL, considerar como false (não lido)
+                if ($notification->is_read === null) {
+                    $notification->is_read = false;
+                }
+                
                 return $notification;
             });
 
         $totalNotifications = $user->notifications()->count();
+        $unreadCount = $user->notifications()->unread()->count();
         $hasMore = ($offset + $perPage) < $totalNotifications;
+        
+        // Log para debug (apenas em desenvolvimento)
+        if (config('app.debug')) {
+            \Log::info('Notifications loaded', [
+                'user_id' => $user->id,
+                'total' => $totalNotifications,
+                'unread_count' => $unreadCount,
+                'loaded_count' => $notifications->count(),
+                'page' => $page
+            ]);
+        }
 
         // If AJAX request, return JSON
         if ($request->ajax()) {

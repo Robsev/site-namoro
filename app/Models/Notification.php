@@ -53,7 +53,11 @@ class Notification extends Model
      */
     public function scopeUnread($query)
     {
-        return $query->where('is_read', false);
+        // Considerar NULL ou false como não lido
+        return $query->where(function($q) {
+            $q->where('is_read', false)
+              ->orWhereNull('is_read');
+        });
     }
 
     /**
@@ -62,6 +66,15 @@ class Notification extends Model
     public function scopeRead($query)
     {
         return $query->where('is_read', true);
+    }
+
+    /**
+     * Get is_read attribute (accessor)
+     * Se is_read for NULL, considerar como false (não lido)
+     */
+    public function getIsReadAttribute($value)
+    {
+        return $value === true || $value === 1 || $value === '1';
     }
 
     /**
@@ -91,6 +104,7 @@ class Notification extends Model
             'title' => $title,
             'message' => $message,
             'data' => $data,
+            'is_read' => false, // Garantir que novas notificações sejam marcadas como não lidas
         ]);
     }
 
