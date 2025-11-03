@@ -172,7 +172,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/subscriptions/{subscription}/payment-method', [SubscriptionController::class, 'updatePaymentMethod'])->name('subscriptions.update-payment');
     Route::get('/subscriptions/usage', [SubscriptionController::class, 'usage'])->name('subscriptions.usage');
     Route::get('/subscriptions/success', [SubscriptionController::class, 'success'])->name('subscriptions.success');
-    Route::get('/subscriptions/cancel', [SubscriptionController::class, 'cancelPayment'])->name('subscriptions.cancel');
+    Route::get('/subscriptions/payment-cancel', [SubscriptionController::class, 'cancelPayment'])->name('subscriptions.payment-cancel');
 
 
     // Geolocation routes

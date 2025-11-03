@@ -50,8 +50,8 @@ class CommerceGateService
                 'billingFrequency' => $planData['interval'] === 'month' ? 'monthly' : 'yearly',
                 'description' => $planData['description'] ?? 'Assinatura Premium',
                 'returnUrl' => route('subscriptions.success'),
-                'cancelUrl' => route('subscriptions.cancel'),
-                'notificationUrl' => route('subscriptions.webhook'),
+                'cancelUrl' => route('subscriptions.payment-cancel'),
+                'notificationUrl' => route('commercegate.webhook'),
             ];
 
             // Autenticação básica HTTP
@@ -257,8 +257,8 @@ class CommerceGateService
             'billingFrequency' => $planData['interval'] === 'month' ? 'monthly' : 'yearly',
             'description' => $planData['description'] ?? 'Assinatura Premium',
             'returnUrl' => route('subscriptions.success'),
-            'cancelUrl' => route('subscriptions.cancel'),
-            'notificationUrl' => route('subscriptions.webhook'),
+            'cancelUrl' => route('subscriptions.payment-cancel'),
+            'notificationUrl' => route('commercegate.webhook'),
             'subscription' => true,
         ];
 
