@@ -466,6 +466,8 @@ return [
     'subscriptions.redirecting' => 'Redirecting to secure payment gateway...',
     'subscriptions.secure_payment' => 'You will be redirected to a secure CommerceGate page to complete your payment.',
     'subscriptions.proceed_to_payment' => 'Proceed to Payment',
+    'subscriptions.interval_month' => 'month',
+    'subscriptions.interval_year' => 'year',
     'subscriptions.using_free_plan' => 'You are using the free plan. Upgrade to unlock premium features!',
     'subscriptions.make_upgrade' => 'Make Upgrade',
     'subscriptions.confirm_cancel' => 'Are you sure you want to cancel your subscription? You will lose access to premium features at the end of the paid period.',

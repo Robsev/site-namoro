@@ -240,12 +240,19 @@ class SubscriptionController extends Controller
                 }
 
                 // Gerar formulário de pagamento hospedado
+                $interval = $plan === 'premium_monthly' ? 'month' : 'year';
+                
+                // Descrição completa para aparecer no extrato do cartão
+                // Formato: "AMIGOS PARA SEMPRE - [Nome do Plano]"
+                // Isso garante que apareça corretamente no extrato do cartão
+                $description = 'AMIGOS PARA SEMPRE - ' . strtoupper($planDetails['name']);
+                
                 $paymentForm = $this->commerceGateService->generateHostedPaymentForm($user, [
                     'amount' => $planAmount,
                     'currency' => 'BRL',
                     'plan_code' => $planCode,
-                    'interval' => $plan === 'premium_monthly' ? 'month' : 'year',
-                    'description' => $planDetails['name'],
+                    'interval' => $interval,
+                    'description' => $description,
                 ]);
 
                 // Validar e redirecionar se houver forwardUrl válida
