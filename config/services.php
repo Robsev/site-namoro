@@ -51,6 +51,12 @@ return [
         'auth_login' => env('COMMERCEGATE_AUTH_LOGIN', '104675-TEST'),
         'auth_password' => env('COMMERCEGATE_AUTH_PASSWORD', 'XX0e909e2119c04428fxx940'),
         'test_mode' => env('COMMERCEGATE_TEST_MODE', true),
+        // URLs da API - verificar documentação oficial do CommerceGate
+        'api_url_test' => env('COMMERCEGATE_API_URL_TEST', 'https://secure.commercegate.com'),
+        'api_url_production' => env('COMMERCEGATE_API_URL_PRODUCTION', 'https://secure.commercegate.com'),
+        // URL do formulário hospedado - geralmente fornecido pelo CommerceGate no portal do merchant
+        'hosted_payment_url_test' => env('COMMERCEGATE_HOSTED_PAYMENT_URL_TEST', 'https://secure.commercegate.com/payment'),
+        'hosted_payment_url_production' => env('COMMERCEGATE_HOSTED_PAYMENT_URL_PRODUCTION', 'https://secure.commercegate.com/payment'),
     ],
 
     // Subscription system mode: 'commercegate', 'stripe', or 'mock'

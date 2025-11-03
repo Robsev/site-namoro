@@ -14,6 +14,7 @@ class CommerceGateService
     protected $authLogin;
     protected $authPassword;
     protected $baseUrl;
+    protected $hostedPaymentUrl;
     protected $testMode;
 
     public function __construct()
@@ -24,10 +25,14 @@ class CommerceGateService
         $this->authPassword = config('services.commercegate.auth_password');
         $this->testMode = config('services.commercegate.test_mode', true);
         
-        // CommerceGate URLs - usar sandbox em modo teste
+        // CommerceGate URLs - configuráveis via .env ou usar padrões
         $this->baseUrl = $this->testMode 
-            ? 'https://secure.commercegate.com/api/test'
-            : 'https://secure.commercegate.com/api';
+            ? config('services.commercegate.api_url_test', 'https://secure.commercegate.com')
+            : config('services.commercegate.api_url_production', 'https://secure.commercegate.com');
+        
+        $this->hostedPaymentUrl = $this->testMode
+            ? config('services.commercegate.hosted_payment_url_test', 'https://secure.commercegate.com/payment')
+            : config('services.commercegate.hosted_payment_url_production', 'https://secure.commercegate.com/payment');
     }
 
     /**
@@ -55,8 +60,12 @@ class CommerceGateService
             ];
 
             // Autenticação básica HTTP
+            // NOTA: Verificar na documentação oficial do CommerceGate o endpoint correto da API
+            // Pode ser necessário usar um endpoint diferente ou método de integração alternativo
+            $apiEndpoint = $this->baseUrl . '/api/subscriptions/create';
+            
             $response = Http::withBasicAuth($this->authLogin, $this->authPassword)
-                ->post($this->baseUrl . '/subscriptions/create', $subscriptionData);
+                ->post($apiEndpoint, $subscriptionData);
 
             if ($response->successful()) {
                 $result = $response->json();
@@ -93,8 +102,11 @@ class CommerceGateService
     public function getSubscription(string $subscriptionId): array
     {
         try {
+            // NOTA: Verificar endpoint correto na documentação oficial
+            $apiEndpoint = $this->baseUrl . '/api/subscriptions/' . $subscriptionId;
+            
             $response = Http::withBasicAuth($this->authLogin, $this->authPassword)
-                ->get($this->baseUrl . '/subscriptions/' . $subscriptionId, [
+                ->get($apiEndpoint, [
                     'merchantId' => $this->merchantId
                 ]);
 
@@ -119,8 +131,10 @@ class CommerceGateService
     public function cancelSubscription(string $subscriptionId, bool $immediately = false): array
     {
         try {
+            $apiEndpoint = $this->baseUrl . '/api/subscriptions/' . $subscriptionId . '/cancel';
+            
             $response = Http::withBasicAuth($this->authLogin, $this->authPassword)
-                ->post($this->baseUrl . '/subscriptions/' . $subscriptionId . '/cancel', [
+                ->post($apiEndpoint, [
                     'merchantId' => $this->merchantId,
                     'immediate' => $immediately
                 ]);
@@ -146,8 +160,10 @@ class CommerceGateService
     public function resumeSubscription(string $subscriptionId): array
     {
         try {
+            $apiEndpoint = $this->baseUrl . '/api/subscriptions/' . $subscriptionId . '/resume';
+            
             $response = Http::withBasicAuth($this->authLogin, $this->authPassword)
-                ->post($this->baseUrl . '/subscriptions/' . $subscriptionId . '/resume', [
+                ->post($apiEndpoint, [
                     'merchantId' => $this->merchantId
                 ]);
 
@@ -173,8 +189,10 @@ class CommerceGateService
     public function updatePaymentMethod(string $subscriptionId, array $paymentData): array
     {
         try {
+            $apiEndpoint = $this->baseUrl . '/api/subscriptions/' . $subscriptionId . '/update-payment';
+            
             $response = Http::withBasicAuth($this->authLogin, $this->authPassword)
-                ->post($this->baseUrl . '/subscriptions/' . $subscriptionId . '/update-payment', array_merge([
+                ->post($apiEndpoint, array_merge([
                     'merchantId' => $this->merchantId
                 ], $paymentData));
 
@@ -266,7 +284,8 @@ class CommerceGateService
         $signature = $this->generateSignature($formData);
 
         $formData['signature'] = $signature;
-        $formData['actionUrl'] = $this->baseUrl . '/hosted-payment';
+        // URL do formulário hospedado - deve ser fornecido pelo CommerceGate no portal do merchant
+        $formData['actionUrl'] = $this->hostedPaymentUrl;
 
         return $formData;
     }

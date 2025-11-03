@@ -23,7 +23,24 @@
     </div>
 
     <!-- CommerceGate Hosted Payment Form -->
-    <form id="commercegate-payment-form" method="POST" action="{{ $formData['actionUrl'] ?? 'https://secure.commercegate.com/api/test/hosted-payment' }}">
+    @if(empty($formData['actionUrl']))
+        <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+            <div class="flex items-start">
+                <i class="fas fa-exclamation-triangle text-red-500 mr-3 mt-1"></i>
+                <div>
+                    <h3 class="font-semibold text-red-800 mb-2">URL de Pagamento Não Configurada</h3>
+                    <p class="text-red-700 text-sm">
+                        A URL do formulário de pagamento hospedado não está configurada. 
+                        Por favor, configure a variável <code>COMMERCEGATE_HOSTED_PAYMENT_URL_TEST</code> 
+                        (ou <code>COMMERCEGATE_HOSTED_PAYMENT_URL_PRODUCTION</code>) no arquivo <code>.env</code>
+                        com a URL correta fornecida pelo CommerceGate.
+                    </p>
+                </div>
+            </div>
+        </div>
+    @endif
+    
+    <form id="commercegate-payment-form" method="POST" action="{{ $formData['actionUrl'] ?? '#' }}">
         @foreach($formData as $key => $value)
             @if($key !== 'actionUrl')
                 <input type="hidden" name="{{ $key }}" value="{{ $value }}">
@@ -41,10 +58,15 @@
     <!-- Auto-submit form after page load -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Auto-submit form after short delay
-            setTimeout(function() {
-                document.getElementById('commercegate-payment-form').submit();
-            }, 1000);
+            const form = document.getElementById('commercegate-payment-form');
+            const actionUrl = form.getAttribute('action');
+            
+            // Só auto-submit se a URL estiver configurada
+            if (actionUrl && actionUrl !== '#' && actionUrl.trim() !== '') {
+                setTimeout(function() {
+                    form.submit();
+                }, 1000);
+            }
         });
     </script>
 </div>

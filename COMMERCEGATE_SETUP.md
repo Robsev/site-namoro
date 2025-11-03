@@ -104,8 +104,33 @@ Após configurar, você pode verificar se está funcionando:
 
 ## URLs do CommerceGate
 
-- **Teste/Sandbox**: `https://secure.commercegate.com/api/test`
-- **Produção**: `https://secure.commercegate.com/api`
+⚠️ **IMPORTANTE**: As URLs exatas devem ser obtidas da documentação oficial do CommerceGate ou através do portal do merchant.
+
+### Configuração de URLs (Opcional - se não configuradas, serão usadas URLs padrão)
+
+```env
+# URLs da API (para chamadas de API)
+COMMERCEGATE_API_URL_TEST=https://secure.commercegate.com
+COMMERCEGATE_API_URL_PRODUCTION=https://secure.commercegate.com
+
+# URL do formulário de pagamento hospedado (normalmente fornecido no portal do merchant)
+COMMERCEGATE_HOSTED_PAYMENT_URL_TEST=https://secure.commercegate.com/payment
+COMMERCEGATE_HOSTED_PAYMENT_URL_PRODUCTION=https://secure.commercegate.com/payment
+```
+
+**NOTA**: A URL do formulário hospedado (`hosted_payment_url`) geralmente é específica para cada merchant e deve ser obtida:
+1. No portal do merchant do CommerceGate
+2. Na documentação oficial da API
+3. Através do suporte técnico do CommerceGate
+
+### Como obter as URLs corretas
+
+1. **Acesse o portal do merchant do CommerceGate**
+2. **Procure na seção "Integration" ou "API Documentation"**
+3. **Ou entre em contato com o suporte técnico** para obter:
+   - URL exata do formulário de pagamento hospedado
+   - Endpoints corretos da API REST
+   - Credenciais específicas do ambiente
 
 ## Webhook URL
 
