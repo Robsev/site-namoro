@@ -63,9 +63,9 @@ class CommerceGateService
                 throw new \Exception('Token não retornado na resposta');
             }
 
-            // Cache pelo tempo de expiração
-            Cache::put($cacheKey, $token, $expiresIn - 60); // -60 segundos de margem
-
+            // Se expiresIn for menor que o cache padrão, ajustar o cache
+            // Mas Cache::remember já gerencia isso, então apenas retornar o token
+            // O cache será atualizado automaticamente na próxima chamada
             return $token;
         });
     }
