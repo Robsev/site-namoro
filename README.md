@@ -17,7 +17,7 @@ Sistema de relacionamento entre amigos desenvolvido em Laravel 12.
 - **Frontend**: Blade Templates, Tailwind CSS
 - **Banco de Dados**: MySQL
 - **Autenticação**: Laravel Socialite (Google, Microsoft)
-- **Pagamentos**: Stripe (em desenvolvimento)
+- **Pagamentos**: CommerceGate (assinaturas)
 
 ## 📋 Instalação
 

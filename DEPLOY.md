@@ -150,7 +150,7 @@ nano .env
 - `APP_URL=https://seu-dominio.com`
 - Configurar banco de dados
 - Configurar OAuth (Google)
-- Configurar Stripe (pagamentos)
+- Configurar CommerceGate (pagamentos)
 
 ### 2. Configurar Cache Redis
 ```bash

@@ -5,22 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Services\NotificationService;
-use App\Services\StripeService;
+use App\Services\CommerceGateService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class SubscriptionController extends Controller
 {
-    protected $stripeService;
+    protected $commerceGateService;
     protected $notificationService;
     protected $mode;
 
-    public function __construct(StripeService $stripeService, NotificationService $notificationService)
+    public function __construct(CommerceGateService $commerceGateService, NotificationService $notificationService)
     {
-        $this->stripeService = $stripeService;
+        $this->commerceGateService = $commerceGateService;
         $this->notificationService = $notificationService;
-        $this->mode = config('services.subscriptions.mode', 'stripe');
+        $this->mode = config('services.subscriptions.mode', 'commercegate');
     }
 
     /**
@@ -42,44 +42,31 @@ class SubscriptionController extends Controller
             ]);
         }
 
-        // Check if Stripe is configured
-        $stripeConfigured = !empty(config('services.stripe.key')) && 
-                           !empty(config('services.stripe.secret')) &&
-                           !empty(config('services.stripe.premium_monthly_price_id')) &&
-                           !empty(config('services.stripe.premium_yearly_price_id'));
+        // Check if CommerceGate is configured
+        $commerceGateConfigured = !empty(config('services.commercegate.merchant_id')) && 
+                                  !empty(config('services.commercegate.website_id'));
 
-        if (!$stripeConfigured) {
-            // Show warning that Stripe is not configured
+        if (!$commerceGateConfigured && $this->mode !== 'mock') {
+            // Show warning that CommerceGate is not configured
             return view('subscriptions.plans', [
                 'plans' => $this->getMockPlans(),
                 'currentSubscription' => $currentSubscription,
-                'stripeConfigured' => false,
+                'commerceGateConfigured' => false,
                 'warning' => 'Sistema de pagamentos não configurado. Entre em contato com o administrador.'
             ]);
         }
 
-        try {
-            // Get real Stripe prices
-            $plans = $this->getStripePlans();
-        } catch (\Exception $e) {
-            Log::error('Failed to fetch Stripe plans', [
-                'error' => $e->getMessage()
-            ]);
-            
-            // Fallback to mock plans if Stripe fails
-            $plans = $this->getMockPlans();
-        }
+        // Get plans (CommerceGate ou mock)
+        $plans = $this->getCommerceGatePlans();
 
-        return view('subscriptions.plans', compact('plans', 'currentSubscription', 'stripeConfigured'));
+        return view('subscriptions.plans', compact('plans', 'currentSubscription', 'commerceGateConfigured'));
     }
 
     /**
-     * Get Stripe plans with real prices
+     * Get CommerceGate plans
      */
-    private function getStripePlans()
+    private function getCommerceGatePlans()
     {
-        $priceIds = $this->stripeService->getPriceIds();
-        
         return [
             'free' => [
                 'name' => __('messages.subscriptions.free'),
@@ -104,7 +91,6 @@ class SubscriptionController extends Controller
                 'price' => 29.90,
                 'currency' => 'BRL',
                 'interval' => 'month',
-                'price_id' => $priceIds['premium_monthly'],
                 'features' => [
                     __('messages.subscriptions.feature_profile_photos', ['count' => 20]),
                     __('messages.subscriptions.feature_unlimited_likes'),
@@ -122,7 +108,6 @@ class SubscriptionController extends Controller
                 'price' => 299.90,
                 'currency' => 'BRL',
                 'interval' => 'year',
-                'price_id' => $priceIds['premium_yearly'],
                 'features' => [
                     __('messages.subscriptions.feature_profile_photos', ['count' => 20]),
                     __('messages.subscriptions.feature_unlimited_likes'),
@@ -226,19 +211,9 @@ class SubscriptionController extends Controller
             return redirect()->route('subscriptions.plans')
                 ->with('info', 'Assinaturas em breve. O serviço é gratuito por enquanto.');
         }
-        // Check if Stripe is configured
-        $stripeConfigured = !empty(config('services.stripe.key')) && 
-                           !empty(config('services.stripe.secret')) &&
-                           !empty(config('services.stripe.premium_monthly_price_id')) &&
-                           !empty(config('services.stripe.premium_yearly_price_id'));
-
-        if (!$stripeConfigured) {
-            return redirect()->back()->with('error', 'Sistema de pagamentos não configurado. Entre em contato com o administrador.');
-        }
 
         $request->validate([
             'plan' => 'required|in:premium_monthly,premium_yearly',
-            'payment_method_id' => 'required|string'
         ]);
 
         $user = Auth::user();
@@ -250,40 +225,43 @@ class SubscriptionController extends Controller
             return redirect()->back()->with('error', 'Você já possui uma assinatura ativa.');
         }
 
+        // Get plan details
+        $planDetails = $this->getPlanDetails($plan);
+        $planAmount = $planDetails['price'] * 100; // Converter para centavos
+
         try {
-            // Get price ID for the plan
-            $priceIds = $this->stripeService->getPriceIds();
-            $priceId = $priceIds[$plan] ?? null;
+            if ($this->mode === 'commercegate') {
+                // CommerceGate integration
+                $planCodes = $this->commerceGateService->getPlanCodes();
+                $planCode = $planCodes[$plan] ?? null;
 
-            if (!$priceId) {
-                return redirect()->back()->with('error', 'Plano não encontrado.');
-            }
+                if (!$planCode) {
+                    return redirect()->back()->with('error', 'Plano não encontrado.');
+                }
 
-            // Create Stripe subscription
-            $result = $this->stripeService->createSubscription($user, $priceId, $request->payment_method_id);
-
-            // If subscription requires payment confirmation, redirect to payment page
-            if ($result['status'] === 'incomplete') {
-                return redirect()->route('subscriptions.payment', [
-                    'subscription_id' => $result['subscription']->id,
-                    'client_secret' => $result['client_secret']
+                // Gerar formulário de pagamento hospedado
+                $paymentForm = $this->commerceGateService->generateHostedPaymentForm($user, [
+                    'amount' => $planAmount,
+                    'currency' => 'BRL',
+                    'plan_code' => $planCode,
+                    'interval' => $plan === 'premium_monthly' ? 'month' : 'year',
+                    'description' => $planDetails['name'],
                 ]);
-            }
 
-            // If subscription is active, create local record
-            if ($result['status'] === 'active') {
-                $this->createLocalSubscription($user, $result['subscription']);
-                
-                return redirect()->route('subscriptions.show')
-                    ->with('success', 'Assinatura criada com sucesso! Bem-vindo ao Premium!');
-            }
+                // Redirecionar para página de pagamento hospedada do CommerceGate
+                return view('subscriptions.commercegate-payment', [
+                    'formData' => $paymentForm,
+                    'plan' => $plan,
+                    'planName' => $planDetails['name'],
+                ]);
 
-            return redirect()->back()->with('error', 'Erro ao criar assinatura. Tente novamente.');
+            }
 
         } catch (\Exception $e) {
             Log::error('Subscription creation failed', [
                 'user_id' => $user->id,
                 'plan' => $plan,
+                'mode' => $this->mode,
                 'error' => $e->getMessage()
             ]);
 
@@ -308,8 +286,21 @@ class SubscriptionController extends Controller
         }
 
         try {
-            // Cancel Stripe subscription
-            $this->stripeService->cancelSubscription($subscription->stripe_subscription_id);
+            if ($this->mode === 'commercegate' && $subscription->commercegate_subscription_id) {
+                // Cancel CommerceGate subscription
+                $this->commerceGateService->cancelSubscription($subscription->commercegate_subscription_id, false);
+            }
+
+            // Update local subscription
+            $subscription->update([
+                'status' => 'canceled',
+                'canceled_at' => now()
+            ]);
+
+            // Update user
+            $user->update([
+                'subscription_type' => 'free'
+            ]);
 
             return redirect()->route('subscriptions.show')
                 ->with('success', 'Assinatura cancelada com sucesso.');
@@ -317,6 +308,7 @@ class SubscriptionController extends Controller
         } catch (\Exception $e) {
             Log::error('Subscription cancellation failed', [
                 'subscription_id' => $subscription->id,
+                'mode' => $this->mode,
                 'error' => $e->getMessage()
             ]);
 
@@ -341,8 +333,21 @@ class SubscriptionController extends Controller
         }
 
         try {
-            // Resume Stripe subscription
-            $this->stripeService->resumeSubscription($subscription->stripe_subscription_id);
+            if ($this->mode === 'commercegate' && $subscription->commercegate_subscription_id) {
+                // Resume CommerceGate subscription
+                $this->commerceGateService->resumeSubscription($subscription->commercegate_subscription_id);
+            }
+
+            // Update local subscription
+            $subscription->update([
+                'status' => 'active',
+                'canceled_at' => null
+            ]);
+
+            // Update user
+            $user->update([
+                'subscription_type' => 'premium'
+            ]);
 
             return redirect()->route('subscriptions.show')
                 ->with('success', 'Assinatura reativada com sucesso!');
@@ -350,6 +355,7 @@ class SubscriptionController extends Controller
         } catch (\Exception $e) {
             Log::error('Subscription resume failed', [
                 'subscription_id' => $subscription->id,
+                'mode' => $this->mode,
                 'error' => $e->getMessage()
             ]);
 
@@ -373,13 +379,18 @@ class SubscriptionController extends Controller
             return redirect()->back()->with('error', 'Acesso negado.');
         }
 
-        $request->validate([
-            'payment_method_id' => 'required|string'
-        ]);
-
         try {
-            // Update Stripe payment method
-            $this->stripeService->updatePaymentMethod($subscription->stripe_subscription_id, $request->payment_method_id);
+            if ($this->mode === 'commercegate' && $subscription->commercegate_subscription_id) {
+                // CommerceGate pode requerer nova autorização
+                $request->validate([
+                    'payment_data' => 'required|array'
+                ]);
+                
+                $this->commerceGateService->updatePaymentMethod(
+                    $subscription->commercegate_subscription_id, 
+                    $request->payment_data
+                );
+            }
 
             return redirect()->route('subscriptions.show')
                 ->with('success', 'Método de pagamento atualizado com sucesso.');
@@ -387,6 +398,7 @@ class SubscriptionController extends Controller
         } catch (\Exception $e) {
             Log::error('Payment method update failed', [
                 'subscription_id' => $subscription->id,
+                'mode' => $this->mode,
                 'error' => $e->getMessage()
             ]);
 
@@ -395,80 +407,149 @@ class SubscriptionController extends Controller
     }
 
     /**
-     * Show payment confirmation page
+     * Handle successful payment return from CommerceGate
      */
-    public function payment(Request $request)
+    public function success(Request $request)
     {
         if ($this->mode === 'mock') {
             return redirect()->route('subscriptions.plans')
                 ->with('info', 'Assinaturas em breve. O serviço é gratuito por enquanto.');
         }
-        $subscriptionId = $request->get('subscription_id');
-        $clientSecret = $request->get('client_secret');
 
-        if (!$subscriptionId || !$clientSecret) {
+        $subscriptionId = $request->get('subscriptionId') ?? $request->get('subscription_id');
+        $transactionId = $request->get('transactionId') ?? $request->get('transaction_id');
+
+        if (!$subscriptionId) {
             return redirect()->route('subscriptions.plans')
                 ->with('error', 'Parâmetros de pagamento inválidos.');
         }
 
-        return view('subscriptions.payment', compact('subscriptionId', 'clientSecret'));
-    }
-
-    /**
-     * Confirm payment and activate subscription
-     */
-    public function confirmPayment(Request $request)
-    {
-        if ($this->mode === 'mock') {
-            return redirect()->route('subscriptions.plans')
-                ->with('info', 'Assinaturas em breve. O serviço é gratuito por enquanto.');
-        }
-        $request->validate([
-            'subscription_id' => 'required|string'
-        ]);
-
         try {
-            $subscription = $this->stripeService->confirmSubscription($request->subscription_id);
+            // Get subscription details from CommerceGate
+            $cgSubscription = $this->commerceGateService->getSubscription($subscriptionId);
             
-            if ($subscription->status === 'active') {
+            if ($cgSubscription && ($cgSubscription['status'] ?? '') === 'active') {
                 $user = Auth::user();
-                $this->createLocalSubscription($user, $subscription);
+                $this->createLocalSubscriptionFromCommerceGate($user, $cgSubscription);
                 
                 return redirect()->route('subscriptions.show')
                     ->with('success', 'Pagamento confirmado! Bem-vindo ao Premium!');
             }
 
-            return redirect()->back()->with('error', 'Pagamento ainda não foi processado.');
+            return redirect()->route('subscriptions.plans')
+                ->with('error', 'Pagamento ainda não foi processado.');
 
         } catch (\Exception $e) {
-            Log::error('Payment confirmation failed', [
-                'subscription_id' => $request->subscription_id,
+            Log::error('Payment success processing failed', [
+                'subscription_id' => $subscriptionId,
                 'error' => $e->getMessage()
             ]);
 
-            return redirect()->back()->with('error', 'Erro ao confirmar pagamento. Tente novamente.');
+            return redirect()->route('subscriptions.plans')
+                ->with('error', 'Erro ao confirmar pagamento. Tente novamente.');
         }
     }
 
     /**
-     * Create local subscription record from Stripe subscription
+     * Handle canceled payment from CommerceGate
      */
-    private function createLocalSubscription(User $user, $stripeSubscription)
+    public function cancelPayment(Request $request)
     {
+        return redirect()->route('subscriptions.plans')
+            ->with('info', 'Pagamento cancelado. Você pode tentar novamente quando quiser.');
+    }
+
+    /**
+     * Handle CommerceGate webhook
+     */
+    public function webhook(Request $request)
+    {
+        try {
+            $payload = $request->all();
+            $signature = $request->header('X-CommerceGate-Signature') ?? '';
+
+            // Verify webhook signature
+            if (!$this->commerceGateService->verifyWebhook($payload, $signature)) {
+                Log::warning('CommerceGate webhook signature verification failed');
+                return response()->json(['error' => 'Invalid signature'], 401);
+            }
+
+            // Process webhook
+            $event = $this->commerceGateService->handleWebhook($payload);
+            $subscriptionId = $event['subscription_id'] ?? null;
+
+            if (!$subscriptionId) {
+                return response()->json(['error' => 'Missing subscription_id'], 400);
+            }
+
+            // Find local subscription
+            $subscription = Subscription::where('commercegate_subscription_id', $subscriptionId)->first();
+
+            if (!$subscription) {
+                Log::warning('CommerceGate webhook: subscription not found', ['subscription_id' => $subscriptionId]);
+                return response()->json(['error' => 'Subscription not found'], 404);
+            }
+
+            // Handle different event types
+            switch ($event['type']) {
+                case 'subscription.activated':
+                case 'subscription.renewed':
+                    $subscription->update([
+                        'status' => 'active',
+                        'ends_at' => isset($event['data']['next_billing_date']) 
+                            ? now()->parse($event['data']['next_billing_date'])
+                            : $subscription->ends_at->addMonth()
+                    ]);
+                    break;
+
+                case 'subscription.canceled':
+                    $subscription->update([
+                        'status' => 'canceled',
+                        'canceled_at' => now()
+                    ]);
+                    break;
+
+                case 'subscription.failed':
+                    $subscription->update(['status' => 'past_due']);
+                    break;
+
+                case 'subscription.expired':
+                    $subscription->update(['status' => 'canceled']);
+                    break;
+            }
+
+            return response()->json(['success' => true]);
+
+        } catch (\Exception $e) {
+            Log::error('CommerceGate webhook processing failed', [
+                'error' => $e->getMessage(),
+                'payload' => $request->all()
+            ]);
+
+            return response()->json(['error' => 'Webhook processing failed'], 500);
+        }
+    }
+
+    /**
+     * Create local subscription record from CommerceGate subscription
+     */
+    private function createLocalSubscriptionFromCommerceGate(User $user, array $cgSubscription)
+    {
+        $plan = $this->getPlanFromCommerceGateCode($cgSubscription['planCode'] ?? '');
+        
         $subscription = Subscription::create([
             'user_id' => $user->id,
-            'stripe_subscription_id' => $stripeSubscription->id,
-            'stripe_customer_id' => $stripeSubscription->customer,
-            'plan' => $this->getPlanFromPriceId($stripeSubscription->items->data[0]->price->id),
-            'status' => $stripeSubscription->status,
-            'amount' => $stripeSubscription->items->data[0]->price->unit_amount / 100,
-            'currency' => strtoupper($stripeSubscription->items->data[0]->price->currency),
-            'starts_at' => now()->createFromTimestamp($stripeSubscription->current_period_start),
-            'ends_at' => now()->createFromTimestamp($stripeSubscription->current_period_end),
-            'trial_ends_at' => $stripeSubscription->trial_end ? now()->createFromTimestamp($stripeSubscription->trial_end) : null,
+            'commercegate_subscription_id' => $cgSubscription['subscriptionId'] ?? null,
+            'plan' => $plan,
+            'status' => $cgSubscription['status'] ?? 'active',
+            'amount' => ($cgSubscription['amount'] ?? 0) / 100, // Convert from cents
+            'currency' => strtoupper($cgSubscription['currency'] ?? 'BRL'),
+            'starts_at' => now(),
+            'ends_at' => isset($cgSubscription['nextBillingDate']) 
+                ? now()->parse($cgSubscription['nextBillingDate'])
+                : now()->addMonth(),
             'metadata' => [
-                'stripe_subscription_id' => $stripeSubscription->id,
-                'stripe_customer_id' => $stripeSubscription->customer,
+                'commercegate_subscription_id' => $cgSubscription['subscriptionId'] ?? null,
                 'created_via' => 'web'
             ]
         ]);
@@ -486,19 +567,19 @@ class SubscriptionController extends Controller
     }
 
     /**
-     * Get plan name from Stripe price ID
+     * Get plan name from CommerceGate plan code
      */
-    private function getPlanFromPriceId($priceId): string
+    private function getPlanFromCommerceGateCode(string $planCode): string
     {
-        $priceIds = $this->stripeService->getPriceIds();
+        $planCodes = $this->commerceGateService->getPlanCodes();
         
-        foreach ($priceIds as $plan => $id) {
-            if ($id === $priceId) {
+        foreach ($planCodes as $plan => $code) {
+            if ($code === $planCode) {
                 return $plan;
             }
         }
 
-        return 'unknown';
+        return 'premium_monthly'; // Default
     }
 
     /**

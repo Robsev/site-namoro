@@ -8,7 +8,6 @@ use App\Http\Controllers\MatchingController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SubscriptionController;
-use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\LanguageController;
 
 Route::get('/', function () {
@@ -53,8 +52,8 @@ Route::get('/community', function () {
     return view('legal.community');
 })->name('community');
 
-// Stripe Webhook (must be public and not use CSRF protection)
-Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])->name('stripe.webhook');
+// CommerceGate Webhook (must be public and not use CSRF protection)
+Route::post('/commercegate/webhook', [SubscriptionController::class, 'webhook'])->name('commercegate.webhook');
 
 // Language routes (public)
 Route::get('/language', [LanguageController::class, 'index'])->name('language.index');
@@ -172,8 +171,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/subscriptions/{subscription}/resume', [SubscriptionController::class, 'resume'])->name('subscriptions.resume');
     Route::put('/subscriptions/{subscription}/payment-method', [SubscriptionController::class, 'updatePaymentMethod'])->name('subscriptions.update-payment');
     Route::get('/subscriptions/usage', [SubscriptionController::class, 'usage'])->name('subscriptions.usage');
-    Route::get('/subscriptions/payment', [SubscriptionController::class, 'payment'])->name('subscriptions.payment');
-    Route::post('/subscriptions/confirm-payment', [SubscriptionController::class, 'confirmPayment'])->name('subscriptions.confirm-payment');
+    Route::get('/subscriptions/success', [SubscriptionController::class, 'success'])->name('subscriptions.success');
+    Route::get('/subscriptions/cancel', [SubscriptionController::class, 'cancelPayment'])->name('subscriptions.cancel');
 
 
     // Geolocation routes

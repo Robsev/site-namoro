@@ -45,17 +45,17 @@ return [
         'key' => env('GOOGLE_MAPS_API_KEY'),
     ],
 
-    'stripe' => [
-        'key' => env('STRIPE_KEY'),
-        'secret' => env('STRIPE_SECRET'),
-        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
-        'premium_monthly_price_id' => env('STRIPE_PREMIUM_MONTHLY_PRICE_ID'),
-        'premium_yearly_price_id' => env('STRIPE_PREMIUM_YEARLY_PRICE_ID'),
+    'commercegate' => [
+        'merchant_id' => env('COMMERCEGATE_MERCHANT_ID', '104675-TEST'),
+        'website_id' => env('COMMERCEGATE_WEBSITE_ID', '31052-TEST'),
+        'auth_login' => env('COMMERCEGATE_AUTH_LOGIN', '104675-TEST'),
+        'auth_password' => env('COMMERCEGATE_AUTH_PASSWORD', 'XX0e909e2119c04428fxx940'),
+        'test_mode' => env('COMMERCEGATE_TEST_MODE', true),
     ],
 
-    // Subscription system mode: 'stripe' (default) or 'mock'
+    // Subscription system mode: 'commercegate', 'stripe', or 'mock'
     'subscriptions' => [
-        'mode' => env('SUBSCRIPTIONS_MODE', 'stripe'),
+        'mode' => env('SUBSCRIPTIONS_MODE', 'commercegate'),
     ],
 
 ];
