@@ -198,7 +198,7 @@
                 <div class="bg-gray-50 p-4 rounded-lg">
                     <p class="text-gray-700">
                         <strong>{{ __('messages.legal.privacy.sections.contact.email') }}:</strong> 
-                        <a href="mailto:privacy@amigosparasempre.com" class="text-pink-600 hover:text-pink-500">privacy@amigosparasempre.com</a>
+                        <a href="mailto:contato@sintoniadeamor.com.br" class="text-pink-600 hover:text-pink-500">contato@sintoniadeamor.com.br</a>
                     </p>
                 </div>
             </div>

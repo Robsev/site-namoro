@@ -281,7 +281,6 @@
                     <ul class="space-y-2 text-gray-400">
                         <li><a href="{{ route('how-it-works') }}" class="hover:text-white">{{ __('messages.footer.how_it_works') }}</a></li>
                         <li><a href="{{ route('features') }}" class="hover:text-white">{{ __('messages.footer.features') }}</a></li>
-                        <li><a href="{{ route('pricing') }}" class="hover:text-white">{{ __('messages.footer.pricing') }}</a></li>
                     </ul>
                 </div>
                 
@@ -290,7 +289,6 @@
                     <ul class="space-y-2 text-gray-400">
                         <li><a href="{{ route('help') }}" class="hover:text-white">{{ __('messages.footer.help_center') }}</a></li>
                         <li><a href="{{ route('contact') }}" class="hover:text-white">{{ __('messages.footer.contact') }}</a></li>
-                        <li><a href="{{ route('community') }}" class="hover:text-white">{{ __('messages.footer.community') }}</a></li>
                     </ul>
                 </div>
                 

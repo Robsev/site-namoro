@@ -72,7 +72,7 @@ class GeolocationController extends Controller
             // Using OpenStreetMap Nominatim API (free)
             $response = Http::timeout(15)
                 ->withHeaders([
-                    'User-Agent' => 'AmigosParaSempre/1.0 (https://amigosparasempre.com)',
+                    'User-Agent' => 'SintoniaDeAmor/1.0 (https://sintoniadeamor.com.br)',
                 ])
                 ->get('https://nominatim.openstreetmap.org/reverse', [
                     'format' => 'json',

@@ -61,7 +61,7 @@ class ContactController extends Controller
             
             // Send email
             Mail::raw($this->formatMessage($request), function ($message) use ($request) {
-                $message->to('suporte@amigosparasempre.com')
+                $message->to('suporte@sintoniadeamor.com.br')
                     ->subject('[Sintonia de Amor] ' . $this->getSubjectText($request->subject) . ' - ' . $request->name)
                     ->replyTo($request->email, $request->name);
             });

@@ -24,7 +24,7 @@ MAIL_PORT=587
 MAIL_USERNAME=seu-email@gmail.com
 MAIL_PASSWORD=sua-senha-de-app
 MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=suporte@amigosparasempre.com
+MAIL_FROM_ADDRESS=suporte@sintoniadeamor.com.br
 MAIL_FROM_NAME="Sintonia de Amor"
 ```
 

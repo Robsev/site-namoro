@@ -809,7 +809,7 @@ return [
     // Privacy Policy
     'privacy.title' => 'Privacy Policy',
     'privacy.last_updated' => 'Last updated: :date',
-    'privacy.contact' => 'Contact: suporte@amigosparasempre.com',
+    'privacy.contact' => 'Contact: suporte@sintoniadeamor.com.br',
 
     // Footer
     'footer.title' => 'Sintonia de Amor',
@@ -818,7 +818,7 @@ return [
     'footer.privacy_policy' => 'Privacy Policy',
     'footer.contact' => 'Contact',
     'footer.support' => 'Support',
-    'footer.support_email' => 'suporte@amigosparasempre.com',
+    'footer.support_email' => 'suporte@sintoniadeamor.com.br',
     'footer.response_time' => 'We respond within 24 hours',
     'footer.copyright' => 'All rights reserved.',
 
@@ -1347,7 +1347,7 @@ return [
     'footer.legal_section' => 'Legal',
     'footer.contact_email' => 'Contact',
     'footer.support_section' => 'Support',
-    'footer.support_email' => 'suporte@amigosparasempre.com',
+    'footer.support_email' => 'suporte@sintoniadeamor.com.br',
     'footer.response_time' => 'We respond within 24 hours',
     'footer.copyright' => '© :year Sintonia de Amor. All rights reserved.',
 

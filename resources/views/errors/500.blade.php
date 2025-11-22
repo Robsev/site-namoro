@@ -97,7 +97,7 @@
                         <div class="space-y-1">
                             <p class="text-sm text-gray-700">
                                 <i class="fas fa-envelope mr-2"></i>
-                                suporte@amigosparasempre.com
+                                suporte@sintoniadeamor.com.br
                             </p>
                             <p class="text-sm text-gray-700">
                                 <i class="fas fa-phone mr-2"></i>

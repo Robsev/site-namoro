@@ -118,8 +118,8 @@
                                 <p class="text-gray-600">{{ __('messages.legal.contact.email.description') }}</p>
                             </div>
                         </div>
-                        <a href="mailto:suporte@amigosparasempre.com" class="text-pink-600 hover:text-pink-500 font-medium">
-                            suporte@amigosparasempre.com
+                        <a href="mailto:suporte@sintoniadeamor.com.br" class="text-pink-600 hover:text-pink-500 font-medium">
+                            suporte@sintoniadeamor.com.br
                         </a>
                     </div>
 

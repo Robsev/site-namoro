@@ -224,7 +224,7 @@
                     <p class="text-gray-700">
                         <strong>{{ __('messages.legal.cookies.contact.email') }}:</strong> 
                         <a href="{{ route('contact') }}" class="text-pink-600 hover:text-pink-500">
-                            suporte@amigosparasempre.com
+                            suporte@sintoniadeamor.com.br
                         </a>
                     </p>
                 </div>

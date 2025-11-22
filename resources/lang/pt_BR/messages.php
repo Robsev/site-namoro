@@ -873,7 +873,7 @@ return [
     // Privacy Policy
     'privacy.title' => 'Política de Privacidade',
     'privacy.last_updated' => 'Última atualização: :date',
-    'privacy.contact' => 'Contato: suporte@amigosparasempre.com',
+    'privacy.contact' => 'Contato: suporte@sintoniadeamor.com.br',
 
     // Footer
     'footer.title' => 'Sintonia de Amor',
@@ -882,7 +882,7 @@ return [
     'footer.privacy_policy' => 'Política de Privacidade',
     'footer.contact' => 'Contato',
     'footer.support' => 'Suporte',
-    'footer.support_email' => 'suporte@amigosparasempre.com',
+    'footer.support_email' => 'suporte@sintoniadeamor.com.br',
     'footer.response_time' => 'Respondemos em até 24 horas',
     'footer.copyright' => 'Todos os direitos reservados.',
     'footer.description' => 'Conectando pessoas, criando amizades para sempre.',
@@ -1684,7 +1684,7 @@ return [
     'footer.legal_section' => 'Legal',
     'footer.contact_email' => 'Contato',
     'footer.support_section' => 'Suporte',
-    'footer.support_email' => 'suporte@amigosparasempre.com',
+    'footer.support_email' => 'suporte@sintoniadeamor.com.br',
     'footer.response_time' => 'Respondemos em até 24 horas',
     'footer.copyright' => '© :year Sintonia de Amor. Todos os direitos reservados.',
 
