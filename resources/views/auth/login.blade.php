@@ -89,6 +89,18 @@
             </div>
         </div>
 
+        <!-- Informative Message -->
+        <div class="mt-6 pt-6 border-t border-gray-200">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <p class="text-sm text-gray-700 leading-relaxed">
+                    <strong class="text-blue-800">Atenção:</strong> Estamos iniciando nossas atividades; portanto, ainda não há muitos usuários em nossa base. Esperamos que, em breve, já tenhamos uma base grande!
+                </p>
+                <p class="text-sm text-gray-700 leading-relaxed mt-2">
+                    Nosso serviço sempre será gratuito e todos os recursos estarão liberados. Aproveite!
+                </p>
+            </div>
+        </div>
+
         <!-- Language Selector -->
         <div class="mt-8 pt-6 border-t border-gray-200">
             <div class="flex justify-center space-x-4">
