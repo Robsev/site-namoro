@@ -507,8 +507,35 @@ class User extends Authenticatable implements MustVerifyEmail
             return $this->profile_photo;
         }
 
-        // Otherwise, return the Storage URL
-        return \Illuminate\Support\Facades\Storage::url($this->profile_photo);
+        // Check if file exists in storage
+        $exists = \Illuminate\Support\Facades\Storage::disk('public')->exists($this->profile_photo);
+        
+        if (!$exists) {
+            \Log::warning('Profile photo file not found in storage', [
+                'user_id' => $this->id,
+                'path' => $this->profile_photo,
+                'full_path' => \Illuminate\Support\Facades\Storage::disk('public')->path($this->profile_photo)
+            ]);
+            return null;
+        }
+
+        // Generate Storage URL
+        $storageUrl = \Illuminate\Support\Facades\Storage::url($this->profile_photo);
+        
+        // Ensure the URL is absolute
+        if (!str_starts_with($storageUrl, 'http://') && !str_starts_with($storageUrl, 'https://')) {
+            // Remove leading slash if present and add with asset()
+            $storageUrl = ltrim($storageUrl, '/');
+            $storageUrl = asset($storageUrl);
+        }
+
+        \Log::debug('Profile photo URL generated', [
+            'user_id' => $this->id,
+            'path' => $this->profile_photo,
+            'url' => $storageUrl
+        ]);
+
+        return $storageUrl;
     }
 
     /**

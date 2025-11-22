@@ -152,7 +152,13 @@ class OAuthController extends Controller
 
         if (!empty($updates)) {
             $user->update($updates);
-            \Log::info('OAuth: User updated', ['updates' => array_keys($updates)]);
+            // Refresh the model to ensure attributes are updated
+            $user->refresh();
+            \Log::info('OAuth: User updated', [
+                'updates' => array_keys($updates),
+                'new_profile_photo' => $user->profile_photo,
+                'profile_photo_url' => $user->profile_photo_url
+            ]);
         } else {
             \Log::info('OAuth: No updates needed');
         }
