@@ -6,6 +6,9 @@
     <title>{{ __('messages.legal.contact.title') }} - {{ config('app.name') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    @if(config('services.recaptcha.site_key'))
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    @endif
 </head>
 <body class="bg-gray-50 min-h-screen">
     <!-- Navigation -->
@@ -249,6 +252,18 @@
                                 </a>
                             </label>
                         </div>
+
+                        <!-- reCAPTCHA -->
+                        @if(config('services.recaptcha.site_key'))
+                            <div class="flex justify-center">
+                                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                            </div>
+                            @error('g-recaptcha-response')
+                                <div class="text-red-600 text-sm mt-1">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        @endif
 
                         <button type="submit" 
                                 class="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white py-3 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition duration-200">

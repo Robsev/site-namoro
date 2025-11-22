@@ -6,6 +6,9 @@
     <title>{{ __('messages.auth.register') }} - {{ config('app.name') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    @if(config('services.recaptcha.site_key'))
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    @endif
 </head>
 <body class="bg-gradient-to-br from-pink-100 to-purple-100 min-h-screen flex items-center justify-center py-4 sm:py-8 overflow-x-hidden px-3">
     <div class="bg-white rounded-2xl shadow-2xl p-4 sm:p-8 w-full max-w-2xl">
@@ -165,6 +168,18 @@
                     <a href="{{ route('privacy-policy') }}" class="text-pink-600 hover:text-pink-500">{{ __('messages.register.privacy_policy') }}</a>
                 </label>
             </div>
+
+            <!-- reCAPTCHA -->
+            @if(config('services.recaptcha.site_key'))
+                <div class="flex justify-center">
+                    <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                </div>
+                @error('g-recaptcha-response')
+                    <div class="text-red-600 text-sm mt-1">
+                        {{ $message }}
+                    </div>
+                @enderror
+            @endif
 
             <!-- Submit Button -->
             <button type="submit" 

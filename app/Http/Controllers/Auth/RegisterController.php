@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Services\NotificationService;
+use App\Services\RecaptchaService;
 use Illuminate\Validation\Rules\Password;
 
 class RegisterController extends Controller
@@ -30,6 +31,18 @@ class RegisterController extends Controller
             $request->merge([
                 'birth_date' => $request->birth_year . '-' . str_pad($request->birth_month, 2, '0', STR_PAD_LEFT) . '-' . str_pad($request->birth_day, 2, '0', STR_PAD_LEFT)
             ]);
+        }
+        
+        // Validate reCAPTCHA if configured
+        if (config('services.recaptcha.site_key')) {
+            $recaptchaService = app(RecaptchaService::class);
+            $recaptchaToken = $request->input('g-recaptcha-response');
+            
+            if (!$recaptchaService->validate($recaptchaToken, $request->ip())) {
+                return redirect()->back()
+                    ->withErrors(['g-recaptcha-response' => 'Por favor, complete a verificação reCAPTCHA.'])
+                    ->withInput();
+            }
         }
         
         $request->validate([

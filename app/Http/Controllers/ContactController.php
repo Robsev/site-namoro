@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use App\Services\RecaptchaService;
 
 class ContactController extends Controller
 {
@@ -21,6 +22,18 @@ class ContactController extends Controller
      */
     public function send(Request $request)
     {
+        // Validate reCAPTCHA if configured
+        if (config('services.recaptcha.site_key')) {
+            $recaptchaService = app(RecaptchaService::class);
+            $recaptchaToken = $request->input('g-recaptcha-response');
+            
+            if (!$recaptchaService->validate($recaptchaToken, $request->ip())) {
+                return redirect()->back()
+                    ->withErrors(['g-recaptcha-response' => 'Por favor, complete a verificação reCAPTCHA.'])
+                    ->withInput();
+            }
+        }
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',

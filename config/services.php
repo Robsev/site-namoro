@@ -64,4 +64,11 @@ return [
         'mode' => env('SUBSCRIPTIONS_MODE', 'commercegate'),
     ],
 
+    'recaptcha' => [
+        'site_key' => env('RECAPTCHA_SITE_KEY'),
+        'secret_key' => env('RECAPTCHA_SECRET_KEY'),
+        'version' => env('RECAPTCHA_VERSION', 'v2'), // v2 ou v3
+        'min_score' => env('RECAPTCHA_MIN_SCORE', 0.5), // Apenas para v3
+    ],
+
 ];
