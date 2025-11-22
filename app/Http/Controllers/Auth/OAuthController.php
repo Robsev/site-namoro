@@ -104,7 +104,16 @@ class OAuthController extends Controller
     {
         $updates = [];
 
-        if (!$user->profile_photo && $providerUser->getAvatar()) {
+        // Always update profile photo from Google if available
+        if ($providerUser->getAvatar()) {
+            // Delete old photo if it exists and is stored locally
+            if ($user->profile_photo && !str_starts_with($user->profile_photo, 'http://') && !str_starts_with($user->profile_photo, 'https://')) {
+                if (Storage::disk('public')->exists($user->profile_photo)) {
+                    Storage::disk('public')->delete($user->profile_photo);
+                }
+            }
+
+            // Download and save new photo
             $profilePhotoPath = $this->downloadAndSaveProfilePhoto($providerUser->getAvatar());
             if ($profilePhotoPath) {
                 $updates['profile_photo'] = $profilePhotoPath;
