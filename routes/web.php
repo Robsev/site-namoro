@@ -90,6 +90,11 @@ Route::prefix('auth')->group(function () {
     Route::get('/google/callback', [OAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 });
 
+// Storage Routes - Serve files from public storage without symbolic link
+Route::get('/storage/{path}', [App\Http\Controllers\StorageController::class, 'serve'])
+    ->where('path', '.*')
+    ->name('storage.serve');
+
 // Protected routes (require auth)
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
