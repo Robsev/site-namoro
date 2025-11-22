@@ -105,19 +105,43 @@ class OAuthController extends Controller
         $updates = [];
 
         // Always update profile photo from Google if available
-        if ($providerUser->getAvatar()) {
+        $avatarUrl = $providerUser->getAvatar();
+        \Log::info('OAuth: Updating user from provider', [
+            'user_id' => $user->id,
+            'email' => $user->email,
+            'has_avatar' => !empty($avatarUrl),
+            'avatar_url' => $avatarUrl,
+            'current_photo' => $user->profile_photo
+        ]);
+
+        if ($avatarUrl) {
             // Delete old photo if it exists and is stored locally
-            if ($user->profile_photo && !str_starts_with($user->profile_photo, 'http://') && !str_starts_with($user->profile_photo, 'https://')) {
-                if (Storage::disk('public')->exists($user->profile_photo)) {
-                    Storage::disk('public')->delete($user->profile_photo);
+            // Also delete if it's an old Google URL (we want to replace with local file)
+            if ($user->profile_photo) {
+                $isExternalUrl = str_starts_with($user->profile_photo, 'http://') || str_starts_with($user->profile_photo, 'https://');
+                
+                if (!$isExternalUrl) {
+                    // It's a local file, delete it
+                    if (Storage::disk('public')->exists($user->profile_photo)) {
+                        Storage::disk('public')->delete($user->profile_photo);
+                        \Log::info('OAuth: Deleted old local profile photo', ['path' => $user->profile_photo]);
+                    }
+                } else {
+                    // It's an external URL (old Google URL), we'll replace it with local file
+                    \Log::info('OAuth: Replacing external URL with local file', ['old_url' => $user->profile_photo]);
                 }
             }
 
             // Download and save new photo
-            $profilePhotoPath = $this->downloadAndSaveProfilePhoto($providerUser->getAvatar());
+            $profilePhotoPath = $this->downloadAndSaveProfilePhoto($avatarUrl);
             if ($profilePhotoPath) {
                 $updates['profile_photo'] = $profilePhotoPath;
+                \Log::info('OAuth: Profile photo downloaded and saved', ['path' => $profilePhotoPath]);
+            } else {
+                \Log::warning('OAuth: Failed to download profile photo', ['url' => $avatarUrl]);
             }
+        } else {
+            \Log::warning('OAuth: No avatar URL provided by provider');
         }
 
         if (!$user->is_verified) {
@@ -128,6 +152,9 @@ class OAuthController extends Controller
 
         if (!empty($updates)) {
             $user->update($updates);
+            \Log::info('OAuth: User updated', ['updates' => array_keys($updates)]);
+        } else {
+            \Log::info('OAuth: No updates needed');
         }
     }
 
@@ -137,11 +164,42 @@ class OAuthController extends Controller
     private function downloadAndSaveProfilePhoto($avatarUrl)
     {
         try {
-            // Download the image
-            $imageContent = file_get_contents($avatarUrl);
+            \Log::info('OAuth: Starting photo download', ['url' => $avatarUrl]);
+
+            // Use cURL for more reliable downloads
+            $ch = curl_init($avatarUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
             
-            if ($imageContent === false) {
-                \Log::warning('Failed to download profile photo from: ' . $avatarUrl);
+            $imageContent = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $error = curl_error($ch);
+            curl_close($ch);
+            
+            if ($imageContent === false || $httpCode !== 200) {
+                \Log::warning('Failed to download profile photo', [
+                    'url' => $avatarUrl,
+                    'http_code' => $httpCode,
+                    'error' => $error
+                ]);
+                
+                // Fallback to file_get_contents if cURL fails
+                if (ini_get('allow_url_fopen')) {
+                    \Log::info('OAuth: Trying file_get_contents as fallback');
+                    $imageContent = @file_get_contents($avatarUrl);
+                    if ($imageContent === false) {
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+            }
+
+            if (empty($imageContent)) {
+                \Log::warning('OAuth: Downloaded image is empty', ['url' => $avatarUrl]);
                 return null;
             }
 
@@ -150,7 +208,7 @@ class OAuthController extends Controller
             $urlPath = parse_url($avatarUrl, PHP_URL_PATH);
             if ($urlPath) {
                 $pathInfo = pathinfo($urlPath);
-                if (isset($pathInfo['extension']) && in_array(strtolower($pathInfo['extension']), ['jpg', 'jpeg', 'png', 'gif'])) {
+                if (isset($pathInfo['extension']) && in_array(strtolower($pathInfo['extension']), ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
                     $extension = strtolower($pathInfo['extension']);
                 }
             }
@@ -159,14 +217,25 @@ class OAuthController extends Controller
             $filename = 'profile-photos/' . Str::random(40) . '.' . $extension;
             
             // Save to storage
-            Storage::disk('public')->put($filename, $imageContent);
+            $saved = Storage::disk('public')->put($filename, $imageContent);
+            
+            if (!$saved) {
+                \Log::error('OAuth: Failed to save photo to storage', ['filename' => $filename]);
+                return null;
+            }
+
+            \Log::info('OAuth: Photo saved successfully', ['filename' => $filename, 'size' => strlen($imageContent)]);
 
             // Resize if possible
             $this->resizeProfilePhoto($filename);
 
             return $filename;
         } catch (\Exception $e) {
-            \Log::error('Error downloading profile photo: ' . $e->getMessage());
+            \Log::error('OAuth: Error downloading profile photo', [
+                'url' => $avatarUrl,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return null;
         }
     }
