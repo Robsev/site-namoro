@@ -519,9 +519,15 @@ class User extends Authenticatable implements MustVerifyEmail
             return null;
         }
 
-        // Generate Storage URL using our custom route
-        // This works even without the storage:link command
-        $storageUrl = route('storage.serve', ['path' => $this->profile_photo]);
+        // Generate Storage URL - try standard Laravel method first
+        $storageUrl = \Illuminate\Support\Facades\Storage::url($this->profile_photo);
+        
+        // If Storage::url() returns a relative path, make it absolute
+        if (!str_starts_with($storageUrl, 'http://') && !str_starts_with($storageUrl, 'https://')) {
+            // Remove leading slash if present and add with asset()
+            $storageUrl = ltrim($storageUrl, '/');
+            $storageUrl = asset($storageUrl);
+        }
 
         \Log::debug('Profile photo URL generated', [
             'user_id' => $this->id,
