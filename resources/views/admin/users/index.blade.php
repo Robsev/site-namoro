@@ -84,11 +84,22 @@
                 </select>
             </div>
             <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Gênero</label>
+                <select name="gender" class="w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">Todos</option>
+                    <option value="male" {{ request('gender') === 'male' ? 'selected' : '' }}>Masculino</option>
+                    <option value="female" {{ request('gender') === 'female' ? 'selected' : '' }}>Feminino</option>
+                    <option value="other" {{ request('gender') === 'other' ? 'selected' : '' }}>Outro</option>
+                    <option value="prefer_not_to_say" {{ request('gender') === 'prefer_not_to_say' ? 'selected' : '' }}>Prefere não dizer</option>
+                </select>
+            </div>
+            <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Ordenar por</label>
                 <select name="order_by" class="w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500">
                     <option value="created_at" {{ request('order_by', 'created_at') === 'created_at' ? 'selected' : '' }}>Data de Cadastro</option>
                     <option value="name" {{ request('order_by') === 'name' ? 'selected' : '' }}>Nome</option>
                     <option value="email" {{ request('order_by') === 'email' ? 'selected' : '' }}>E-mail</option>
+                    <option value="gender" {{ request('order_by') === 'gender' ? 'selected' : '' }}>Gênero</option>
                     <option value="last_seen" {{ request('order_by') === 'last_seen' ? 'selected' : '' }}>Última Visita</option>
                 </select>
             </div>
@@ -112,6 +123,7 @@
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuário</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">E-mail</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gênero</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assinatura</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cadastro</th>
@@ -162,6 +174,22 @@
                                     <span class="ml-2 text-yellow-600" title="E-mail não verificado">
                                         <i class="fas fa-exclamation-circle"></i>
                                     </span>
+                                @endif
+                            </td>
+                            <td class="px-4 py-3 text-sm text-gray-700">
+                                @if($user->gender)
+                                    @php
+                                        $genderLabels = [
+                                            'male' => 'Masculino',
+                                            'female' => 'Feminino',
+                                            'other' => 'Outro',
+                                            'prefer_not_to_say' => 'Prefere não dizer'
+                                        ];
+                                        $genderLabel = $genderLabels[$user->gender] ?? ucfirst($user->gender);
+                                    @endphp
+                                    {{ $genderLabel }}
+                                @else
+                                    <span class="text-gray-400">Não informado</span>
                                 @endif
                             </td>
                             <td class="px-4 py-3">

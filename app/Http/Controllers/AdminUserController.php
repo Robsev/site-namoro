@@ -63,6 +63,10 @@ class AdminUserController extends Controller
             }
         }
 
+        if ($gender = $request->get('gender')) {
+            $query->where('gender', $gender);
+        }
+
         // Order by
         $orderBy = $request->get('order_by', 'created_at');
         $orderDir = $request->get('order_dir', 'desc');
