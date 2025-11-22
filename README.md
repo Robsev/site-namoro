@@ -1,4 +1,4 @@
-# Amigos Para Sempre
+# Sintonia de Amor
 
 Sistema de relacionamento entre amigos desenvolvido em Laravel 12.
 

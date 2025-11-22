@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # =============================================================================
-# SCRIPT DE DEPLOY - AMIGOS PARA SEMPRE
+# SCRIPT DE DEPLOY - SINTONIA DE AMOR
 # =============================================================================
 # Este script automatiza o processo de deploy para produção
 # Inclui build do frontend, otimizações e configurações de produção
@@ -88,7 +88,7 @@ else
     print_status "Continuando com atualização de dependências e migrations..."
 fi
 
-print_header "🚀 INICIANDO DEPLOY - AMIGOS PARA SEMPRE"
+print_header "🚀 INICIANDO DEPLOY - SINTONIA DE AMOR"
 
 # =============================================================================
 # 0. GIT PULL (apenas se houver atualizações)
@@ -517,4 +517,4 @@ echo -e "  • Config: ${YELLOW}php artisan config:show${NC}"
 echo ""
 
 print_header "🎉 DEPLOY CONCLUÍDO COM SUCESSO!"
-print_success "Amigos Para Sempre está pronto para produção! ❤️"
+print_success "Sintonia de Amor está pronto para produção! ❤️"

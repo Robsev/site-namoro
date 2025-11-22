@@ -1,4 +1,4 @@
-# Status de Traduções - Amigos Para Sempre
+# Status de Traduções - Sintonia de Amor
 
 ## Data: 26/10/2025
 

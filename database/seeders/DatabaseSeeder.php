@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         $admin = User::firstOrCreate(
             ['email' => 'admin@amigosparasempre.com'],
             [
-                'name' => 'Admin Amigos Para Sempre',
+                'name' => 'Admin Sintonia de Amor',
                 'first_name' => 'Admin',
                 'last_name' => 'Sistema',
                 'is_verified' => true,
@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
         // Criar perfil para o admin (se não existir)
         if (!$admin->profile) {
             $admin->profile()->create([
-                'bio' => 'Administrador do sistema Amigos Para Sempre. Aqui para ajudar você a encontrar suas amizades perfeitas!',
+                'bio' => 'Administrador do sistema Sintonia de Amor. Aqui para ajudar você a encontrar suas amizades perfeitas!',
                 'interests' => ['Tecnologia', 'Comunidade', 'Ajudar pessoas', 'Inovação'],
                 'hobbies' => ['Programar', 'Ler', 'Viajar', 'Conhecer pessoas'],
                 'personality_traits' => ['Empático', 'Líder', 'Compassivo', 'Determinado'],

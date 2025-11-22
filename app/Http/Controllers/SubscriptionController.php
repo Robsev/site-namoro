@@ -243,9 +243,9 @@ class SubscriptionController extends Controller
                 $interval = $plan === 'premium_monthly' ? 'month' : 'year';
                 
                 // Descrição completa para aparecer no extrato do cartão
-                // Formato: "AMIGOS PARA SEMPRE - [Nome do Plano]"
+                // Formato: "SINTONIA DE AMOR - [Nome do Plano]"
                 // Isso garante que apareça corretamente no extrato do cartão
-                $description = 'AMIGOS PARA SEMPRE - ' . strtoupper($planDetails['name']);
+                $description = 'SINTONIA DE AMOR - ' . strtoupper($planDetails['name']);
                 
                 $paymentForm = $this->commerceGateService->generateHostedPaymentForm($user, [
                     'amount' => $planAmount,

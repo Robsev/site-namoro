@@ -1,4 +1,4 @@
-# 🔐 Configuração de OAuth com Google - Amigos Para Sempre
+# 🔐 Configuração de OAuth com Google - Sintonia de Amor
 
 ## 📋 Visão Geral
 
@@ -21,7 +21,7 @@ Para configurar o OAuth com Google, você precisará de:
 3. Se você ainda não tem um projeto, crie um novo:
    - Clique no seletor de projetos no topo da página
    - Clique em **"Novo Projeto"** (ou **"New Project"**)
-   - Dê um nome ao projeto (ex: "Amigos Para Sempre")
+   - Dê um nome ao projeto (ex: "Sintonia de Amor")
    - Clique em **"Criar"** (ou **"Create"**)
 
 ### 2. Ativar a API do Google+
@@ -38,7 +38,7 @@ Para configurar o OAuth com Google, você precisará de:
    - **Externo**: Para usuários de qualquer organização Google
    - **Interno**: Apenas para usuários da sua organização (requer Google Workspace)
 3. Preencha as informações obrigatórias:
-   - **Nome do aplicativo**: "Amigos Para Sempre" (ou o nome que preferir)
+   - **Nome do aplicativo**: "Sintonia de Amor" (ou o nome que preferir)
    - **Email de suporte do usuário**: Seu email de contato
    - **Logo do aplicativo**: (Opcional) Faça upload de um logo
    - **Domínio de suporte do desenvolvedor**: (Opcional) Seu domínio
@@ -66,7 +66,7 @@ Para configurar o OAuth com Google, você precisará de:
 5. Configure o tipo de aplicativo:
    - Selecione **"Aplicativo da Web"** (ou **"Web application"**)
 6. Preencha os campos:
-   - **Nome**: "Amigos Para Sempre Web Client" (ou o nome que preferir)
+   - **Nome**: "Sintonia de Amor Web Client" (ou o nome que preferir)
    - **URIs de redirecionamento autorizados**:
      - Para desenvolvimento local: `http://localhost:8000/auth/google/callback`
      - Para produção: `https://seudominio.com/auth/google/callback`

@@ -1,6 +1,6 @@
 @extends('layouts.profile')
 
-@section('title', 'Conversas - Amigos Para Sempre')
+@section('title', 'Conversas - Sintonia de Amor')
 
 @section('content')
 <div class="min-h-screen bg-gray-50 py-8">

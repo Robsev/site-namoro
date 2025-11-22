@@ -108,7 +108,7 @@ class NotificationService
         Notification::createNotification(
             $user->id,
             'welcome',
-            'Bem-vindo ao Amigos Para Sempre!',
+            'Bem-vindo ao Sintonia de Amor!',
             'Sua conta foi criada com sucesso. Complete seu perfil para começar a encontrar pessoas!',
             ['user_id' => $user->id]
         );

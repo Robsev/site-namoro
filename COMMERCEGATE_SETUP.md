@@ -50,7 +50,7 @@ COMMERCEGATE_TEST_MODE=false
 # ============================================
 # APLICAÇÃO
 # ============================================
-APP_NAME="Amigos Para Sempre"
+APP_NAME="Sintonia de Amor"
 APP_ENV=local
 APP_KEY=base64:...
 APP_DEBUG=true

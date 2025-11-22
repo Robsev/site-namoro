@@ -49,11 +49,11 @@ class PhotoModerationResult extends Notification
         $message = new MailMessage();
         
         if ($this->status === 'approved') {
-            $message->subject('Foto Aprovada - Amigos Para Sempre')
+            $message->subject('Foto Aprovada - Sintonia de Amor')
                     ->line('Sua foto foi aprovada e está agora visível no seu perfil!')
-                    ->line('Obrigado por usar o Amigos Para Sempre.');
+                    ->line('Obrigado por usar o Sintonia de Amor.');
         } else {
-            $message->subject('Foto Rejeitada - Amigos Para Sempre')
+            $message->subject('Foto Rejeitada - Sintonia de Amor')
                     ->line('Infelizmente, sua foto não foi aprovada.')
                     ->line('Motivo: ' . ($this->photo->moderation_notes ?? 'Não especificado'))
                     ->line('Por favor, envie uma nova foto seguindo nossas diretrizes da comunidade.');

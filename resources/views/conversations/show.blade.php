@@ -1,6 +1,6 @@
 @extends('layouts.profile')
 
-@section('title', 'Conversa com ' . $otherUser->name . ' - Amigos Para Sempre')
+@section('title', 'Conversa com ' . $otherUser->name . ' - Sintonia de Amor')
 
 @section('content')
 <div class="min-h-screen bg-gray-50">

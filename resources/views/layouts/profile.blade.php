@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Perfil') - {{ config('app.name', 'Amigos Para Sempre') }}</title>
+    <title>@yield('title', 'Perfil') - {{ config('app.name', 'Sintonia de Amor') }}</title>
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('images/icons/favicon.ico') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/icons/favicon-32x32.png') }}">
@@ -45,7 +45,7 @@
                     <div class="flex items-center">
                         <a href="{{ route('dashboard') }}" class="text-xl sm:text-2xl font-bold text-pink-600">
                             <i class="fas fa-heart mr-2"></i>
-                            <span class="hidden sm:inline">Amigos Para Sempre</span>
+                            <span class="hidden sm:inline">Sintonia de Amor</span>
                             <span class="sm:hidden">APS</span>
                         </a>
                     </div>
@@ -262,7 +262,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
                     <h3 class="text-lg font-semibold mb-4">
-                        <i class="fas fa-heart text-pink-400 mr-2"></i>Amigos Para Sempre
+                        <i class="fas fa-heart text-pink-400 mr-2"></i>Sintonia de Amor
                     </h3>
                     <p class="text-gray-300 text-sm">
                         {{ __('messages.footer.connecting_people') }}

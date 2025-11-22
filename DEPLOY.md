@@ -1,6 +1,6 @@
-# 🚀 Guia de Deploy - Amigos Para Sempre
+# 🚀 Guia de Deploy - Sintonia de Amor
 
-Este guia explica como fazer deploy do "Amigos Para Sempre" em produção.
+Este guia explica como fazer deploy do "Sintonia de Amor" em produção.
 
 ## 📋 Pré-requisitos
 
@@ -353,4 +353,4 @@ Em caso de problemas:
 
 ---
 
-**🎉 Deploy concluído com sucesso! Amigos Para Sempre está online! ❤️**
+**🎉 Deploy concluído com sucesso! Sintonia de Amor está online! ❤️**

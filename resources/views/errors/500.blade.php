@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Erro Interno - {{ config('app.name', 'Amigos Para Sempre') }}</title>
+    <title>Erro Interno - {{ config('app.name', 'Sintonia de Amor') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -110,7 +110,7 @@
 
             <!-- Footer -->
             <div class="text-center text-gray-500 text-sm">
-                <p>&copy; {{ date('Y') }} Amigos Para Sempre. {{ __('messages.errors.404.footer') }}</p>
+                <p>&copy; {{ date('Y') }} Sintonia de Amor. {{ __('messages.errors.404.footer') }}</p>
                 <p class="mt-1">{{ __('messages.errors.404.footer_tagline') }}</p>
             </div>
         </div>

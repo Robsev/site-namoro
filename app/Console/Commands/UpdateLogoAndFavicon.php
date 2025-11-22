@@ -78,8 +78,8 @@ class UpdateLogoAndFavicon extends Command
 
             // Inserir após a tag <title>
             $layoutContent = str_replace(
-                '<title>@yield(\'title\', \'Perfil\') - {{ config(\'app.name\', \'Amigos Para Sempre\') }}</title>',
-                '<title>@yield(\'title\', \'Perfil\') - {{ config(\'app.name\', \'Amigos Para Sempre\') }}</title>' . "\n" . $faviconCode,
+                '<title>@yield(\'title\', \'Perfil\') - {{ config(\'app.name\', \'Sintonia de Amor\') }}</title>',
+                '<title>@yield(\'title\', \'Perfil\') - {{ config(\'app.name\', \'Sintonia de Amor\') }}</title>' . "\n" . $faviconCode,
                 $layoutContent
             );
 
@@ -92,14 +92,14 @@ class UpdateLogoAndFavicon extends Command
                         <img src="{{ asset(\'images/logo/logo.png\') }}" alt="{{ config(\'app.name\') }}" class="h-8 w-auto">
                     @else
                         <i class="fas fa-heart mr-2"></i>
-                        <span class="hidden sm:inline">Amigos Para Sempre</span>
+                        <span class="hidden sm:inline">Sintonia de Amor</span>
                         <span class="sm:hidden">APS</span>
                     @endif';
 
         // Substituir o logo atual
         $layoutContent = str_replace(
             '<i class="fas fa-heart mr-2"></i>
-                            <span class="hidden sm:inline">Amigos Para Sempre</span>
+                            <span class="hidden sm:inline">Sintonia de Amor</span>
                             <span class="sm:hidden">APS</span>',
             $logoCode,
             $layoutContent

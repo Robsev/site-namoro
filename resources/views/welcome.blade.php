@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Amigos Para Sempre') }}</title>
+    <title>{{ config('app.name', 'Sintonia de Amor') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -25,7 +25,7 @@
                     <i class="fas fa-heart text-xl sm:text-4xl text-pink-500 mr-1.5 sm:mr-3 flex-shrink-0"></i>
                     <h1 class="text-xs sm:text-2xl font-bold text-gray-800 break-words leading-tight max-w-[120px] sm:max-w-none">
                         <span class="sm:hidden">APS</span>
-                        <span class="hidden sm:inline">{{ config('app.name', 'Amigos Para Sempre') }}</span>
+                        <span class="hidden sm:inline">{{ config('app.name', 'Sintonia de Amor') }}</span>
                     </h1>
                 </div>
                 <div class="flex items-center justify-end space-x-1.5 sm:space-x-4 flex-shrink-0">
@@ -129,7 +129,7 @@
                      onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                 <div style="display: none;" class="text-center">
                     <i class="fas fa-heart text-8xl text-pink-500 mb-4"></i>
-                    <h1 class="text-4xl font-bold text-gray-800">{{ config('app.name', 'Amigos Para Sempre') }}</h1>
+                    <h1 class="text-4xl font-bold text-gray-800">{{ config('app.name', 'Sintonia de Amor') }}</h1>
                 </div>
             </div>
             
@@ -281,7 +281,7 @@
                 <div>
                     <div class="flex items-center mb-4">
                         <i class="fas fa-heart text-2xl text-pink-500 mr-2"></i>
-                        <h3 class="text-xl font-bold">{{ config('app.name', 'Amigos Para Sempre') }}</h3>
+                        <h3 class="text-xl font-bold">{{ config('app.name', 'Sintonia de Amor') }}</h3>
                     </div>
                     <p class="text-gray-400">
                         {{ __('messages.footer.description') }}
@@ -317,7 +317,7 @@
             </div>
             
             <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; {{ date('Y') }} {{ config('app.name', 'Amigos Para Sempre') }}. {{ __('messages.footer.copyright') }}</p>
+                <p>&copy; {{ date('Y') }} {{ config('app.name', 'Sintonia de Amor') }}. {{ __('messages.footer.copyright') }}</p>
             </div>
         </div>
     </footer>

@@ -1,4 +1,4 @@
-# Status do Projeto - Amigos Para Sempre
+# Status do Projeto - Sintonia de Amor
 
 ## Data: 26/10/2025 - 19:00
 

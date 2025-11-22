@@ -1,4 +1,4 @@
-# 📧 Configuração de E-mail - Amigos Para Sempre
+# 📧 Configuração de E-mail - Sintonia de Amor
 
 ## ✅ Sistema de E-mail Implementado
 
@@ -25,7 +25,7 @@ MAIL_USERNAME=seu-email@gmail.com
 MAIL_PASSWORD=sua-senha-de-app
 MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS=suporte@amigosparasempre.com
-MAIL_FROM_NAME="Amigos Para Sempre"
+MAIL_FROM_NAME="Sintonia de Amor"
 ```
 
 ### 2. Configuração para Gmail
@@ -35,7 +35,7 @@ Para usar Gmail:
 1. **Ative a autenticação de 2 fatores** na sua conta Google
 2. **Gere uma "Senha de App"** específica:
    - Vá em: Conta Google → Segurança → Senhas de app
-   - Gere uma senha para "Amigos Para Sempre"
+   - Gere uma senha para "Sintonia de Amor"
    - Use essa senha no `MAIL_PASSWORD`
 
 ### 3. Configuração para Outros Provedores
@@ -78,7 +78,7 @@ Os usuários podem controlar suas notificações por e-mail em:
 Os e-mails são enviados com templates personalizados para cada tipo de notificação:
 
 - **Design responsivo** para mobile e desktop
-- **Branding** do Amigos Para Sempre
+- **Branding** do Sintonia de Amor
 - **Links diretos** para a aplicação
 - **Informações relevantes** sobre a notificação
 

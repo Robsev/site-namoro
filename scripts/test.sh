@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Script de Testes para Amigos Para Sempre
+# Script de Testes para Sintonia de Amor
 # Executa todos os testes e gera relatórios
 
-echo "🧪 Executando Testes do Amigos Para Sempre..."
+echo "🧪 Executando Testes do Sintonia de Amor..."
 echo "=============================================="
 
 # Verificar se estamos no diretório correto

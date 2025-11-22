@@ -1,4 +1,4 @@
-# Auditoria de Segurança e Dados - Amigos Para Sempre
+# Auditoria de Segurança e Dados - Sintonia de Amor
 
 ## 1. **COLETAS DE DADOS ATUAIS**
 
