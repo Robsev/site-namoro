@@ -103,8 +103,8 @@ $viewsCount = $likesReceivedCount + $matchesCount;
             <!-- Profile Card -->
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="text-center">
-                    @if(Auth::user()->profile_photo)
-                        <img src="{{ Storage::url(Auth::user()->profile_photo) }}" 
+                    @if(Auth::user()->profile_photo_url)
+                        <img src="{{ Auth::user()->profile_photo_url }}" 
                              alt="{{ __('messages.dashboard.profile_photo') }}" 
                              class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
                     @else

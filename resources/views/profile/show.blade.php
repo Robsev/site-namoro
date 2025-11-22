@@ -12,8 +12,8 @@
         <div class="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6">
             <!-- Profile Photo -->
             <div class="relative">
-                @if($user->profile_photo)
-                    <img src="{{ Storage::url($user->profile_photo) }}" 
+                @if($user->profile_photo_url)
+                    <img src="{{ $user->profile_photo_url }}" 
                          alt="{{ __('messages.profile.profile_photo') }}" 
                          class="w-32 h-32 rounded-full object-cover border-4 border-pink-200">
                 @else

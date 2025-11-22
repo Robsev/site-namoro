@@ -492,6 +492,26 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Get the profile photo URL.
+     * Returns the URL directly if it's an external URL (e.g., from Google OAuth),
+     * otherwise returns the Storage URL.
+     */
+    public function getProfilePhotoUrlAttribute()
+    {
+        if (!$this->profile_photo) {
+            return null;
+        }
+
+        // If it's an external URL (starts with http), return it directly
+        if (str_starts_with($this->profile_photo, 'http://') || str_starts_with($this->profile_photo, 'https://')) {
+            return $this->profile_photo;
+        }
+
+        // Otherwise, return the Storage URL
+        return \Illuminate\Support\Facades\Storage::url($this->profile_photo);
+    }
+
+    /**
      * Check if user has active premium subscription.
      */
     public function hasActivePremiumSubscription()

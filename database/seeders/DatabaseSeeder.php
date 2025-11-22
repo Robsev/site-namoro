@@ -14,6 +14,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Seed interest categories
+        $this->call(InterestCategorySeeder::class);
+        
         $this->command->info('✅ Database seeded successfully!');
     }
 }

@@ -17,7 +17,7 @@
                     <!-- User Info -->
                     <div class="flex items-center space-x-3">
                         @if($otherUser->profile_photo)
-                            <img src="{{ Storage::url($otherUser->profile_photo) }}" 
+                            <img src="{{ $otherUser->profile_photo_url }}" 
                                  alt="{{ $otherUser->name }}"
                                  class="w-10 h-10 rounded-full object-cover">
                         @else

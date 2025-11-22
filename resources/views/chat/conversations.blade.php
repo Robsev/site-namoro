@@ -15,7 +15,7 @@
                         <!-- Profile Photo -->
                         <div class="flex-shrink-0 mr-4">
                             @if($conversation['user']->profile_photo)
-                                <img src="{{ Storage::url($conversation['user']->profile_photo) }}" 
+                                <img src="{{ $conversation['user']->profile_photo_url }}" 
                                      alt="{{ $conversation['user']->full_name }}" 
                                      class="w-12 h-12 rounded-full object-cover">
                             @else

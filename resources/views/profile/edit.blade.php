@@ -40,8 +40,8 @@
                     <div class="flex items-center space-x-6">
                         <!-- Foto atual -->
                         <div class="flex-shrink-0">
-                            @if($user->profile_photo)
-                                <img src="{{ Storage::url($user->profile_photo) }}" 
+                            @if($user->profile_photo_url)
+                                <img src="{{ $user->profile_photo_url }}" 
                                      alt="Foto de perfil" 
                                      class="w-20 h-20 rounded-full object-cover border-2 border-gray-300">
                             @else

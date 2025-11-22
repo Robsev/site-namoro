@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -53,6 +54,12 @@ class OAuthController extends Controller
             return $user;
         }
 
+        // Download and save profile photo from provider
+        $profilePhotoPath = null;
+        if ($providerUser->getAvatar()) {
+            $profilePhotoPath = $this->downloadAndSaveProfilePhoto($providerUser->getAvatar());
+        }
+
         // Create new user
         $user = User::create([
             'name' => $providerUser->getName(),
@@ -60,7 +67,7 @@ class OAuthController extends Controller
             'password' => Hash::make(Str::random(24)), // Random password for OAuth users
             'first_name' => $this->extractFirstName($providerUser->getName()),
             'last_name' => $this->extractLastName($providerUser->getName()),
-            'profile_photo' => $providerUser->getAvatar(),
+            'profile_photo' => $profilePhotoPath,
             'is_verified' => true, // OAuth users are considered verified
             'is_active' => true,
             'last_seen' => now(),
@@ -98,7 +105,10 @@ class OAuthController extends Controller
         $updates = [];
 
         if (!$user->profile_photo && $providerUser->getAvatar()) {
-            $updates['profile_photo'] = $providerUser->getAvatar();
+            $profilePhotoPath = $this->downloadAndSaveProfilePhoto($providerUser->getAvatar());
+            if ($profilePhotoPath) {
+                $updates['profile_photo'] = $profilePhotoPath;
+            }
         }
 
         if (!$user->is_verified) {
@@ -109,6 +119,78 @@ class OAuthController extends Controller
 
         if (!empty($updates)) {
             $user->update($updates);
+        }
+    }
+
+    /**
+     * Download profile photo from external URL and save it locally.
+     */
+    private function downloadAndSaveProfilePhoto($avatarUrl)
+    {
+        try {
+            // Download the image
+            $imageContent = file_get_contents($avatarUrl);
+            
+            if ($imageContent === false) {
+                \Log::warning('Failed to download profile photo from: ' . $avatarUrl);
+                return null;
+            }
+
+            // Get file extension from URL or default to jpg
+            $extension = 'jpg';
+            $urlPath = parse_url($avatarUrl, PHP_URL_PATH);
+            if ($urlPath) {
+                $pathInfo = pathinfo($urlPath);
+                if (isset($pathInfo['extension']) && in_array(strtolower($pathInfo['extension']), ['jpg', 'jpeg', 'png', 'gif'])) {
+                    $extension = strtolower($pathInfo['extension']);
+                }
+            }
+
+            // Generate unique filename
+            $filename = 'profile-photos/' . Str::random(40) . '.' . $extension;
+            
+            // Save to storage
+            Storage::disk('public')->put($filename, $imageContent);
+
+            // Resize if possible
+            $this->resizeProfilePhoto($filename);
+
+            return $filename;
+        } catch (\Exception $e) {
+            \Log::error('Error downloading profile photo: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Resize profile photo to optimize storage.
+     */
+    private function resizeProfilePhoto($path)
+    {
+        try {
+            // Check if Intervention Image is available
+            if (!class_exists('Intervention\Image\ImageManager')) {
+                \Log::info('Intervention Image not available, skipping photo resizing');
+                return;
+            }
+
+            $fullPath = Storage::disk('public')->path($path);
+            
+            // Use Intervention Image v3 syntax
+            $manager = new \Intervention\Image\ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
+            $image = $manager->read($fullPath);
+            
+            // Resize to 400x400 maintaining aspect ratio
+            $image->cover(400, 400);
+            
+            // Optimize quality and save
+            $image->toJpeg(85)->save($fullPath);
+            
+            \Log::info('Profile photo resized successfully');
+            
+        } catch (\Exception $e) {
+            \Log::warning('Failed to resize profile photo: ' . $e->getMessage());
+            // Continue without resizing if intervention/image is not available
         }
     }
 

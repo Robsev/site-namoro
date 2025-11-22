@@ -42,7 +42,7 @@
                                 <!-- User Avatar -->
                                 <div class="flex-shrink-0">
                                     @if($otherUser->profile_photo)
-                                        <img src="{{ Storage::url($otherUser->profile_photo) }}" 
+                                        <img src="{{ $otherUser->profile_photo_url }}" 
                                              alt="{{ $otherUser->name }}"
                                              class="w-12 h-12 rounded-full object-cover">
                                     @else

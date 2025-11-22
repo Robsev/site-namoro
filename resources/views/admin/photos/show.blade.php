@@ -69,7 +69,7 @@
                     
                     <div class="flex items-center space-x-4 mb-4">
                         @if($photo->user->profile_photo)
-                            <img src="{{ Storage::url($photo->user->profile_photo) }}" 
+                            <img src="{{ $photo->user->profile_photo_url }}" 
                                  alt="{{ $photo->user->name }}"
                                  class="w-16 h-16 rounded-full object-cover">
                         @else

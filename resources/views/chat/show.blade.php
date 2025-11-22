@@ -9,7 +9,7 @@
                 <i class="fas fa-arrow-left"></i>
             </a>
             @if($user->profile_photo)
-                <img src="{{ Storage::url($user->profile_photo) }}" alt="{{ $user->full_name }}" class="w-10 h-10 rounded-full mr-3">
+                <img src="{{ $user->profile_photo_url }}" alt="{{ $user->full_name }}" class="w-10 h-10 rounded-full mr-3">
             @else
                 <div class="w-10 h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center mr-3">
                     <i class="fas fa-user text-white"></i>
@@ -69,7 +69,7 @@
                     @if($message->sender_id !== Auth::id())
                         <div class="flex items-center mb-1">
                             @if($message->sender->profile_photo)
-                                <img src="{{ Storage::url($message->sender->profile_photo) }}" alt="{{ $message->sender->full_name }}" class="w-6 h-6 rounded-full mr-2">
+                                <img src="{{ $message->sender->profile_photo_url }}" alt="{{ $message->sender->full_name }}" class="w-6 h-6 rounded-full mr-2">
                             @else
                                 <div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center mr-2">
                                     <i class="fas fa-user text-xs text-gray-600"></i>
