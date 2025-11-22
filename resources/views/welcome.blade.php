@@ -121,6 +121,18 @@
     <!-- Hero Section -->
     <div class="max-w-7xl mx-auto px-3 sm:px-4 py-8 sm:py-16">
         <div class="text-center">
+            <!-- Informative Message -->
+            <div class="max-w-3xl mx-auto mb-6 sm:mb-8 px-3">
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 sm:p-6">
+                    <p class="text-sm sm:text-base text-gray-700 leading-relaxed">
+                        <strong class="text-blue-800">Atenção:</strong> Estamos iniciando nossas atividades; portanto, ainda não há muitos usuários em nossa base. Esperamos que, em breve, já tenhamos uma base grande!
+                    </p>
+                    <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
+                        Nosso serviço sempre será gratuito e todos os recursos estarão liberados. Aproveite!
+                    </p>
+                </div>
+            </div>
+            
             <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 px-2">
                 {{ __('messages.welcome.title') }}
             </h2>
