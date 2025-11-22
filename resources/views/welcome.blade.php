@@ -121,18 +121,6 @@
     <!-- Hero Section -->
     <div class="max-w-7xl mx-auto px-3 sm:px-4 py-8 sm:py-16">
         <div class="text-center">
-            <!-- Logo Grande e Central -->
-            <div class="mb-8">
-                <img src="{{ asset('images/logo/logo.png') }}" 
-                     alt="{{ config('app.name') }}" 
-                     class="mx-auto h-64 w-auto sm:h-80 md:h-96"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                <div style="display: none;" class="text-center">
-                    <i class="fas fa-heart text-8xl text-pink-500 mb-4"></i>
-                    <h1 class="text-4xl font-bold text-gray-800">{{ config('app.name', 'Sintonia de Amor') }}</h1>
-                </div>
-            </div>
-            
             <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 px-2">
                 {{ __('messages.welcome.title') }}
             </h2>
