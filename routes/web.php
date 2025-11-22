@@ -230,4 +230,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/reports/{report}/status', [App\Http\Controllers\AdminReportController::class, 'updateStatus'])->name('reports.update-status');
     Route::post('/reports/{report}/deactivate-user', [App\Http\Controllers\AdminReportController::class, 'deactivateReportedUser'])->name('reports.deactivate-user');
     Route::post('/reports/{report}/activate-user', [App\Http\Controllers\AdminReportController::class, 'activateReportedUser'])->name('reports.activate-user');
+
+    // Users management
+    Route::get('/users', [App\Http\Controllers\AdminUserController::class, 'index'])->name('users.index');
+    Route::get('/users/{user}', [App\Http\Controllers\AdminUserController::class, 'show'])->name('users.show');
+    Route::post('/users/{user}/activate', [App\Http\Controllers\AdminUserController::class, 'activate'])->name('users.activate');
+    Route::post('/users/{user}/deactivate', [App\Http\Controllers\AdminUserController::class, 'deactivate'])->name('users.deactivate');
+    Route::post('/users/{user}/make-admin', [App\Http\Controllers\AdminUserController::class, 'makeAdmin'])->name('users.make-admin');
+    Route::post('/users/{user}/remove-admin', [App\Http\Controllers\AdminUserController::class, 'removeAdmin'])->name('users.remove-admin');
+    Route::put('/users/{user}', [App\Http\Controllers\AdminUserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [App\Http\Controllers\AdminUserController::class, 'destroy'])->name('users.destroy');
 });

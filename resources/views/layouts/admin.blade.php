@@ -29,6 +29,9 @@
                     </div>
                     
                     <div class="flex items-center space-x-4">
+                        <a href="{{ route('admin.users.index') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-users mr-1"></i>Usuários
+                        </a>
                         <a href="{{ route('admin.photos.index') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                             <i class="fas fa-images mr-1"></i>Moderação
                         </a>
