@@ -24,12 +24,14 @@ Para configurar o OAuth com Google, você precisará de:
    - Dê um nome ao projeto (ex: "Sintonia de Amor")
    - Clique em **"Criar"** (ou **"Create"**)
 
-### 2. Ativar a API do Google+
+### 2. Ativar as APIs Necessárias
 
 1. No menu lateral, vá em **"APIs e Serviços"** → **"Biblioteca"** (ou **"APIs & Services"** → **"Library"**)
-2. Procure por **"Google+ API"** ou **"Google Identity"**
-3. Clique na API e depois em **"Ativar"** (ou **"Enable"**)
-   - **Nota**: O Google+ API foi descontinuado, mas você pode usar a **"Google Identity API"** ou simplesmente pular esta etapa, pois o Laravel Socialite gerencia isso automaticamente
+2. Procure e ative as seguintes APIs:
+   - **"Google Identity API"** ou **"Google+ API"** (para autenticação básica)
+   - **"People API"** (para obter informações adicionais como data de nascimento)
+3. Para cada API, clique nela e depois em **"Ativar"** (ou **"Enable"**)
+   - **Nota**: A People API é necessária para obter a data de nascimento do usuário
 
 ### 3. Configurar a Tela de Consentimento OAuth
 
@@ -49,8 +51,10 @@ Para configurar o OAuth com Google, você precisará de:
    - Selecione os escopos necessários:
      - `userinfo.email` - Ver seu endereço de email
      - `userinfo.profile` - Ver suas informações básicas de perfil
+     - `https://www.googleapis.com/auth/user.birthday.read` - Ver sua data de nascimento (necessário para obter a data de nascimento)
    - Clique em **"Atualizar"** (ou **"Update"**)
    - Clique em **"Salvar e continuar"** (ou **"Save and Continue"**)
+   - **Nota**: O escopo de data de nascimento requer verificação adicional do Google para produção
 6. Na seção **"Usuários de teste"** (Test users):
    - Se o app estiver em modo de teste, adicione emails de teste que poderão usar o OAuth
    - Para produção, você precisará solicitar verificação do Google
@@ -234,9 +238,41 @@ Se suspeitar que suas credenciais foram comprometidas:
 - [Google OAuth 2.0 Documentation](https://developers.google.com/identity/protocols/oauth2)
 - [Google Cloud Console](https://console.cloud.google.com/)
 
+## 📅 Obtenção de Data de Nascimento
+
+### Como Funciona
+
+A aplicação está configurada para solicitar e obter a data de nascimento do usuário durante o login via Google. Isso é feito através de:
+
+1. **Escopo OAuth**: O escopo `https://www.googleapis.com/auth/user.birthday.read` é solicitado automaticamente
+2. **People API**: A aplicação faz uma chamada adicional à People API do Google para obter a data de nascimento completa
+3. **Armazenamento**: A data de nascimento é salva automaticamente no campo `birth_date` do usuário
+
+### Requisitos
+
+- A **People API** deve estar habilitada no Google Cloud Console
+- O escopo de data de nascimento deve estar configurado na tela de consentimento OAuth
+- O usuário deve conceder permissão para compartilhar sua data de nascimento
+
+### Comportamento
+
+- Se a data de nascimento estiver disponível, ela será salva automaticamente
+- Se não estiver disponível ou o usuário negar a permissão, o campo `birth_date` ficará `null`
+- A aplicação continua funcionando normalmente mesmo sem a data de nascimento
+
+### Verificação em Produção
+
+⚠️ **IMPORTANTE**: Para usar o escopo de data de nascimento em produção, você precisará:
+
+1. Solicitar verificação do aplicativo no Google
+2. Justificar o uso da data de nascimento (ex: verificação de idade, matching de usuários)
+3. O processo de verificação pode levar alguns dias
+
+Para mais informações, consulte: [Google OAuth Verification](https://support.google.com/cloud/answer/9110914)
+
 ## 🚀 Status
 
 **✅ CONFIGURADO E PRONTO PARA USO!**
 
-Após seguir estas instruções, a autenticação OAuth com Google estará funcionando em sua aplicação.
+Após seguir estas instruções, a autenticação OAuth com Google estará funcionando em sua aplicação, incluindo a obtenção automática da data de nascimento quando disponível.
 

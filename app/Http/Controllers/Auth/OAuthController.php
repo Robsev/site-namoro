@@ -18,7 +18,9 @@ class OAuthController extends Controller
      */
     public function redirectToGoogle()
     {
-        return Socialite::driver('google')->redirect();
+        return Socialite::driver('google')
+            ->scopes(['https://www.googleapis.com/auth/user.birthday.read'])
+            ->redirect();
     }
 
     /**
@@ -60,6 +62,9 @@ class OAuthController extends Controller
             $profilePhotoPath = $this->downloadAndSaveProfilePhoto($providerUser->getAvatar());
         }
 
+        // Extract birth date from Google user data
+        $birthDate = $this->extractBirthDate($providerUser);
+
         // Create new user
         $user = User::create([
             'name' => $providerUser->getName(),
@@ -67,6 +72,7 @@ class OAuthController extends Controller
             'password' => Hash::make(Str::random(24)), // Random password for OAuth users
             'first_name' => $this->extractFirstName($providerUser->getName()),
             'last_name' => $this->extractLastName($providerUser->getName()),
+            'birth_date' => $birthDate,
             'profile_photo' => $profilePhotoPath,
             'is_verified' => true, // OAuth users are considered verified
             'is_active' => true,
@@ -146,6 +152,14 @@ class OAuthController extends Controller
 
         if (!$user->is_verified) {
             $updates['is_verified'] = true;
+        }
+
+        // Update birth date if not set and available from provider
+        if (!$user->birth_date) {
+            $birthDate = $this->extractBirthDate($providerUser);
+            if ($birthDate) {
+                $updates['birth_date'] = $birthDate;
+            }
         }
 
         $updates['last_seen'] = now();
@@ -294,5 +308,110 @@ class OAuthController extends Controller
     {
         $parts = explode(' ', trim($fullName));
         return count($parts) > 1 ? implode(' ', array_slice($parts, 1)) : '';
+    }
+
+    /**
+     * Extract birth date from Google OAuth user data.
+     * 
+     * @param \Laravel\Socialite\Two\User $providerUser
+     * @return string|null Date in Y-m-d format or null if not available
+     */
+    private function extractBirthDate($providerUser)
+    {
+        try {
+            // Try to get birth date from user data array
+            $userData = $providerUser->user ?? [];
+            
+            // Check if birthday is in user data (format: YYYY-MM-DD or MM-DD)
+            if (isset($userData['birthday'])) {
+                $birthday = $userData['birthday'];
+                
+                // If format is YYYY-MM-DD, use it directly
+                if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $birthday)) {
+                    return $birthday;
+                }
+                
+                // If format is MM-DD, we need to get year from People API
+                if (preg_match('/^\d{2}-\d{2}$/', $birthday)) {
+                    // Try to get full date from People API
+                    return $this->getBirthDateFromPeopleApi($providerUser);
+                }
+            }
+
+            // Try to get from People API directly
+            return $this->getBirthDateFromPeopleApi($providerUser);
+            
+        } catch (\Exception $e) {
+            \Log::warning('OAuth: Failed to extract birth date', [
+                'error' => $e->getMessage()
+            ]);
+            return null;
+        }
+    }
+
+    /**
+     * Get birth date from Google People API.
+     * 
+     * @param \Laravel\Socialite\Two\User $providerUser
+     * @return string|null Date in Y-m-d format or null if not available
+     */
+    private function getBirthDateFromPeopleApi($providerUser)
+    {
+        try {
+            // Try different ways to get the token
+            $token = $providerUser->token ?? 
+                     (method_exists($providerUser, 'getToken') ? $providerUser->getToken() : null) ??
+                     (isset($providerUser->accessTokenResponseBody['access_token']) ? $providerUser->accessTokenResponseBody['access_token'] : null);
+            
+            if (!$token) {
+                \Log::warning('OAuth: No access token available for People API');
+                return null;
+            }
+
+            // Make request to People API
+            $client = new \GuzzleHttp\Client();
+            $response = $client->get('https://people.googleapis.com/v1/people/me?personFields=birthdays', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                    'Accept' => 'application/json',
+                ],
+            ]);
+
+            $data = json_decode($response->getBody()->getContents(), true);
+            
+            if (isset($data['birthdays']) && is_array($data['birthdays'])) {
+                foreach ($data['birthdays'] as $birthday) {
+                    if (isset($birthday['date'])) {
+                        $date = $birthday['date'];
+                        
+                        // Google returns year, month, day separately
+                        $year = $date['year'] ?? null;
+                        $month = $date['month'] ?? null;
+                        $day = $date['day'] ?? null;
+                        
+                        if ($year && $month && $day) {
+                            return sprintf('%04d-%02d-%02d', $year, $month, $day);
+                        }
+                        
+                        // If no year, use current year (but this is not ideal)
+                        if ($month && $day) {
+                            \Log::info('OAuth: Birthday without year, using current year', [
+                                'month' => $month,
+                                'day' => $day
+                            ]);
+                            return sprintf('%04d-%02d-%02d', date('Y'), $month, $day);
+                        }
+                    }
+                }
+            }
+            
+            return null;
+            
+        } catch (\Exception $e) {
+            \Log::warning('OAuth: Failed to get birth date from People API', [
+                'error' => $e->getMessage()
+            ]);
+            return null;
+        }
     }
 }
