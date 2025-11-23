@@ -93,14 +93,14 @@ class UpdateLogoAndFavicon extends Command
                     @else
                         <i class="fas fa-heart mr-2"></i>
                         <span class="hidden sm:inline">Sintonia de Amor</span>
-                        <span class="sm:hidden">APS</span>
+                        <span class="sm:hidden">SDA</span>
                     @endif';
 
         // Substituir o logo atual
         $layoutContent = str_replace(
             '<i class="fas fa-heart mr-2"></i>
                             <span class="hidden sm:inline">Sintonia de Amor</span>
-                            <span class="sm:hidden">APS</span>',
+                            <span class="sm:hidden">SDA</span>',
             $logoCode,
             $layoutContent
         );

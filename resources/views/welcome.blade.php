@@ -24,7 +24,7 @@
                 <div class="flex items-center min-w-0 flex-shrink">
                     <i class="fas fa-heart text-xl sm:text-4xl text-pink-500 mr-1.5 sm:mr-3 flex-shrink-0"></i>
                     <h1 class="text-xs sm:text-2xl font-bold text-gray-800 break-words leading-tight max-w-[120px] sm:max-w-none">
-                        <span class="sm:hidden">APS</span>
+                        <span class="sm:hidden">SDA</span>
                         <span class="hidden sm:inline">{{ config('app.name', 'Sintonia de Amor') }}</span>
                     </h1>
                 </div>

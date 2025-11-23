@@ -46,7 +46,7 @@
                         <a href="{{ route('dashboard') }}" class="text-xl sm:text-2xl font-bold text-pink-600">
                             <i class="fas fa-heart mr-2"></i>
                             <span class="hidden sm:inline">Sintonia de Amor</span>
-                            <span class="sm:hidden">APS</span>
+                            <span class="sm:hidden">SDA</span>
                         </a>
                     </div>
                     
