@@ -15,9 +15,11 @@
 /.zed
 /auth.json
 /node_modules
-/public/build
 /public/hot
 /public/storage
+# Husky (manter os hooks no repositório)
+!.husky/pre-commit
+!.husky/_/
 /storage/*.key
 /storage/pail
 # Storage directories - ignore everything except .gitkeep files

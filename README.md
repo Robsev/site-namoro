@@ -22,10 +22,22 @@ Sistema de relacionamento entre amigos desenvolvido em Laravel 12.
 ## 📋 Instalação
 
 1. Clone o repositório
-2. Instale as dependências: `composer install`
-3. Configure o arquivo `.env`
-4. Execute as migrations: `php artisan migrate`
-5. Inicie o servidor: `php artisan serve`
+2. Instale as dependências PHP: `composer install`
+3. Instale as dependências Node.js: `npm install` (configura hooks automáticos)
+4. Configure o arquivo `.env`
+5. Execute as migrations: `php artisan migrate`
+6. Inicie o servidor: `php artisan serve`
+
+### 🎨 Build do Frontend
+
+O build do frontend é executado **automaticamente** quando você faz commit de mudanças nos arquivos CSS/JS. 
+
+Se precisar executar manualmente:
+```bash
+./build-local.sh
+```
+
+Veja mais detalhes em [BUILD_ASSETS.md](BUILD_ASSETS.md)
 
 ## 🔧 Configuração
 

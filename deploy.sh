@@ -314,34 +314,31 @@ else
     fi
 fi
 
-# Instalar dependências Node.js
-print_status "Instalando dependências Node.js..."
-npm install
-print_success "Dependências Node.js instaladas"
-
 # =============================================================================
-# 4. BUILD DO FRONTEND
+# 4. VERIFICAÇÃO DO BUILD DO FRONTEND
 # =============================================================================
-print_header "🎨 BUILD DO FRONTEND"
+print_header "🎨 VERIFICAÇÃO DO BUILD DO FRONTEND"
 
-# Verificar se Vite está configurado
-if [ ! -f "vite.config.js" ]; then
-    print_error "Arquivo vite.config.js não encontrado!"
-    exit 1
-fi
-
-# Build do frontend com Vite
-print_status "Executando build do frontend com Vite..."
-npm run build
-print_success "Build do frontend concluído"
-
-# Verificar se os arquivos foram gerados
+# Verificar se os arquivos de build existem (devem ser commitados no repositório)
+print_status "Verificando arquivos de build do frontend..."
 if [ ! -d "public/build" ]; then
-    print_error "Diretório public/build não foi criado!"
+    print_error "Diretório public/build não encontrado!"
+    print_error "Os arquivos de build devem ser commitados no repositório."
+    print_error "Execute o build localmente com: ./build-local.sh"
+    print_error "Ou manualmente: npm install && npm run build"
     exit 1
 fi
 
-print_success "Arquivos de build gerados em public/build/"
+# Verificar se o manifest.json existe
+if [ ! -f "public/build/manifest.json" ]; then
+    print_error "Arquivo public/build/manifest.json não encontrado!"
+    print_error "O build do frontend parece estar incompleto."
+    print_error "Execute o build localmente com: ./build-local.sh"
+    exit 1
+fi
+
+print_success "Arquivos de build encontrados em public/build/"
+print_status "NOTA: Build executado localmente e commitado no repositório"
 
 # =============================================================================
 # 4. CONFIGURAÇÕES DE PRODUÇÃO
@@ -476,8 +473,7 @@ fi
 echo -e "  • Modo de Manutenção: ${GREEN}✓${NC} Ativado durante deploy"
 echo -e "  • Dependências PHP: ${GREEN}✓${NC} Atualizadas e otimizadas"
 echo -e "  • composer.lock: ${GREEN}✓${NC} Verificado/Atualizado"
-echo -e "  • Dependências Node.js: ${GREEN}✓${NC} Instaladas"
-echo -e "  • Build Frontend: ${GREEN}✓${NC} Concluído com Vite"
+echo -e "  • Build Frontend: ${GREEN}✓${NC} Verificado (build local commitado)"
 echo -e "  • Cache de Produção: ${GREEN}✓${NC} Configurado"
 echo -e "  • Banco de Dados: ${GREEN}✓${NC} Migrations pendentes executadas"
 echo -e "  • Storage: ${GREEN}✓${NC} Link simbólico criado"

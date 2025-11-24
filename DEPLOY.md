@@ -7,10 +7,12 @@ Este guia explica como fazer deploy do "Sintonia de Amor" em produção.
 ### Servidor
 - **PHP 8.2+** com extensões: BCMath, Ctype, cURL, DOM, Fileinfo, JSON, Mbstring, OpenSSL, PCRE, PDO, Tokenizer, XML, GD, MySQL
 - **Composer** 2.0+
-- **Node.js** 18+ e **npm** 9+
 - **MySQL** 8.0+ ou **MariaDB** 10.6+
 - **Redis** (opcional, para cache e sessões)
 - **Nginx** ou **Apache** com mod_rewrite
+
+### Desenvolvimento Local (para build do frontend)
+- **Node.js** 18+ e **npm** 9+ (necessário apenas no ambiente de desenvolvimento)
 
 ### Domínio e SSL
 - Domínio configurado
@@ -23,21 +25,27 @@ Este guia explica como fazer deploy do "Sintonia de Amor" em produção.
 ./deploy.sh
 ```
 **O que faz:**
-- Instala dependências PHP e Node.js
-- Executa build do frontend com Vite
+- Atualiza código do repositório (git pull)
+- Instala/atualiza dependências PHP
+- Verifica se os arquivos de build do frontend existem (devem estar commitados)
 - Configura cache de produção
 - Executa migrations do banco
 - Configura permissões e storage
 - Otimiza performance
 
-### 2. Build Rápido (Apenas Frontend)
+**⚠️ IMPORTANTE:** O servidor de produção **não precisa** ter Node.js/npm instalado. Os arquivos de build devem ser commitados no repositório após serem gerados localmente.
+
+### 2. Build Local do Frontend
 ```bash
-./build.sh
+./build-local.sh
 ```
 **O que faz:**
-- Instala dependências Node.js
-- Executa build do frontend
+- Instala/atualiza dependências Node.js
+- Executa build do frontend com Vite
 - Verifica se os arquivos foram gerados
+- Prepara arquivos para commit no git
+
+**Use este script sempre que modificar arquivos do frontend (CSS, JS, etc).**
 
 ## 📝 Passo a Passo Manual
 
@@ -53,9 +61,8 @@ sudo apt install nginx mysql-server redis-server php8.2-fpm php8.2-mysql php8.2-
 curl -sS https://getcomposer.org/installer | php
 sudo mv composer.phar /usr/local/bin/composer
 
-# Instalar Node.js
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt-get install -y nodejs
+# NOTA: Node.js não é necessário no servidor de produção
+# O build do frontend é feito localmente e commitado no repositório
 ```
 
 ### 2. Configurar Banco de Dados
@@ -192,16 +199,30 @@ sudo supervisorctl start amigos-queue:*
 
 ## 🔧 Comandos de Manutenção
 
-### Build do Frontend
+### Build do Frontend (Local)
+
+**⚠️ IMPORTANTE:** O build do frontend deve ser feito **localmente** no seu computador de desenvolvimento, não no servidor de produção.
+
 ```bash
-# Build completo
+# Usar o script helper (recomendado)
+./build-local.sh
+
+# Ou manualmente:
+npm install
 npm run build
+git add public/build/
+git commit -m "build: atualizar assets do frontend"
+git push origin main
+```
 
-# Build em modo desenvolvimento
+**Quando fazer build:**
+- Após modificar arquivos em `resources/css/` ou `resources/js/`
+- Após atualizar dependências Node.js no `package.json`
+- Antes de fazer deploy de mudanças no frontend
+
+**Build em modo desenvolvimento (apenas local):**
+```bash
 npm run dev
-
-# Instalar dependências
-npm ci --only=production
 ```
 
 ### Cache e Otimização
@@ -288,11 +309,16 @@ sudo chmod -R 775 storage bootstrap/cache
 
 **2. Assets não carregam**
 ```bash
-# Verificar se o build foi executado
+# Verificar se os arquivos de build existem
 ls -la public/build/
 
-# Executar build
-npm run build
+# Se não existirem, os arquivos devem ser commitados no repositório
+# Execute o build localmente:
+# ./build-local.sh
+# git add public/build/
+# git commit -m "build: atualizar assets"
+# git push origin main
+# Depois execute: ./deploy.sh
 
 # Verificar link simbólico do storage
 php artisan storage:link
@@ -320,17 +346,38 @@ redis-cli ping
 ## 🔄 Atualizações
 
 ### Deploy de Atualizações
+
+**Se você modificou arquivos do frontend:**
+
+1. **No seu computador local:**
+```bash
+# Executar build local
+./build-local.sh
+
+# Fazer commit e push dos arquivos de build
+git add public/build/
+git commit -m "build: atualizar assets do frontend"
+git push origin main
+```
+
+2. **No servidor de produção:**
 ```bash
 # Fazer backup
 cp .env .env.backup
 
-# Atualizar código
-git pull origin main
-
-# Executar deploy
+# Executar deploy (vai fazer git pull automaticamente)
 ./deploy.sh
 
 # Verificar se está funcionando
+curl -I https://seu-dominio.com
+```
+
+**Se você modificou apenas código PHP/backend:**
+
+```bash
+# No servidor de produção
+cp .env .env.backup
+./deploy.sh
 curl -I https://seu-dominio.com
 ```
 
