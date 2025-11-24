@@ -59,14 +59,7 @@
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inativos</option>
                 </select>
             </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Assinatura</label>
-                <select name="subscription_type" class="w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">Todos</option>
-                    <option value="premium" {{ request('subscription_type') === 'premium' ? 'selected' : '' }}>Premium</option>
-                    <option value="free" {{ request('subscription_type') === 'free' ? 'selected' : '' }}>Gratuito</option>
-                </select>
-            </div>
+            {{-- Subscription type filter removed - all users have premium features now --}}
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Administrador</label>
                 <select name="is_admin" class="w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500">
@@ -204,15 +197,9 @@
                                 @endif
                             </td>
                             <td class="px-4 py-3 text-sm text-gray-700">
-                                @if($user->hasActivePremiumSubscription())
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
-                                        <i class="fas fa-star mr-1"></i> Premium
-                                    </span>
-                                @else
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                        Gratuito
-                                    </span>
-                                @endif
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
+                                    <i class="fas fa-star mr-1"></i> Premium
+                                </span>
                             </td>
                             <td class="px-4 py-3 text-sm text-gray-500">
                                 {{ $user->created_at->format('d/m/Y H:i') }}

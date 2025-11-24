@@ -255,3 +255,6 @@ fi
 echo
 print_success "Sincronização concluída! 🎉"
 
+
+
+

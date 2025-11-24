@@ -116,7 +116,7 @@ $viewsCount = $likesReceivedCount + $matchesCount;
                     <p class="text-gray-600">{{ Auth::user()->email }}</p>
                     <div class="mt-4">
                         <span class="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-                            {{ Auth::user()->subscription_type === 'premium' ? __('messages.dashboard.premium') : __('messages.dashboard.free') }}
+                            {{ __('messages.dashboard.premium') }}
                         </span>
                         @if(Auth::user()->is_verified)
                             <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full ml-2">

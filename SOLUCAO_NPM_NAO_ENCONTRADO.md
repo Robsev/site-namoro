@@ -172,3 +172,6 @@ Após resolver o problema do npm e compilar os assets:
 O diretório `public/build` está no `.gitignore` porque deve ser gerado em cada ambiente. 
 **Nunca faça commit permanente** do diretório `public/build` no Git.
 
+
+
+

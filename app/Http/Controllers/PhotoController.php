@@ -30,13 +30,12 @@ class PhotoController extends Controller
             'photo.max' => 'A foto não pode ter mais de 5MB (5120 kilobytes).',
         ]);
 
-        // Check photo limit (max 6 photos for free users, unlimited for premium)
+        // Check photo limit (max 20 photos for all users)
         $photoCount = $user->photos()->count();
-        $maxPhotos = $user->hasActivePremiumSubscription() ? 20 : 6;
+        $maxPhotos = 20;
 
         if ($photoCount >= $maxPhotos) {
-            return redirect()->back()->with('error', 'Limite de fotos atingido. ' . 
-                ($user->hasActivePremiumSubscription() ? 'Contate o suporte.' : 'Faça upgrade para premium para mais fotos.'));
+            return redirect()->back()->with('error', 'Limite de fotos atingido. Você pode ter até 20 fotos.');
         }
 
         // Store photo

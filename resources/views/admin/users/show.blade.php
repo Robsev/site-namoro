@@ -77,15 +77,9 @@
                 </span>
             @endif
 
-            @if($user->hasActivePremiumSubscription())
-                <span class="px-3 py-1 text-sm font-semibold rounded-full bg-indigo-100 text-indigo-800">
-                    <i class="fas fa-star mr-1"></i> Premium
-                </span>
-            @else
-                <span class="px-3 py-1 text-sm font-semibold rounded-full bg-gray-100 text-gray-800">
-                    Gratuito
-                </span>
-            @endif
+            <span class="px-3 py-1 text-sm font-semibold rounded-full bg-indigo-100 text-indigo-800">
+                <i class="fas fa-star mr-1"></i> Premium
+            </span>
         </div>
     </div>
 

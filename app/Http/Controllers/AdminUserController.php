@@ -42,18 +42,10 @@ class AdminUserController extends Controller
             $query->where('is_admin', $isAdmin === 'yes');
         }
 
-        if ($subscriptionType = $request->get('subscription_type')) {
-            if ($subscriptionType === 'premium') {
-                $query->where('subscription_type', 'premium')
-                      ->where('subscription_expires_at', '>', now());
-            } elseif ($subscriptionType === 'free') {
-                $query->where(function ($q) {
-                    $q->whereNull('subscription_type')
-                      ->orWhere('subscription_type', 'free')
-                      ->orWhere('subscription_expires_at', '<=', now());
-                });
-            }
-        }
+        // Subscription type filter removed - all users have premium features now
+        // if ($subscriptionType = $request->get('subscription_type')) {
+        //     // All users are treated as premium
+        // }
 
         if ($verified = $request->get('verified')) {
             if ($verified === 'yes') {
@@ -81,9 +73,7 @@ class AdminUserController extends Controller
             'inactive' => User::where('is_active', false)->count(),
             'admins' => User::where('is_admin', true)->count(),
             'verified' => User::whereNotNull('email_verified_at')->count(),
-            'premium' => User::where('subscription_type', 'premium')
-                           ->where('subscription_expires_at', '>', now())
-                           ->count(),
+            'premium' => User::count(), // All users have premium features now
         ];
 
         return view('admin.users.index', compact('users', 'stats'));

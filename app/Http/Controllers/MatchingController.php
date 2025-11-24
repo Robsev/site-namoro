@@ -705,9 +705,8 @@ class MatchingController extends Controller
      */
     private function hasSuperLikeAvailable(User $user)
     {
-        // Free users get 1 super like per day
-        // Premium users get 5 super likes per day
-        $dailyLimit = $user->subscription_type === 'premium' ? 5 : 1;
+        // All users get 5 super likes per day
+        $dailyLimit = 5;
         
         $todaySuperLikes = UserMatch::where('user1_id', $user->id)
             ->where('is_super_like', true)

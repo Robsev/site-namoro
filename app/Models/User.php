@@ -540,12 +540,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Check if user has active premium subscription.
+     * All users now have premium features (always returns true).
      */
     public function hasActivePremiumSubscription()
     {
-        return $this->subscription_type === 'premium' && 
-               $this->subscription_expires_at && 
-               $this->subscription_expires_at->isFuture();
+        return true;
     }
     
     /**

@@ -332,10 +332,7 @@ class SubscriptionController extends Controller
                 'canceled_at' => now()
             ]);
 
-            // Update user
-            $user->update([
-                'subscription_type' => 'free'
-            ]);
+            // Note: All users have premium features now, so no need to update subscription_type
 
             return redirect()->route('subscriptions.show')
                 ->with('success', 'Assinatura cancelada com sucesso.');
@@ -701,26 +698,20 @@ class SubscriptionController extends Controller
     public function usage()
     {
         $user = Auth::user();
-        $subscription = $user->subscriptions()->active()->first();
-        
-        if (!$subscription) {
-            return redirect()->route('subscriptions.plans')
-                ->with('error', 'Você não possui uma assinatura ativa.');
-        }
 
-        // Calculate usage statistics
+        // Calculate usage statistics (all users have premium features)
         $usage = [
             'photos_used' => $user->photos()->count(),
-            'photos_limit' => $user->subscription_type === 'premium' ? 20 : 6,
+            'photos_limit' => 20,
             'likes_used_today' => $this->getLikesUsedToday($user),
-            'likes_limit' => $user->subscription_type === 'premium' ? -1 : 5, // -1 means unlimited
+            'likes_limit' => -1, // -1 means unlimited
             'super_likes_used_today' => $this->getSuperLikesUsedToday($user),
-            'super_likes_limit' => $user->subscription_type === 'premium' ? 5 : 1,
+            'super_likes_limit' => 5,
             'boosts_used_this_month' => $this->getBoostsUsedThisMonth($user),
-            'boosts_limit' => $user->subscription_type === 'premium' ? 5 : 0
+            'boosts_limit' => 5
         ];
 
-        return view('subscriptions.usage', compact('subscription', 'usage'));
+        return view('subscriptions.usage', compact('usage'));
     }
 
     /**
