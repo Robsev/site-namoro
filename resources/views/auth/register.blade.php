@@ -27,7 +27,26 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('register') }}" class="space-y-6">
+        <div class="space-y-6">
+            <!-- Google Register -->
+            <a href="{{ route('auth.google') }}" 
+               class="w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-white text-gray-700 hover:bg-gray-50 transition duration-200">
+                <i class="fab fa-google text-red-500 mr-3"></i>
+                <span class="font-medium">{{ __('messages.auth.register_with_google') }}</span>
+            </a>
+
+            <!-- Divider -->
+            <div class="relative">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-300"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-white text-gray-500">{{ __('messages.common.or') }}</span>
+                </div>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ route('register') }}" class="space-y-6 mt-6">
             @csrf
             
             <!-- Personal Information -->
